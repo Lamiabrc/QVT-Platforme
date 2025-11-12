@@ -23,34 +23,43 @@ export function MobileWrapper({ children }: MobileWrapperProps) {
     };
     setupStatusBar();
 
-    // Handle Android back button
-    const backButtonListener = CapApp.addListener('backButton', ({ canGoBack }) => {
-      if (!canGoBack) {
-        CapApp.exitApp();
-      } else {
-        window.history.back();
-      }
-    });
+    let backButtonListener: any;
+    let appStateListener: any;
+    let keyboardWillShow: any;
+    let keyboardWillHide: any;
 
-    // Handle App State Changes
-    const appStateListener = CapApp.addListener('appStateChange', ({ isActive }) => {
-      console.log('App state changed. Is active:', isActive);
-    });
+    const setupListeners = async () => {
+      // Handle Android back button
+      backButtonListener = await CapApp.addListener('backButton', ({ canGoBack }) => {
+        if (!canGoBack) {
+          CapApp.exitApp();
+        } else {
+          window.history.back();
+        }
+      });
 
-    // Handle Keyboard
-    const keyboardWillShow = Keyboard.addListener('keyboardWillShow', (info) => {
-      document.body.style.paddingBottom = `${info.keyboardHeight}px`;
-    });
+      // Handle App State Changes
+      appStateListener = await CapApp.addListener('appStateChange', ({ isActive }) => {
+        console.log('App state changed. Is active:', isActive);
+      });
 
-    const keyboardWillHide = Keyboard.addListener('keyboardWillHide', () => {
-      document.body.style.paddingBottom = '0px';
-    });
+      // Handle Keyboard
+      keyboardWillShow = await Keyboard.addListener('keyboardWillShow', (info) => {
+        document.body.style.paddingBottom = `${info.keyboardHeight}px`;
+      });
+
+      keyboardWillHide = await Keyboard.addListener('keyboardWillHide', () => {
+        document.body.style.paddingBottom = '0px';
+      });
+    };
+
+    setupListeners();
 
     return () => {
-      backButtonListener.remove();
-      appStateListener.remove();
-      keyboardWillShow.remove();
-      keyboardWillHide.remove();
+      backButtonListener?.remove();
+      appStateListener?.remove();
+      keyboardWillShow?.remove();
+      keyboardWillHide?.remove();
     };
   }, []);
 
