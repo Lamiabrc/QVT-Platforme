@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { Profile, FamilyMember, AppRole } from '@/types/database';
+import { Profile, FamilyMember, AppRole, Emotion, SharedJournal } from '@/types/database';
+import { generateDemoEmotions, generateDemoJournalEntries } from './useDemoData';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -12,6 +13,8 @@ export function useAuth() {
   const [userRole, setUserRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const [demoEmotions, setDemoEmotions] = useState<Emotion[]>([]);
+  const [demoJournalEntries, setDemoJournalEntries] = useState<SharedJournal[]>([]);
 
   useEffect(() => {
     // Check for demo mode in URL
@@ -211,6 +214,19 @@ export function useAuth() {
     setFamilyMembers(demoMembers);
     setCurrentMember(demoMembers[0]);
     setUserRole('parent');
+    
+    // Générer les émotions de démo pour chaque membre
+    const allDemoEmotions: Emotion[] = [];
+    demoMembers.forEach(member => {
+      const emotions = generateDemoEmotions(member.id, member.display_name);
+      allDemoEmotions.push(...emotions);
+    });
+    setDemoEmotions(allDemoEmotions);
+    
+    // Générer les entrées de journal de démo
+    const journalEntries = generateDemoJournalEntries('demo-family-id', demoMembers);
+    setDemoJournalEntries(journalEntries);
+    
     setLoading(false);
   };
 
@@ -223,6 +239,8 @@ export function useAuth() {
     userRole,
     loading,
     isDemoMode,
+    demoEmotions,
+    demoJournalEntries,
     signUp,
     signIn,
     signOut,

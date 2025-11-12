@@ -4,18 +4,19 @@ import { useAuth } from "@/hooks/useAuth";
 import { ZenaAvatar } from "@/components/zena/ZenaAvatar";
 import { GlowCard } from "@/components/zena/GlowCard";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Heart } from "lucide-react";
 import { EmotionBubble } from "@/components/zena/EmotionBubble";
 
 export default function FamilySpace() {
   const navigate = useNavigate();
-  const { user, familyMembers, loading } = useAuth();
+  const { user, familyMembers, loading, isDemoMode, demoEmotions } = useAuth();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !isDemoMode) {
       navigate("/auth");
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, isDemoMode, navigate]);
 
   if (loading) {
     return (
@@ -27,7 +28,31 @@ export default function FamilySpace() {
     );
   }
 
-  if (!user) return null;
+  if (!user && !isDemoMode) return null;
+
+  // Obtenir les 7 derniers jours
+  const getLast7Days = () => {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  const last7Days = getLast7Days();
+
+  // Fonction pour obtenir les émotions d'un membre pour une date donnée
+  const getEmotionsForMemberAndDate = (memberId: string, date: Date) => {
+    if (!isDemoMode) return [];
+    
+    const dateStr = date.toISOString().split('T')[0];
+    return demoEmotions.filter(emotion => {
+      const emotionDate = new Date(emotion.created_at).toISOString().split('T')[0];
+      return emotion.family_member_id === memberId && emotionDate === dateStr;
+    });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-zena-night to-zena-night/80 pb-20 md:pb-8">
@@ -44,9 +69,16 @@ export default function FamilySpace() {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <Heart className="h-6 w-6 text-zena-rose" />
-            <div>
-              <h1 className="text-lg font-semibold text-foreground">Family Space</h1>
-              <p className="text-sm text-muted-foreground">Météo émotionnelle familiale</p>
+            <div className="flex items-center gap-2">
+              <div>
+                <h1 className="text-lg font-semibold text-foreground">Family Space</h1>
+                <p className="text-sm text-muted-foreground">Météo émotionnelle familiale</p>
+              </div>
+              {isDemoMode && (
+                <Badge variant="outline" className="text-xs border-zena-violet/30 text-zena-violet bg-zena-violet/10">
+                  🎭 Mode Démo
+                </Badge>
+              )}
             </div>
           </div>
         </div>
@@ -62,6 +94,22 @@ export default function FamilySpace() {
               Tableau Émotionnel des 7 derniers jours
             </h2>
 
+            {/* Timeline des 7 derniers jours */}
+            <div className="overflow-x-auto">
+              <div className="flex gap-2 mb-4 min-w-max">
+                {last7Days.map((day, index) => (
+                  <div key={index} className="flex-1 min-w-[100px] text-center">
+                    <p className="text-xs text-muted-foreground mb-1">
+                      {day.toLocaleDateString('fr-FR', { weekday: 'short' })}
+                    </p>
+                    <p className="text-xs font-medium text-foreground">
+                      {day.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {familyMembers && familyMembers.length > 0 ? (
               <div className="space-y-4">
                 {familyMembers.map((member) => (
@@ -72,11 +120,29 @@ export default function FamilySpace() {
                         <p className="text-xs text-muted-foreground capitalize">{member.role}</p>
                       </div>
                     </div>
-                    <div className="flex gap-2 flex-wrap">
-                      {/* Placeholder pour les bulles émotionnelles */}
-                      <EmotionBubble emotion="calme" intensity={70} />
-                      <EmotionBubble emotion="joie" intensity={85} />
-                      <EmotionBubble emotion="motivation" intensity={60} />
+                    <div className="overflow-x-auto">
+                      <div className="flex gap-2 min-w-max">
+                        {last7Days.map((day, dayIndex) => {
+                          const emotions = getEmotionsForMemberAndDate(member.id, day);
+                          return (
+                            <div key={dayIndex} className="flex-1 min-w-[100px] flex flex-col gap-2 items-center justify-center p-2">
+                              {emotions.length > 0 ? (
+                                emotions.map((emotion) => (
+                                  <EmotionBubble 
+                                    key={emotion.id}
+                                    emotion={emotion.emotion} 
+                                    intensity={emotion.intensity}
+                                  />
+                                ))
+                              ) : (
+                                <div className="w-10 h-10 rounded-full bg-muted/20 flex items-center justify-center">
+                                  <span className="text-xs text-muted-foreground">-</span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 ))}
