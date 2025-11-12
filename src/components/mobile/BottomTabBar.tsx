@@ -1,12 +1,14 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Users, MessageCircle, User } from 'lucide-react';
+import { Home, Users, MessageCircle, BookOpen, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsNative } from '@/hooks/useIsNative';
 
 const tabs = [
-  { path: '/', icon: Home, label: 'Accueil' },
-  { path: '/auth', icon: User, label: 'Compte' },
-  { path: '/onboarding', icon: Users, label: 'Famille' },
+  { path: '/dashboard', icon: Home, label: 'Accueil' },
+  { path: '/family', icon: Users, label: 'Famille' },
+  { path: '/chat', icon: MessageCircle, label: 'ZÉNA' },
+  { path: '/journal', icon: BookOpen, label: 'Journal' },
+  { path: '/profile', icon: User, label: 'Profil' },
 ];
 
 export function BottomTabBar() {
@@ -14,8 +16,9 @@ export function BottomTabBar() {
   const location = useLocation();
   const { isNative } = useIsNative();
 
-  // Only show on mobile/native
-  if (!isNative) return null;
+  // Only show on mobile/native and authenticated pages
+  const hiddenRoutes = ['/', '/auth', '/onboarding'];
+  if (!isNative || hiddenRoutes.includes(location.pathname)) return null;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-zena-night/95 backdrop-blur-lg border-t border-white/10 z-50" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
