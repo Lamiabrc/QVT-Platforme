@@ -14,6 +14,23 @@ export default {
     },
     extend: {
       colors: {
+        zena: {
+          turquoise: "hsl(var(--zena-turquoise))",
+          violet: "hsl(var(--zena-violet))",
+          rose: "hsl(var(--zena-rose))",
+          cream: "hsl(var(--zena-cream))",
+          night: "hsl(var(--zena-night))",
+        },
+        emotions: {
+          calme: "hsl(var(--emotion-calme))",
+          fatigue: "hsl(var(--emotion-fatigue))",
+          joie: "hsl(var(--emotion-joie))",
+          stress: "hsl(var(--emotion-stress))",
+          motivation: "hsl(var(--emotion-motivation))",
+          tristesse: "hsl(var(--emotion-tristesse))",
+          colere: "hsl(var(--emotion-colere))",
+          anxiete: "hsl(var(--emotion-anxiete))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

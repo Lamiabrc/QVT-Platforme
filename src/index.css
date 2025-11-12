@@ -2,6 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    /* ZÉNA Color Palette */
+    --zena-turquoise: 174 100% 56%;
+    --zena-violet: 261 46% 69%;
+    --zena-rose: 336 100% 85%;
+    --zena-cream: 60 29% 97%;
+    --zena-night: 232 25% 14%;
+    
+    /* Emotion Colors */
+    --emotion-calme: 191 77% 67%;
+    --emotion-fatigue: 261 46% 69%;
+    --emotion-joie: 47 100% 61%;
+    --emotion-stress: 348 100% 70%;
+    --emotion-motivation: 139 45% 60%;
+    --emotion-tristesse: 186 39% 73%;
+    --emotion-colere: 354 75% 58%;
+    --emotion-anxiete: 30 88% 67%;
+    
+    /* Base Theme */
+    --background: 0 0% 100%;
+    --foreground: 232 25% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 232 25% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 232 25% 14%;
+    --primary: 174 100% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 261 46% 69%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 232 25% 45%;
+    --accent: 336 100% 85%;
+    --accent-foreground: 232 25% 14%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 174 100% 56%;
+    --radius: 0.75rem;
+    
+    /* ZÉNA Special Effects */
+    --glow-soft: 0 0 20px hsla(var(--zena-turquoise) / 0.3);
+    --glow-strong: 0 0 40px hsla(var(--zena-turquoise) / 0.5);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 232 25% 14%;
+    --foreground: 60 29% 97%;
+    --card: 232 20% 18%;
+    --card-foreground: 60 29% 97%;
+    --popover: 232 20% 18%;
+    --popover-foreground: 60 29% 97%;
+    --primary: 174 100% 56%;
+    --primary-foreground: 232 25% 14%;
+    --secondary: 261 46% 69%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 232 20% 25%;
+    --muted-foreground: 210 20% 70%;
+    --accent: 336 100% 85%;
+    --accent-foreground: 232 25% 14%;
+    --border: 232 20% 30%;
+    --input: 232 20% 30%;
+    --ring: 174 100% 56%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Montserrat", system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .glow-soft {
+    box-shadow: var(--glow-soft);
+  }
+  .glow-strong {
+    box-shadow: var(--glow-strong);
+  }
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
