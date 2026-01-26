@@ -4,37 +4,76 @@ import SphereLayout from "@/components/SphereLayout";
 const CompanyHomePage = () => (
   <SphereLayout
     sphere="company"
-    title="Hub Entreprise"
-    description="Reseau interne pour equipes, alerts RH/QVT et plan d'action." 
+    title="Bonjour, comment va l'equipe ?"
+    description="ZENA pro suit les signaux faibles et propose des actions RH/QVT."
   >
-    <div className="grid gap-4 md:grid-cols-2">
-      <div className="rounded-2xl border border-border p-6">
-        <h3 className="text-lg font-semibold">Planning</h3>
-        <p className="text-sm text-muted-foreground">Rituels d'equipe et actions QVT.</p>
-        <Link to="/company/planning" className="text-sm text-primary">
-          Ouvrir le planning
-        </Link>
-      </div>
-      <div className="rounded-2xl border border-border p-6">
-        <h3 className="text-lg font-semibold">Alertes</h3>
-        <p className="text-sm text-muted-foreground">Detresse, harcelement, addiction, fatigue.</p>
-        <Link to="/company/alerts" className="text-sm text-primary">
-          Declarer une alerte
-        </Link>
-      </div>
-      <div className="rounded-2xl border border-border p-6">
-        <h3 className="text-lg font-semibold">Chat ZENA</h3>
-        <p className="text-sm text-muted-foreground">Espace de dialogue professionnel.</p>
+    <div className="zena-grid">
+      <div className="zena-card zena-soft space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="zena-avatar">Z</div>
+          <div>
+            <p className="text-sm font-semibold">Point d'ecoute pro</p>
+            <p className="text-xs text-muted-foreground">
+              Posez le contexte et ZENA suggere des actions concretes.
+            </p>
+          </div>
+        </div>
         <Link to="/company/chat" className="text-sm text-primary">
-          Ouvrir le chat
+          Ouvrir le chat ZENA Pro
         </Link>
       </div>
-      <div className="rounded-2xl border border-border p-6">
-        <h3 className="text-lg font-semibold">Communaute interne</h3>
-        <p className="text-sm text-muted-foreground">Feed interne sans exposition publique.</p>
-        <Link to="/company/community" className="text-sm text-primary">
-          Voir le feed
-        </Link>
+
+      <div className="zena-card space-y-3">
+        <div className="flex items-center justify-between">
+          <p className="zena-section-title">Planning QVT</p>
+          <Link to="/company/planning" className="text-xs text-primary">
+            Voir tout
+          </Link>
+        </div>
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between">
+            <span>Check-in equipe</span>
+            <span className="text-muted-foreground">09:00</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Atelier respiration</span>
+            <span className="text-muted-foreground">12:30</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span>Debrief manager</span>
+            <span className="text-muted-foreground">17:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="zena-card space-y-3">
+          <p className="zena-section-title">Alertes RH/QVT</p>
+          <p className="text-sm text-muted-foreground">
+            Detresse, harcelement, surcharge : signalement vers l'admin.
+          </p>
+          <Link to="/company/alerts" className="text-sm text-primary">
+            Declarer une alerte
+          </Link>
+        </div>
+        <div className="zena-card space-y-3">
+          <p className="zena-section-title">Suggestions</p>
+          <p className="text-sm text-muted-foreground">
+            Idees d'actions, rituels d'equipe, ressources pro.
+          </p>
+          <Link to="/company/community" className="text-sm text-primary">
+            Voir les ressources
+          </Link>
+        </div>
+      </div>
+
+      <div className="zena-footer-nav">
+        <button className="active" type="button">
+          Accueil
+        </button>
+        <button type="button">Planning</button>
+        <button type="button">Alertes</button>
+        <button type="button">Ressources</button>
       </div>
     </div>
   </SphereLayout>

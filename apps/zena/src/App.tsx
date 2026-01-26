@@ -17,7 +17,7 @@ import CompanyAlertsPage from "@/pages/company/CompanyAlertsPage";
 import CompanyCommunityPage from "@/pages/company/CompanyCommunityPage";
 
 const App = () => (
-  <AppShell universe={zenaUniverse} mainClassName="mx-auto w-full max-w-6xl px-6 py-8">
+  <AppShell universe={zenaUniverse} mainClassName="mx-auto w-full max-w-4xl px-4 py-10">
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/auth" element={<AuthPage />} />
