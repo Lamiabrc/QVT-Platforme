@@ -1,0 +1,107 @@
+﻿import { Link } from "react-router-dom";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import ZenaParticleFace from "@/components/ZenaParticleFace";
+
+const cards = [
+  {
+    title: "Elle ecoute",
+    text: "Capture vos nuances vocales et vos silences pour ressentir vos micro-emotions.",
+  },
+  {
+    title: "Elle protege",
+    text: "Analyse emotionnelle et contexte RAG pour repondre avec bienveillance et discretion.",
+  },
+  {
+    title: "Elle eclaire",
+    text: "Recommandations concretes, ressources RH, et suivi QVT - sans friction.",
+  },
+];
+
+export default function Index() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#0b0806] via-[#1b140f] to-[#2d231c] text-[#f7ede0] flex flex-col">
+      <Navigation />
+
+      <main className="flex-1 relative overflow-hidden">
+        <ZenaParticleFace />
+        <div className="pointer-events-none absolute inset-0 opacity-60 bg-[radial-gradient(circle_at_20%_20%,rgba(255,238,214,0.08),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(255,214,186,0.06),transparent_30%),radial-gradient(circle_at_50%_80%,rgba(207,164,104,0.12),transparent_45%)]" />
+
+        <section className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-14 lg:pt-28 lg:pb-16 grid lg:grid-cols-2 gap-12 items-center">
+          <motion.div
+            className="space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+          >
+            <p className="text-xs uppercase tracking-[0.24em] text-[#d9c29a]">ZENA - voix doree</p>
+            <h1 className="text-4xl md:text-5xl font-semibold leading-tight text-[#f8efe4] drop-shadow-sm">
+              ZENA - votre agent emotionnel
+            </h1>
+            <p className="text-lg text-[#e4d4be] leading-relaxed max-w-xl">
+              Elle ecoute, protege et eclaire votre quotidien. Un visage de particules dorees qui se revele a votre approche,
+              une presence chaleureuse qui guide vos choix QVT en douceur.
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <Link
+                to="/zena-chat"
+                className="inline-flex items-center gap-3 rounded-full bg-[#f1d6a0] text-[#1b130e] px-6 py-3 text-sm font-semibold shadow-[0_14px_40px_rgba(241,214,160,0.35)] hover:brightness-110 transition"
+              >
+                <Sparkles className="w-4 h-4" />
+                Entrer dans l experience
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <span className="text-sm text-[#c9b495]">Micro-emotions - RAG securise - Voix premium</span>
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="relative flex items-center justify-center overflow-visible"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.12 }}
+          >
+            <div className="w-full max-w-[520px] overflow-visible">
+              {/* cercle statique, l'effet panoramique est gÃ©rÃ© par le canvas global */}
+              <div className="relative rounded-full overflow-hidden shadow-[0_14px_50px_rgba(0,0,0,0.28)] border border-white/10 bg-black/20 backdrop-blur-sm">
+                <img src="/zena-face-golden.png" alt="Portrait cercle Zena dorure" className="block w-full h-full object-cover" />
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+        <section className="relative z-10 max-w-6xl mx-auto px-6 pb-20">
+          <motion.h2
+            className="text-center text-2xl font-semibold text-[#f4e6d3] mb-8"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Comment elle agit
+          </motion.h2>
+          <div className="grid gap-6 md:grid-cols-3">
+            {cards.map((card, idx) => (
+              <motion.article
+                key={card.title}
+                className="rounded-2xl bg-[#120d0a]/60 border border-white/10 backdrop-blur-md p-6 shadow-[0_16px_60px_rgba(0,0,0,0.25)]"
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.05 * idx }}
+              >
+                <h3 className="text-lg font-semibold text-[#f1d6a0] mb-2">{card.title}</h3>
+                <p className="text-sm text-[#d8c6ae] leading-relaxed">{card.text}</p>
+              </motion.article>
+            ))}
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
+

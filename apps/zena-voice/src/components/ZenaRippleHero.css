@@ -1,0 +1,40 @@
+.zena-ripple-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-image: url("/zena-face-golden.jpg"); /* remplace par ton image */
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.6s ease-out;
+}
+
+/* Effet eau au hover */
+.zena-ripple-container:hover {
+  animation: rippleZoom 2.5s infinite ease-out;
+}
+
+@keyframes rippleZoom {
+  0% {
+    filter: brightness(1) saturate(1) blur(0px);
+  }
+  50% {
+    filter: brightness(1.2) saturate(1.4) blur(2px);
+  }
+  100% {
+    filter: brightness(1) saturate(1) blur(0px);
+  }
+}
+
+.zena-ripple-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--x, 50%) var(--y, 50%),
+    rgba(255, 255, 255, 0.3),
+    transparent 40%
+  );
+  pointer-events: none;
+  transition: all 0.2s ease-out;
+}

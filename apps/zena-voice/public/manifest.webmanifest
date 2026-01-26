@@ -1,0 +1,77 @@
+{
+  "name": "ZENA IA emotionnelle",
+  "short_name": "ZENA",
+  "description": "L'avatar IA humanoide et bienveillant de QVT Box. ZENA ou ZENO parle, ecoute et veille sur votre bien-etre emotionnel au travail et a la maison.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F2F7F6",
+  "theme_color": "#5B4B8A",
+  "lang": "fr-FR",
+  "dir": "ltr",
+  "categories": [
+    "health",
+    "education",
+    "productivity",
+    "wellness"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Parler à ZENA",
+      "short_name": "Coach IA",
+      "description": "Lancer une conversation vocale avec ZENA",
+      "url": "/zena-chat",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any maskable"
+        }
+      ]
+    },
+    {
+      "name": "Mes Box Bien-être",
+      "short_name": "Box QVT",
+      "description": "Découvrir les box bien-être QVT Box",
+      "url": "/box",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any maskable"
+        }
+      ]
+    },
+    {
+      "name": "Mon espace émotionnel",
+      "short_name": "Espace QVT",
+      "description": "Suivre mes émotions avec ZENA",
+      "url": "/dashboard",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any maskable"
+        }
+      ]
+    }
+  ]
+}

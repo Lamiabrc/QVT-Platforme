@@ -1,0 +1,95 @@
+/* 🌿 Thème global ZENA / QVT Box – Version corrigée */
+
+/* Variantes couleurs */
+:root {
+  --color-primary: #005b5f;
+  --color-secondary: #4fd1c5;
+  --color-bg-light: #f2f7f6;
+  --color-bg-gradient-start: #f2f7f6;
+  --color-bg-gradient-end: #eaf4f3;
+  --color-text-dark: #212121;
+  --color-text-muted: #6b7280;
+}
+
+/* ---------------------------------------- */
+/*   RESET GLOBAL – NE PAS TOUCHER          */
+/* ---------------------------------------- */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: "Montserrat", system-ui, sans-serif;
+  color: var(--color-text-dark);
+  background: #ffffff;            /* 👉 fond neutre pour laisser les pages prendre le contrôle */
+  overflow-x: hidden;
+}
+
+/* Supprimé : layout forcé qui cassait tout  
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+*/
+
+/* ---------------------------------------- */
+/* Liens & Titres                           */
+/* ---------------------------------------- */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--color-primary);
+}
+
+/* ---------------------------------------- */
+/* CARTES                                    */
+/* ---------------------------------------- */
+.card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------------------------------------- */
+/* ANIMATIONS UTILITAIRES ZENA              */
+/* ---------------------------------------- */
+@keyframes breathe-slow {
+  0%, 100% { transform: scale(1); }
+  50%     { transform: scale(1.05); }
+}
+
+@keyframes pulse-fast {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.1); opacity: 0.9; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.8; filter: brightness(1); }
+  50%      { opacity: 1;   filter: brightness(1.3); }
+}
+
+.animate-breathe-slow { animation: breathe-slow 4s ease-in-out infinite; }
+.animate-pulse-fast   { animation: pulse-fast 1.5s ease-in-out infinite; }
+.animate-pulse-glow   { animation: pulse-glow 2s ease-in-out infinite; }
+
+/* Utilitaires */
+.text-muted-foreground { color: var(--color-text-muted); }

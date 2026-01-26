@@ -1,0 +1,88 @@
+# --- Node & Build ---
+node_modules
+dist
+dist-ssr
+*.local
+.env
+.env.*
+!.env.example
+
+# --- Logs ---
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- IDE & OS ---
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# --- Test & Coverage ---
+coverage
+.vitest
+*.spec.ts
+*.test.ts
+*.test.tsx
+
+# --- Generated / Temporary ---
+*.cache
+*.pid
+*.seed
+*.tgz
+*.tmp
+*.bak
+*.old
+*.swp
+
+# --- Build Artifacts ---
+.vercel
+.env.backup
+npm-debug.log
+yarn-error.log
+
+# --- Media & Local Data ---
+/public/videos/*
+!/public/videos/zena_default.mp4
+/public/uploads/*
+/public/icons/icon-*
+!.gitkeep
+
+# --- Supabase ---
+.supabase
+supabase/.branches
+supabase/.temp
+supabase/.cache
+.supabase/functions/_shared
+supabase/.env
+
+# --- Security ---
+*.pem
+*.key
+*.crt
+*.p12
+*.keystore
+*.jks
+*.cert
+
+# --- OS-specific junk ---
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# --- Backup or Exported Archives ---
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z

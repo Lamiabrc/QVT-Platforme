@@ -1,0 +1,189 @@
+🔮 COMMANDE CODEX — CONSTRUIRE L’APPLICATION ZÉNA DE A à Z
+
+Task:
+Build a complete mobile-ready application named ZÉNA, with a premium emotional-AI interface, including the custom pointillism → reveal on zoom effect.
+
+You must generate all required components, pages, and configuration files, following the vision below.
+
+1️⃣ Create a full project architecture (React + Vite + Tailwind + Capacitor)
+
+Ensure the project is structured like this:
+
+/public
+   zena-face-golden.png
+
+/src
+   /components
+       ZenaRippleFace.tsx
+       Navigation.tsx
+       Footer.tsx
+
+   /pages
+       Index.tsx
+       ZenaChat.tsx
+
+   /hooks
+       useZenaPointillism.ts
+
+   main.tsx
+   App.tsx
+
+
+Mandatory libraries:
+
+React + TypeScript
+
+Vite
+
+TailwindCSS
+
+Framer Motion
+
+React Router DOM
+
+Capacitor (Android + iOS builds)
+
+Supabase ready (authentication + storage)
+
+Produce all required configuration files:
+
+capacitor.config.ts
+
+package.json dependencies
+
+Tailwind config
+
+Vite config
+
+tsconfig
+
+2️⃣ Create the ZenaRippleFace component with the pointillism effect
+
+Implement a signature effect:
+
+🔸 Pointillism → reveal/disappear
+
+Default state = face rendered in fine dots / pixelated / noise mask
+
+Hover / Zoom = dots fade out → image becomes sharp
+
+Move mouse close = reveal intensifies
+
+Move mouse away = image dissolves back into pointillism
+
+Tactile long-press on mobile = reveal the face
+
+Use a canvas, SVG filter, or CSS mask-image blend technique
+
+🔸 3D tilt
+
+Face tilts slightly with mouse movement
+
+On mobile → tilt based on device orientation or finger drag
+
+🔸 Breathing animation
+
+Slight pulse
+
+Smooth, slow, premium
+
+🔸 Halo gold glow
+
+Around the bubble
+
+Oscillating gentle gradient
+
+🔸 Water reflection inside bubble
+
+A moving soft gradient using framer-motion
+
+🔸 Click → navigate("/zena-chat")
+
+The component must be fully mobile-friendly and performant.
+
+3️⃣ Create a new premium Homepage (Index.tsx)
+
+Layout requirements:
+
+ZenaRippleFace on the right
+
+Text block on the left
+
+Minimalist navigation bar (Pi.ai style)
+
+Soft beige / sand / gold gradients
+
+“How it works” section with 3 Pi.ai-style cards
+
+Footer simple and clean
+
+Animations:
+
+fade-up
+
+slow transitions
+
+elegance and softness
+
+4️⃣ Create the page ZenaChat.tsx
+
+This page should:
+
+include a clean chat UI
+
+placeholder for voice input
+
+minimalistic beige/or/gold theme
+
+animated microphone icon
+
+5️⃣ Set up Routing
+
+In App.tsx, create routes:
+
+/ → Index
+
+/zena-chat → ZenaChat
+
+6️⃣ Prepare for mobile builds (Capacitor)
+
+Generate files:
+
+capacitor.config.ts
+
+Android folder
+
+iOS folder
+
+Configure:
+
+appId: "com.zena.app"
+
+appName: "ZÉNA"
+
+webDir: "dist"
+
+7️⃣ Expectations from Codex
+
+You must:
+
+✔ Generate complete code for every file
+
+✔ Fix all imports
+
+✔ Ensure all files compile
+
+✔ Ensure pointillism effect works on desktop + mobile
+
+✔ Ensure mobile build with Capacitor works
+
+✔ Produce clean, modern, premium UI
+
+✔ Match the ZÉNA vision (sable / or / blanc chaud / douceur)
+
+✔ Never produce partial code → generate full files
+
+8️⃣ Begin now.
+✔️ Fin de la commande Codex
+
+👉 Paste this command into Codex — it must generate the full application as specified above.

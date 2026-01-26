@@ -1,0 +1,41 @@
+project_id = "mahmakmfonycckirgtwm"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://mahmakmfonycckirgtwm.supabase.co/auth/v1/callback"]
+jwt_expiry = 3600
+enable_signup = true
+enable_email_confirmations = false
+enable_phone_confirmations = false
+
+[functions.create-checkout-session]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.send-contact-email]
+verify_jwt = false
+[functions.qvt-ai]
+verify_jwt = false
+
+[functions.speech-to-text]
+verify_jwt = false
+
+[functions.generate-emotional-weather]
+# Météo émotionnelle avec Mistral + ChatGPT + Lovable AI
+verify_jwt = false
+
+[functions.ingest-kb]
+# Ingestion et indexation RAG des documents QVT
+verify_jwt = false
+[functions.analyze-rps-factors]
+verify_jwt = false
