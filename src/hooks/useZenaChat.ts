@@ -99,7 +99,7 @@ export function useZenaChat({ memberRole = 'ado', mode = 'ai', model = 'google/g
         if (response.status === 402) {
           toast({
             title: "Crédits insuffisants",
-            description: "Les crédits Lovable AI sont épuisés.",
+            description: "Les crédits IA sont épuisés.",
             variant: "destructive",
           });
           setSending(false);

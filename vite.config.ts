@@ -1,8 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
-
 export default defineConfig(({ mode }) => {
   const isDev = mode === "development";
 
@@ -22,9 +20,7 @@ export default defineConfig(({ mode }) => {
 
     plugins: [
       react(),
-      // 🔥 À garder seulement en DEV (Lovable tagger)
-      isDev && componentTagger(),
-    ].filter(Boolean),
+    ],
 
     resolve: {
       alias: {
@@ -50,7 +46,7 @@ export default defineConfig(({ mode }) => {
     },
 
     esbuild: {
-      // 🔥 enlève console.log et debugger en production
+      // Remove noisy logs in production bundles.
       drop: isDev ? [] : ["console", "debugger"],
     },
   };

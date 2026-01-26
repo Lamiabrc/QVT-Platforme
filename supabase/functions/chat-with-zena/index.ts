@@ -12,10 +12,14 @@ serve(async (req) => {
 
   try {
     const { messages, memberRole, conversationId, model = "google/gemini-2.5-flash" } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const AI_API_KEY = Deno.env.get("AI_API_KEY");
+    const AI_BASE_URL = Deno.env.get("AI_BASE_URL");
     
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    if (!AI_API_KEY) {
+      throw new Error("AI_API_KEY is not configured");
+    }
+    if (!AI_BASE_URL) {
+      throw new Error("AI_BASE_URL is not configured");
     }
 
     // Validate model
@@ -69,12 +73,12 @@ Important :
 - Propose ton aide pour faciliter la communication familiale`;
     }
 
-    // Call Lovable AI
+    // Call the AI gateway (OpenAI-compatible)
     console.log(`Using model: ${selectedModel} for role: ${memberRole}`);
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch(AI_BASE_URL, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${AI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

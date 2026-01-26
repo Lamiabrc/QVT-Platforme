@@ -1,73 +1,98 @@
-# Welcome to your Lovable project
+# ZÉNA Family – HeartLink
 
-## Project info
+IA émotionnelle pour adolescents, connectée au compte famille QVT Box. L'ado dispose d'un espace famille et d'un espace amis pour exprimer ses émotions et obtenir du soutien. Le service vise la prévention du mal‑être et du harcèlement, avec une approche empathique, utile et non intrusive.
 
-**URL**: https://lovable.dev/projects/7b8bc476-6116-47bb-bbc8-5e329419d6ce
+Domaine produit : https://zena-family.qvtbox.com/
 
-## How can I edit this code?
+## Fonctionnalités
 
-There are several ways of editing your application.
+- Espace ado : journal émotionnel, chat ZÉNA, repères d'humeur.
+- Espace famille : météo émotionnelle familiale, partage bienveillant.
+- Espace amis : à venir (flux et UI dédiés non implémentés).
+- Alertes détresse/harcèlement : à venir (mise en place des tables et des règles d'accès requise).
 
-**Use Lovable**
+## Architecture (rapide)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7b8bc476-6116-47bb-bbc8-5e329419d6ce) and start prompting.
+- Frontend : Vite + React + TypeScript + Tailwind + shadcn/ui.
+- Backend : Supabase (Auth, DB, Storage).
+- Edge Functions : `supabase/functions/chat-with-zena` (gateway IA compatible OpenAI).
 
-Changes made via Lovable will be committed automatically to this repo.
+## Pré-requis
 
-**Use your preferred IDE**
+- Node.js LTS (18+ recommandé).
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Scripts
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- `npm run dev` : serveur de dev
+- `npm run lint` : ESLint
+- `npm run build` : build production
+- `npm run preview` : prévisualisation du build
+- `npm run verify` : lint + build
 
-**Use GitHub Codespaces**
+## Variables d'environnement
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Créer un `.env` à la racine en partant de `.env.example`.
 
-## What technologies are used for this project?
+Obligatoires (frontend) :
 
-This project is built with:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY` (clé publique Supabase, l'équivalent de `VITE_SUPABASE_ANON_KEY`)
+- `VITE_APP_BASE_URL` (optionnel, ex: https://zena-family.qvtbox.com)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Edge Functions (Supabase) :
 
-## How can I deploy this project?
+- `AI_API_KEY` (clé du provider IA)
+- `AI_BASE_URL` (URL d'un endpoint OpenAI-compatible, compatible avec les modèles `provider/model`)
 
-Simply open [Lovable](https://lovable.dev/projects/7b8bc476-6116-47bb-bbc8-5e329419d6ce) and click on Share -> Publish.
+Configurer ces variables dans le dashboard Supabase (Edge Functions > Secrets).
 
-## Can I connect a custom domain to my Lovable project?
+## Déploiement Vercel (SPA)
 
-Yes, you can!
+Le projet est configuré comme une SPA avec React Router. Un `vercel.json` fournit les rewrites vers `index.html`.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Étapes :
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+1) Définir les variables d'environnement `VITE_*` dans Vercel.  
+2) Build command : `npm run build`  
+3) Output directory : `dist`
+
+## Android (Capacitor)
+
+Pré-requis : Android Studio + SDK installés.
+
+```sh
+npm install
+npm run build
+npx cap sync android
+npx cap open android
+```
+
+Pour modifier l'identité Android :
+
+- `appId` et `appName` dans `capacitor.config.ts`.
+
+## Sécurité & mineurs
+
+- Privacy by design : données minimales et utiles uniquement.
+- RLS Supabase pour cloisonner les familles et les profils.
+- Alertes déclenchées uniquement en cas de détresse explicite.
+- Pas de stockage inutile d'identifiants sensibles.
+
+## Intégration QVT Box
+
+ZÉNA Family partage la même instance Supabase que QVT Box.
+
+- Auth partagée : mêmes utilisateurs Supabase.
+- Tables minimales attendues :
+  - `families`
+  - `family_members`
+  - `teen_profiles`
+  - `alerts`
+- Le front pointe vers la même URL Supabase que `qvtbox.com`.

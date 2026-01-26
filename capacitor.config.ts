@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.7b8bc476611647bbbbc85e329419d6ce',
-  appName: 'ZÉNA Family',
+  appId: 'com.qvtbox.zena.family',
+  appName: 'ZENA Family',
   webDir: 'dist',
   
   server: {
@@ -41,7 +41,7 @@ const config: CapacitorConfig = {
 
   ios: {
     contentInset: 'automatic',
-    scheme: 'ZÉNA Family',
+    scheme: 'zena-family',
   },
 
   android: {
