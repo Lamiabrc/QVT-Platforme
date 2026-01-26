@@ -4,6 +4,12 @@ export { Badge } from "./ui/Badge";
 export { Button } from "./ui/Button";
 export { Card } from "./ui/Card";
 export {
+  CONTACT_EMAIL,
+  QVTBOX_URL,
+  ZENA_FAMILY_URL,
+  ZENA_VOICE_URL,
+} from "./config/links";
+export {
   qvtboxUniverse,
   zenaFamilyUniverse,
   zenaVoiceUniverse,

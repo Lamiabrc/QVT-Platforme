@@ -1,8 +1,6 @@
-import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import ZenaHeroUnified from "@/components/ZenaHeroUnified";
 
 const cards = [
@@ -56,7 +54,6 @@ export default function Index() {
         </section>
       </main>
 
-      <Footer />
     </div>
   );
 }

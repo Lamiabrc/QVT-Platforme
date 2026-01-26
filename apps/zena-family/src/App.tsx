@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AppShell } from "@qvt/shared";
+import { AppShell, QVTBOX_URL, ZENA_VOICE_URL } from "@qvt/shared";
 import { universe } from "@/config/universe";
 import { MobileWrapper } from "@/components/mobile/MobileWrapper";
 import { BottomTabBar } from "@/components/mobile/BottomTabBar";
@@ -55,11 +55,11 @@ const App = () => (
               {/* Gateways to other universes */}
               <Route
                 path="/zena-travail"
-                element={<Navigate to="https://zena.qvtbox.com" replace />}
+                element={<Navigate to={ZENA_VOICE_URL} replace />}
               />
               <Route
                 path="/qvtbox"
-                element={<Navigate to="https://www.qvtbox.com" replace />}
+                element={<Navigate to={QVTBOX_URL} replace />}
               />
 
               {/* Catch-all */}

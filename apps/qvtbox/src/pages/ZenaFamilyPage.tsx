@@ -2,6 +2,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ArrowRight, HeartHandshake, Smile, Home, Sparkles } from "lucide-react";
+import { ZENA_FAMILY_URL } from "@qvt/shared";
 
 const ZenaFamilyPage = () => {
   return (
@@ -40,7 +41,7 @@ const ZenaFamilyPage = () => {
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <a
-                href="https://zena-family.qvtbox.com"
+                href={ZENA_FAMILY_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#5B4B8A] to-[#4FD1C5] px-8 py-3 text-sm font-medium text-white shadow-lg hover:scale-[1.03] transition-all"

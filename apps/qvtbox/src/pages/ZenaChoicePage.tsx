@@ -2,6 +2,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ArrowRight } from "lucide-react";
+import { ZENA_FAMILY_URL, ZENA_VOICE_URL } from "@qvt/shared";
 
 export default function ZenaChoicePage() {
   return (
@@ -26,7 +27,7 @@ export default function ZenaChoicePage() {
           <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-6">
             {/* ZÉNA ENTREPRISE */}
             <a
-              href="https://zena.qvtbox.com"
+              href={ZENA_VOICE_URL}
               className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#3A332D] bg-[#1D1B19] hover:bg-[#2A2520] text-lg font-semibold flex items-center justify-center gap-3 transition"
             >
               Zéna Entreprise
@@ -35,7 +36,7 @@ export default function ZenaChoicePage() {
 
             {/* ZÉNA FAMILLE */}
             <a
-              href="https://zena-family.qvtbox.com"
+              href={ZENA_FAMILY_URL}
               className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#3A332D] bg-[#1D1B19] hover:bg-[#2A2520] text-lg font-semibold flex items-center justify-center gap-3 transition"
             >
               Zéna Famille

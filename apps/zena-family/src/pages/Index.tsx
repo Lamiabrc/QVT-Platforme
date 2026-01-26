@@ -6,6 +6,7 @@ import { Heart, MessageCircle, Users, Sparkles, Star, Zap } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import zenaFace from "@/assets/zena-face.png";
+import { ZENA_VOICE_URL } from "@qvt/shared";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -164,7 +165,7 @@ const Index = () => {
           >
             Vous cherchez ZÉNA pour les entreprises ?{" "}
             <a
-              href="https://zena.qvtbox.com"
+              href={ZENA_VOICE_URL}
               className="underline underline-offset-4 text-zena-turquoise hover:text-zena-rose transition-rough"
             >
               Découvrez ZÉNA au travail
@@ -366,18 +367,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-white/10 mt-12 relative z-10">
-        <div className="container mx-auto px-4 py-8 text-center text-muted-foreground text-xs md:text-sm">
-          <p className="mb-1 text-foreground">
-            © {new Date().getFullYear()} ZÉNA Family – une création QVT Box
-          </p>
-          <p>
-            Application d&apos;IA émotionnelle pour adolescents et parents – prévention,
-            communication et bien-être mental en famille.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 };

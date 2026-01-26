@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { ZENA_FAMILY_URL } from "@qvt/shared";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -88,7 +89,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
   };
 
   const handleFamilyProjectClick = () => {
-    window.location.href = "https://zena-family.qvtbox.com";
+    window.location.href = ZENA_FAMILY_URL;
   };
 
   const handleAuthSuccess = async () => {
@@ -253,7 +254,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                   </Button>
 
                   <p className="text-xs text-foreground/50">
-                    Vous serez redirigé vers : zena-family.qvtbox.com
+                    Vous serez redirigé vers : {ZENA_FAMILY_URL}
                   </p>
                 </div>
 

@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Sparkles } from "lucide-react";
+import { QVTBOX_URL } from "@qvt/shared";
 
 export default function Navigation() {
   const location = useLocation();
@@ -53,7 +54,7 @@ export default function Navigation() {
             Espace RH
           </Link>
           <a
-            href="https://qvtbox.com"
+            href={QVTBOX_URL}
             className="text-[#2D2620]/70 hover:text-[#C3A878] transition-colors"
             target="_blank"
             rel="noopener noreferrer"
@@ -107,7 +108,7 @@ export default function Navigation() {
               Créer mon espace RH
             </Link>
             <a
-              href="https://qvtbox.com"
+              href={QVTBOX_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="block py-1"

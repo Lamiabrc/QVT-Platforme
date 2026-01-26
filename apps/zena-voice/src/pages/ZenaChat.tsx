@@ -1,6 +1,4 @@
-import React from "react";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 
 export default function ZenaChat() {
   return (
@@ -10,7 +8,6 @@ export default function ZenaChat() {
         <h1 className="text-3xl font-semibold mb-4">Conversation ZÉNA</h1>
         <p className="text-base text-[#6B5442]">Page de conversation — placeholder. The full chat page is available at <code>/zena-chat</code> (ZenaChatpage component).</p>
       </main>
-      <Footer />
     </div>
   );
 }

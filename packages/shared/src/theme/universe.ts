@@ -1,3 +1,5 @@
+import { CONTACT_EMAIL, QVTBOX_URL } from "../config/links";
+
 export type UniverseLink = {
   label: string;
   href: string;
@@ -14,6 +16,7 @@ export type UniverseConfig = {
   primary: string;
   primaryForeground: string;
   footerLinks: UniverseLink[];
+  cta?: UniverseLink;
   showHeader?: boolean;
   showFooter?: boolean;
 };
@@ -29,12 +32,13 @@ export const qvtboxUniverse: UniverseConfig = {
   primary: "250 75% 68%",
   primaryForeground: "0 0% 98%",
   footerLinks: [
-    { label: "Contact", href: "/contact" },
-    { label: "Confidentialite", href: "/politique-confidentialite" },
-    { label: "Mentions", href: "/mentions-legales" },
+    { label: "Contact", href: `mailto:${CONTACT_EMAIL}` },
+    { label: "Confidentialite", href: `${QVTBOX_URL}/politique-confidentialite` },
+    { label: "Mentions", href: `${QVTBOX_URL}/mentions-legales` },
   ],
-  showHeader: false,
-  showFooter: true,
+  cta: { label: "Se connecter", href: "/auth/login" },
+  showHeader: true,
+  showFooter: false,
 };
 
 export const zenaFamilyUniverse: UniverseConfig = {
@@ -48,11 +52,12 @@ export const zenaFamilyUniverse: UniverseConfig = {
   primary: "270 70% 60%",
   primaryForeground: "0 0% 100%",
   footerLinks: [
-    { label: "Contact", href: "mailto:contact@qvtbox.com" },
-    { label: "Confidentialite", href: "/politique-confidentialite" },
-    { label: "Mentions", href: "/mentions-legales" },
+    { label: "Contact", href: `mailto:${CONTACT_EMAIL}` },
+    { label: "Confidentialite", href: `${QVTBOX_URL}/politique-confidentialite` },
+    { label: "Mentions", href: `${QVTBOX_URL}/mentions-legales` },
   ],
-  showHeader: false,
+  cta: { label: "Creer un compte", href: `${QVTBOX_URL}/auth` },
+  showHeader: true,
   showFooter: true,
 };
 
@@ -67,10 +72,11 @@ export const zenaVoiceUniverse: UniverseConfig = {
   primary: "38 72% 52%",
   primaryForeground: "20 20% 12%",
   footerLinks: [
-    { label: "Contact", href: "mailto:contact@qvtbox.com" },
-    { label: "Confidentialite", href: "/politique-confidentialite" },
-    { label: "Mentions", href: "/mentions-legales" },
+    { label: "Contact", href: `mailto:${CONTACT_EMAIL}` },
+    { label: "Confidentialite", href: `${QVTBOX_URL}/politique-confidentialite` },
+    { label: "Mentions", href: `${QVTBOX_URL}/mentions-legales` },
   ],
-  showHeader: false,
+  cta: { label: "Se connecter", href: `${QVTBOX_URL}/auth` },
+  showHeader: true,
   showFooter: true,
 };

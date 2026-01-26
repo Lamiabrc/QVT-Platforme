@@ -4,6 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import boucheVideo from "@/assets/bouche.mp4";
 import { ArrowRight, Mic } from "lucide-react";
+import { ZENA_FAMILY_URL, ZENA_VOICE_URL } from "@qvt/shared";
 
 export default function Index() {
   return (
@@ -49,7 +50,7 @@ export default function Index() {
                 </Link>
 
                 <a
-                  href="https://zena.qvtbox.com"
+                  href={ZENA_VOICE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/20 border border-white/30 text-white text-sm hover:bg-white/30 backdrop-blur-sm transition"
@@ -127,7 +128,7 @@ export default function Index() {
                 </p>
 
                 <a
-                  href="https://zena.qvtbox.com"
+                  href={ZENA_VOICE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-4 inline-flex items-center gap-2 text-[#1B1A18] hover:underline"
@@ -192,7 +193,7 @@ export default function Index() {
                   </Link>
 
                   <a
-                    href="https://zena-family.qvtbox.com"
+                    href={ZENA_FAMILY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-[#4B5563] hover:underline"

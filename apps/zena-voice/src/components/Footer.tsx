@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Heart, Shield, Users, ChevronUp, ChevronDown } from "lucide-react";
+import { CONTACT_EMAIL, QVTBOX_URL, ZENA_FAMILY_URL } from "@qvt/shared";
 
 export default function Footer() {
   const [open, setOpen] = useState(false);
@@ -10,7 +11,7 @@ export default function Footer() {
         <div className="flex items-center gap-3">
           <span className="text-[#F5D091] font-semibold">QVT Box</span>
           <span className="text-[#FDF3E0]/80 hidden sm:inline">
-            lamia.brechet@outlook.fr · +33 6 76 43 55 51 · Rennes, France
+            {CONTACT_EMAIL} · +33 6 76 43 55 51 · Rennes, France
           </span>
         </div>
         <div className="flex items-center gap-4">
@@ -44,12 +45,12 @@ export default function Footer() {
               <h3 className="text-base font-semibold text-[#F5D091]">Navigation</h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a href="https://qvtbox.com" className="text-[#FDF3E0]/80 hover:text-[#F5D091] transition-colors">
+                  <a href={QVTBOX_URL} className="text-[#FDF3E0]/80 hover:text-[#F5D091] transition-colors">
                     QVT Box
                   </a>
                 </li>
                 <li>
-                  <a href="https://zena-family.qvtbox.com" className="text-[#FDF3E0]/80 hover:text-[#F5D091] transition-colors">
+                  <a href={ZENA_FAMILY_URL} className="text-[#FDF3E0]/80 hover:text-[#F5D091] transition-colors">
                     ZÉNA Famille &amp; Ados
                   </a>
                 </li>
@@ -66,8 +67,8 @@ export default function Footer() {
               <h3 className="text-base font-semibold text-[#F5D091]">Contact</h3>
               <ul className="space-y-2 text-sm text-[#FDF3E0]/80">
                 <li>
-                  <a href="mailto:lamia.brechet@outlook.fr" className="hover:text-[#F5D091] transition-colors">
-                    lamia.brechet@outlook.fr
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-[#F5D091] transition-colors">
+                    {CONTACT_EMAIL}
                   </a>
                 </li>
                 <li>

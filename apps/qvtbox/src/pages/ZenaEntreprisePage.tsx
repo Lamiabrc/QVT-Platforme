@@ -2,6 +2,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ArrowRight, Brain, ShieldCheck, Users, Sparkles } from "lucide-react";
+import { ZENA_VOICE_URL } from "@qvt/shared";
 
 export default function ZenaEntreprisePage() {
   return (
@@ -50,7 +51,7 @@ export default function ZenaEntreprisePage() {
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="https://zena.qvtbox.com"
+                href={ZENA_VOICE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#5B4B8A] to-[#00A5A8] rounded-full text-white text-sm font-medium shadow-lg hover:scale-[1.03] transition-transform"
