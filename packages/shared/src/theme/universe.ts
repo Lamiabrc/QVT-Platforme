@@ -6,7 +6,7 @@ export type UniverseLink = {
 };
 
 export type UniverseConfig = {
-  id: "qvtbox" | "zena-family" | "zena-voice";
+  id: "qvtbox" | "zena-family" | "zena-voice" | "zena";
   name: string;
   tagline: string;
   background: string;
@@ -77,6 +77,26 @@ export const zenaVoiceUniverse: UniverseConfig = {
     { label: "Mentions", href: `${QVTBOX_URL}/mentions-legales` },
   ],
   cta: { label: "Se connecter", href: `${QVTBOX_URL}/auth` },
+  showHeader: true,
+  showFooter: true,
+};
+
+export const zenaUniverse: UniverseConfig = {
+  id: "zena",
+  name: "ZENA",
+  tagline: "IA emotionnelle pour la famille et l'entreprise",
+  background: "0 0% 100%",
+  foreground: "240 10% 3.9%",
+  accent: "200 80% 55%",
+  accentForeground: "0 0% 100%",
+  primary: "260 70% 55%",
+  primaryForeground: "0 0% 100%",
+  footerLinks: [
+    { label: "Contact", href: `mailto:${CONTACT_EMAIL}` },
+    { label: "Confidentialite", href: `${QVTBOX_URL}/politique-confidentialite` },
+    { label: "Mentions", href: `${QVTBOX_URL}/mentions-legales` },
+  ],
+  cta: { label: "Se connecter", href: "/auth" },
   showHeader: true,
   showFooter: true,
 };
