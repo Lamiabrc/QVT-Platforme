@@ -1,64 +1,61 @@
 import { Link } from "react-router-dom";
 import { CONTACT_EMAIL, QVTBOX_URL, ZENA_FAMILY_URL, ZENA_VOICE_URL } from "@qvt/shared";
+import ZenaHeroLanding from "@/components/ZenaHeroLanding";
 
 const LandingPage = () => (
-  <section className="space-y-10">
-    <div className="rounded-3xl border border-border bg-background/90 p-8 shadow-sm">
-      <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">ZENA</p>
-      <h1 className="mt-3 text-4xl font-semibold">L'IA emotionnelle a qui on parle.</h1>
-      <p className="mt-4 max-w-2xl text-sm text-muted-foreground">
-        ZENA accompagne les familles et les organisations avec une IA empathique,
-        des alertes de detresse et des outils concrets pour agir.
-      </p>
-      <div className="mt-6 flex flex-wrap gap-3">
-        <Link
-          to="/choose-sphere"
-          className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground"
-        >
-          Choisir ma sphere
-        </Link>
-        <a
-          href={QVTBOX_URL}
-          className="rounded-full border border-border px-5 py-2 text-sm text-muted-foreground"
-        >
-          QVT Box
+  <section className="space-y-12 -mx-4 w-screen">
+    <ZenaHeroLanding />
+
+    <div id="hub" className="mx-auto w-full max-w-5xl px-6 space-y-8">
+      <div className="zena-card space-y-3">
+        <p className="zena-section-title">Le projet ZENA en trois univers</p>
+        <p className="text-sm text-muted-foreground">
+          Le zoom vous amène vers un hub clair : concept (QVT Box), ZENA Pro et ZENA Famille.
+        </p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="zena-card space-y-3">
+          <h2 className="text-lg font-semibold">Concept</h2>
+          <p className="text-sm text-muted-foreground">
+            QVT Box porte la vision : IA emotionnelle + actions concretes.
+          </p>
+          <a href={QVTBOX_URL} className="text-sm text-primary">
+            Aller vers QVT Box
+          </a>
+        </div>
+        <div className="zena-card space-y-3">
+          <h2 className="text-lg font-semibold">Pro</h2>
+          <p className="text-sm text-muted-foreground">
+            ZENA entreprise pour les equipes et les reseaux internes.
+          </p>
+          <Link to="/company/home" className="text-sm text-primary">
+            Ouvrir ZENA Pro
+          </Link>
+          <a href={ZENA_VOICE_URL} className="text-xs text-muted-foreground">
+            Site ZENA Voice
+          </a>
+        </div>
+        <div className="zena-card space-y-3">
+          <h2 className="text-lg font-semibold">Perso</h2>
+          <p className="text-sm text-muted-foreground">
+            ZENA famille pour les ados, guardians et amis invites.
+          </p>
+          <Link to="/family/home" className="text-sm text-primary">
+            Ouvrir ZENA Famille
+          </Link>
+          <a href={ZENA_FAMILY_URL} className="text-xs text-muted-foreground">
+            Site ZENA Family
+          </a>
+        </div>
+      </div>
+
+      <div className="zena-card text-sm text-muted-foreground">
+        Contact:{" "}
+        <a className="text-primary" href={`mailto:${CONTACT_EMAIL}`}>
+          {CONTACT_EMAIL}
         </a>
       </div>
-    </div>
-
-    <div className="grid gap-4 md:grid-cols-2">
-      <div className="rounded-2xl border border-border p-6">
-        <h2 className="text-xl font-semibold">Sphere Famille</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Espace securise pour adolescents et parents : planning, alertes, suggestions et communaute invite-only.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Link to="/family/onboarding" className="text-sm font-semibold text-primary">
-            Activer la famille
-          </Link>
-          <a href={ZENA_FAMILY_URL} className="text-sm text-muted-foreground">
-            Acces web existant
-          </a>
-        </div>
-      </div>
-      <div className="rounded-2xl border border-border p-6">
-        <h2 className="text-xl font-semibold">Sphere Entreprise</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Reseau interne et accompagnement RH : planning, alertes, suggestions et communaute pro.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Link to="/company/onboarding" className="text-sm font-semibold text-primary">
-            Demander une demo
-          </Link>
-          <a href={ZENA_VOICE_URL} className="text-sm text-muted-foreground">
-            ZENA Voice
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div className="rounded-2xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-      Contact: <a className="text-primary" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
     </div>
   </section>
 );
