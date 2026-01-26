@@ -13,17 +13,30 @@ interface OnboardingModalProps {
   onClose: () => void;
 }
 
-type UserRoleQVT = "salarié" | "manager" | "rh" | "admin";
+type UserRoleQVT = "salarié" | "responsable_qvt" | "rh" | "admin";
 type UserJourneyQVT = "physique_only" | "saas_box";
+type ToneClassKey = "primary" | "secondary" | "accent" | "muted";
 
-const ROLES = [
+const ROLES: Array<{
+  id: UserRoleQVT;
+  title: string;
+  emoji: string;
+  description: string;
+  tone: ToneClassKey;
+}> = [
   { id: "salarié", title: "Salarié", emoji: "👤", description: "Je souhaite prendre soin de mon bien-être au quotidien", tone: "primary" },
-  { id: "manager", title: "Manager", emoji: "👥", description: "Je veux accompagner le bien-être de mon équipe", tone: "secondary" },
+  { id: "responsable_qvt", title: "Manager", emoji: "👥", description: "Je veux accompagner le bien-être de mon équipe", tone: "secondary" },
   { id: "rh", title: "RH", emoji: "🤝", description: "Je pilote la stratégie QVT de l'entreprise", tone: "accent" },
   { id: "admin", title: "Admin", emoji: "⚙️", description: "Je gère la plateforme et les utilisateurs", tone: "muted" },
 ];
 
-const JOURNEYS = [
+const JOURNEYS: Array<{
+  id: UserJourneyQVT;
+  title: string;
+  emoji: string;
+  description: string;
+  benefits: string[];
+}> = [
   {
     id: "physique_only",
     title: "Box Physique Only",
@@ -293,3 +306,4 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
 };
 
 export default OnboardingModal;
+

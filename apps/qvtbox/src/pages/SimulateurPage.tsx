@@ -46,7 +46,12 @@ const COLORS = {
 // -------------------------------------------------------------
 type ProfileId = "salarie" | "parent" | "ado" | "senior" | "autre";
 
-const profiles = [
+const profiles: Array<{
+  id: ProfileId;
+  label: string;
+  desc: string;
+  emoji: string;
+}> = [
   { id: "salarie", label: "Salarié(e)", emoji: "💼", desc: "Travail, rythme, charge mentale, équipe…" },
   { id: "parent", label: "Parent", emoji: "👨‍👩‍👧", desc: "Organisation familiale, fatigue parentale…" },
   { id: "ado", label: "Adolescent(e)", emoji: "🎒", desc: "Émotions, école, relations, sommeil…" },

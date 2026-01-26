@@ -1,14 +1,14 @@
 # ZENA Voice — moteur IA/voix (QVT Box)
 
-ZENA Voice est le moteur IA et voix de la plateforme QVT Box. Il orchestre l'interface vocale, l'analyse émotionnelle, et les Edge Functions nécessaires aux parcours ZENA.
+ZENA Voice est le moteur IA et voix de la plateforme QVT Box. Il orchestre l'interface vocale, l'analyse emotionnelle, et les Edge Functions necessaires aux parcours ZENA.
 
 Domaine : https://zena.qvtbox.com/
 
-## Rôle dans la plateforme
+## Role dans la plateforme
 
 - Interface vocale ZENA/ZENO
-- Analyse émotionnelle et météo émotionnelle
-- RAG multi-tenant pour enrichir les réponses
+- Analyse emotionnelle et meteo emotionnelle
+- RAG multi-tenant pour enrichir les reponses
 - Edge Functions Supabase (chat, ingestion, voix)
 
 ## Installation
@@ -22,13 +22,14 @@ npm run dev
 
 - `npm run dev` : serveur de dev
 - `npm run build` : build production
-- `npm run preview` : prévisualisation du build
+- `npm run preview` : previsualisation du build
 - `npm run lint` : ESLint
 - `npm run typecheck` : TypeScript
+- `npm run test` : tests
 
 ## Variables d'environnement (frontend)
 
-Créer un fichier `.env.local` dans ce dossier :
+Creer un fichier `.env.local` dans ce dossier :
 
 ```
 VITE_SUPABASE_URL=

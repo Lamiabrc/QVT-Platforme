@@ -1,10 +1,10 @@
 # QVT Platform
 
-Monorepo de la plateforme QVT Box, qui regroupe trois applications :
+Monorepo de la plateforme QVT Box avec trois applications :
 
-- QVT Box (hub compte) : https://qvtbox.com
+- QVT Box (hub compte et creation de compte famille) : https://qvtbox.com
 - ZENA Family (ados/famille) : https://zena-family.qvtbox.com
-- ZENA Voice (moteur IA/voix) : https://zena.qvtbox.com (ou usage interne)
+- ZENA Voice (moteur IA/voix) : https://zena.qvtbox.com
 
 ## Structure
 
@@ -14,6 +14,11 @@ apps/zena-family
 apps/zena-voice
 packages/shared
 ```
+
+## Auth et backend partages
+
+Les trois apps utilisent le meme backend Supabase et la meme authentification.
+Le client Supabase et les types communs sont centralises dans `packages/shared`.
 
 ## Installation
 
@@ -28,18 +33,34 @@ npm run dev:qvtbox
 npm run dev:family
 npm run dev:voice
 
-npm run build:qvtbox
-npm run build:family
-npm run build:voice
 npm run build:all
+npm run lint
+npm run typecheck
 ```
 
 ## Variables d'environnement
 
-Chaque application charge ses variables depuis un fichier local.
+Chaque app charge ses variables depuis un fichier `.env.local` dans son dossier.
+Copier `.env.example` en base.
 
-- Copier `.env.example` vers `.env.local` dans chaque app qui en a besoin.
-- Ne jamais committer de secrets.
+- apps/qvtbox
+  - VITE_SUPABASE_URL
+  - VITE_SUPABASE_ANON_KEY
+  - VITE_RESEND_API_KEY
+  - VITE_APP_BASE_URL
+
+- apps/zena-family
+  - VITE_SUPABASE_URL
+  - VITE_SUPABASE_ANON_KEY
+  - VITE_APP_BASE_URL
+  - VITE_ALERT_WEBHOOK_URL (optionnel)
+
+- apps/zena-voice
+  - VITE_SUPABASE_URL
+  - VITE_SUPABASE_ANON_KEY
+  - VITE_APP_BASE_URL
+
+Aucun secret ne doit etre commite.
 
 ## Deploiement (Vercel)
 
@@ -49,9 +70,11 @@ Ce monorepo correspond a 3 projets Vercel distincts. Pour chacun :
 - Build Command : `npm run build`
 - Output Directory : `dist`
 
+Les `vercel.json` par app gerent les rewrites SPA pour React Router.
+
 ## Contexte produit
 
-La plateforme propose une IA emotionnelle pour adolescents, avec un espace famille et un espace amis, plus des alertes de detresse et de harcelement. Le tout s'inscrit dans une periode de restructuration du paysage numerique francais, de maniere neutre et non partisane.
+La plateforme propose une IA emotionnelle pour adolescents, avec un espace famille commun, un espace amis independant, et des alertes en cas de detresse ou de harcelement. Le projet s'inscrit dans une periode de restructuration du paysage numerique francais, de maniere factuelle et non partisane.
 
 ## Contact
 

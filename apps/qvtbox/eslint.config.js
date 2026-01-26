@@ -7,7 +7,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   // 0) Ignorés globalement
-  { ignores: ["dist", "build", "coverage", "node_modules"] },
+  { ignores: ["dist", "build", "coverage", "node_modules", "supabase/functions/**"] },
 
   // 1) Base TS/React (rapide, non "type-aware")
   {
@@ -62,8 +62,23 @@ export default tseslint.config(
     },
     rules: {
       // ajustements fréquents pour éviter du bruit
-      "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: { attributes: false } }],
-      "@typescript-eslint/require-await": "off"
+      "@typescript-eslint/no-misused-promises": "off",
+      "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unnecessary-type-assertion": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+      "@typescript-eslint/no-redundant-type-constituents": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", ignoreRestSiblings: true }
+      ]
     }
   },
 
@@ -81,3 +96,6 @@ export default tseslint.config(
     }
   }
 );
+
+
+

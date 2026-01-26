@@ -12,6 +12,7 @@ import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Chat from "./pages/Chat";
 import FamilySpace from "./pages/FamilySpace";
+import Alerts from "./pages/Alerts";
 import Journal from "./pages/Journal";
 import Profile from "./pages/Profile";
 import Calendar from "./pages/Calendar";
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/family" element={<FamilySpace />} />
+            <Route path="/alerts" element={<Alerts />} />
             <Route path="/journal" element={<Journal />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/calendar" element={<Calendar />} />

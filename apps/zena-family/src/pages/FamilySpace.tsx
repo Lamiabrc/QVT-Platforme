@@ -5,7 +5,7 @@ import { ZenaAvatar } from "@/components/zena/ZenaAvatar";
 import { GlowCard } from "@/components/zena/GlowCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Heart } from "lucide-react";
+import { ArrowLeft, Heart, AlertTriangle } from "lucide-react";
 import { EmotionBubble } from "@/components/zena/EmotionBubble";
 
 export default function FamilySpace() {
@@ -86,6 +86,23 @@ export default function FamilySpace() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6 space-y-6">
+        <GlowCard className="bg-gradient-to-r from-zena-rose/10 to-zena-violet/10">
+          <div className="p-6 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">Alerte detresse / harcelement</h2>
+              <p className="text-sm text-muted-foreground">
+                Declenche un signal vers la famille et un tuteur en cas d'urgence.
+              </p>
+            </div>
+            <Button
+              onClick={() => navigate("/alerts")}
+              className="bg-gradient-to-r from-zena-rose to-zena-violet hover:opacity-90"
+            >
+              <AlertTriangle className="h-4 w-4 mr-2" />
+              Declencher
+            </Button>
+          </div>
+        </GlowCard>
         {/* Carte Météo Familiale */}
         <GlowCard>
           <div className="p-6">

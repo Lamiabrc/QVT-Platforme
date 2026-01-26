@@ -325,6 +325,82 @@ export type Database = {
           },
         ]
       }
+      alerts: {
+        Row: {
+          alert_type: string
+          created_at: string | null
+          created_by: string
+          family_id: string
+          id: string
+          message: string
+          notified_to: string[] | null
+          status: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string | null
+          created_by: string
+          family_id: string
+          id?: string
+          message: string
+          notified_to?: string[] | null
+          status?: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string | null
+          created_by?: string
+          family_id?: string
+          id?: string
+          message?: string
+          notified_to?: string[] | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "family_groups"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alert_notifications: {
+        Row: {
+          alert_id: string
+          channel: string
+          created_at: string | null
+          id: string
+          status: string
+          target: string
+        }
+        Insert: {
+          alert_id: string
+          channel: string
+          created_at?: string | null
+          id?: string
+          status: string
+          target: string
+        }
+        Update: {
+          alert_id?: string
+          channel?: string
+          created_at?: string | null
+          id?: string
+          status?: string
+          target?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alert_notifications_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
