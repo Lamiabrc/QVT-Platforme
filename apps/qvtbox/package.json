@@ -1,5 +1,5 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "qvtbox",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -62,7 +62,6 @@
     "i18next": "^25.5.0",
     "i18next-browser-languagedetector": "^8.0.0",
     "input-otp": "^1.4.2",
-    "lovable-tagger": "^1.1.10",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",

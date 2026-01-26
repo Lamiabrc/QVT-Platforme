@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Users, Package, BarChart3, ArrowRight, Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-spectacular-impact.jpg";
+import qvtBoxLogo from "@/assets/qvt-box-logo.png";
 import { useEffect, useRef } from "react";
 
 const SpectacularHero = () => {
@@ -78,7 +79,7 @@ const SpectacularHero = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-secondary/30 to-accent/30 blur-xl animate-glow scale-105"></div>
               <div className="w-36 h-36 mx-auto lg:mx-0 mb-8 flex items-center justify-center rounded-full shadow-floating hover:shadow-bubble transition-all duration-700 group-hover:scale-110 animate-float relative overflow-hidden">
                 <img 
-                  src="https://2d181cb9-4143-4c90-9e92-77eb836ddc8b.lovableproject.com/qvt-box-logo.png" 
+                  src={qvtBoxLogo} 
                   alt="QVT Box Logo"
                   className="relative z-10 w-full h-full object-cover"
                   onError={(e) => {

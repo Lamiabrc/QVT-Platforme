@@ -1,0 +1,19 @@
+{
+  "name": "qvt-platform",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:qvtbox": "npm --workspace apps/qvtbox run dev",
+    "dev:family": "npm --workspace apps/zena-family run dev",
+    "dev:voice": "npm --workspace apps/zena-voice run dev",
+    "build:qvtbox": "npm --workspace apps/qvtbox run build",
+    "build:family": "npm --workspace apps/zena-family run build",
+    "build:voice": "npm --workspace apps/zena-voice run build",
+    "build:all": "npm run build:qvtbox && npm run build:family && npm run build:voice",
+    "typecheck:all": "npm --workspace apps/qvtbox run typecheck && npm --workspace apps/zena-family run typecheck && npm --workspace apps/zena-voice run typecheck",
+    "lint:all": "npm --workspace apps/qvtbox run lint && npm --workspace apps/zena-family run lint && npm --workspace apps/zena-voice run lint"
+  }
+}

@@ -37,6 +37,8 @@ interface EmotionalAnalysis {
   } | null;
 }
 
+const normalizeBaseUrl = (url: string) => url.replace(/\/+$/, "");
+
 serve(async (req) => {
   const corsHeaders = buildCorsHeaders(req.headers.get("origin"));
   if (req.method === "OPTIONS") {
@@ -298,15 +300,17 @@ serve(async (req) => {
       }
     }
 
-    // 3️⃣ Fallback Lovable AI (Gemini)
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (!analysisResult) {
+    // 3️⃣ Fallback gateway (OpenAI-compatible)
+    const FALLBACK_AI_API_KEY = Deno.env.get('FALLBACK_AI_API_KEY');
+    const FALLBACK_AI_BASE_URL = Deno.env.get('FALLBACK_AI_BASE_URL');
+    if (!analysisResult && FALLBACK_AI_API_KEY && FALLBACK_AI_BASE_URL) {
       try {
-        console.log("[EMOTIONAL-WEATHER] Tentative avec Lovable AI (Gemini)...");
-        const geminiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+        console.log("[EMOTIONAL-WEATHER] Tentative avec un gateway IA de secours...");
+        const fallbackUrl = `${normalizeBaseUrl(FALLBACK_AI_BASE_URL)}/chat/completions`;
+        const geminiResponse = await fetch(fallbackUrl, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+            'Authorization': `Bearer ${FALLBACK_AI_API_KEY}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -322,14 +326,14 @@ serve(async (req) => {
           const toolCall = geminiData.choices?.[0]?.message?.tool_calls?.[0];
           if (toolCall?.function?.arguments) {
             analysisResult = JSON.parse(toolCall.function.arguments);
-            console.log("[EMOTIONAL-WEATHER] ✅ Lovable AI OK");
+            console.log("[EMOTIONAL-WEATHER] ✅ Fallback AI OK");
           }
         } else {
-          errorMsg += `Lovable AI: ${geminiResponse.status}; `;
+          errorMsg += `Fallback AI: ${geminiResponse.status}; `;
         }
       } catch (e) {
-        console.error("[EMOTIONAL-WEATHER] Lovable AI error:", e);
-        errorMsg += `Lovable AI: ${e instanceof Error ? e.message : String(e)}; `;
+        console.error("[EMOTIONAL-WEATHER] Fallback AI error:", e);
+        errorMsg += `Fallback AI: ${e instanceof Error ? e.message : String(e)}; `;
       }
     }
 
@@ -443,3 +447,5 @@ serve(async (req) => {
     );
   }
 });
+
+
