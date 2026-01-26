@@ -1,9 +1,11 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
+import sharedPreset from "@qvt/shared/tailwind.preset";
 
 export default {
   darkMode: ["class"],
-  darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  presets: [sharedPreset],
   prefix: "",
   theme: {
     container: {
@@ -140,5 +142,5 @@ export default {
       },
     },
   },
-  plugins: [import("tailwindcss-animate").then(mod => mod.default)],
+  plugins: [animate],
 } satisfies Config;

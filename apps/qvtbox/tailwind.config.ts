@@ -2,6 +2,7 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 import typography from "@tailwindcss/typography";
+import sharedPreset from "@qvt/shared/tailwind.preset";
 
 export default {
   darkMode: ["class"],
@@ -9,6 +10,7 @@ export default {
     "./index.html",
     "./src/**/*.{ts,tsx,js,jsx,html}"
   ],
+  presets: [sharedPreset],
   prefix: "",
   theme: {
     container: {

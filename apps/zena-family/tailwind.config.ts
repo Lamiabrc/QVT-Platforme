@@ -1,8 +1,10 @@
 import type { Config } from "tailwindcss";
+import sharedPreset from "@qvt/shared/tailwind.preset";
 
 export default {
   darkMode: ["class"],
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  presets: [sharedPreset],
   prefix: "",
   theme: {
     container: {

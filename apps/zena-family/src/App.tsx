@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AppShell } from "@qvt/shared";
+import { universe } from "@/config/universe";
 import { MobileWrapper } from "@/components/mobile/MobileWrapper";
 import { BottomTabBar } from "@/components/mobile/BottomTabBar";
 
@@ -21,9 +23,9 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 /**
- * ❤️ ZÉNA Family – ena-family-heartlink
- * Domaine : https://zena-family.qvtbox.com
- * Univers : Parents / Ados / Bulle familiale
+ * ZENA Family - ena-family-heartlink
+ * Domain: https://zena-family.qvtbox.com
+ * Universe: Parents / Teens / Family space
  */
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -32,39 +34,41 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            {/* 🏠 Accueil Zéna Family */}
-            <Route path="/" element={<Index />} />
+          <AppShell universe={universe}>
+            <Routes>
+              {/* Zena Family home */}
+              <Route path="/" element={<Index />} />
 
-            {/* 🔐 Auth / Onboarding famille */}
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/onboarding" element={<Onboarding />} />
+              {/* Auth / family onboarding */}
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/onboarding" element={<Onboarding />} />
 
-            {/* 🌈 Pages coeur de l'app famille */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/chat" element={<Chat />} />
-            <Route path="/family" element={<FamilySpace />} />
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/journal" element={<Journal />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/calendar" element={<Calendar />} />
+              {/* Core family app pages */}
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/chat" element={<Chat />} />
+              <Route path="/family" element={<FamilySpace />} />
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/journal" element={<Journal />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/calendar" element={<Calendar />} />
 
-            {/* 🔗 Passerelles vers les autres univers */}
-            <Route
-              path="/zena-travail"
-              element={<Navigate to="https://zena.qvtbox.com" replace />}
-            />
-            <Route
-              path="/qvtbox"
-              element={<Navigate to="https://www.qvtbox.com" replace />}
-            />
+              {/* Gateways to other universes */}
+              <Route
+                path="/zena-travail"
+                element={<Navigate to="https://zena.qvtbox.com" replace />}
+              />
+              <Route
+                path="/qvtbox"
+                element={<Navigate to="https://www.qvtbox.com" replace />}
+              />
 
-            {/* CATCH-ALL */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              {/* Catch-all */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
 
-          {/* 📱 Barre d’onglets mobile (Zéna Family) */}
-          <BottomTabBar />
+            {/* Mobile tab bar (Zena Family) */}
+            <BottomTabBar />
+          </AppShell>
         </BrowserRouter>
       </MobileWrapper>
     </TooltipProvider>

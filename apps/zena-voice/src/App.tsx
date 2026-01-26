@@ -1,5 +1,7 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppShell } from "@qvt/shared";
+import { universe } from "@/config/universe";
 import Index from "@/pages/Index";
 import ZenaChatpage from "@/pages/ZenaChatpage";
 import OnboardingCompany from "@/pages/OnboardingCompany";
@@ -8,7 +10,8 @@ import NotFound from "@/pages/NotFound";
 export default function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <Routes>
+      <AppShell universe={universe}>
+        <Routes>
         {/* Page d’accueil avec le visage Zéna en bulle dorée */}
         <Route path="/" element={<Index />} />
 
@@ -20,7 +23,8 @@ export default function App() {
 
         {/* 404 / routes inconnues */}
         <Route path="*" element={<NotFound />} />
-      </Routes>
+        </Routes>
+      </AppShell>
     </BrowserRouter>
   );
 }

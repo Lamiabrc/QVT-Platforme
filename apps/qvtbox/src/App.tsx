@@ -1,6 +1,8 @@
 // src/App.tsx
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AppShell } from "@qvt/shared";
+import { universe } from "@/config/universe";
 
 // UI notifications
 import { Toaster } from "@/components/ui/toaster";
@@ -79,8 +81,9 @@ const App = () => (
       <Sonner />
 
       <BrowserRouter>
-        <Suspense fallback={<Fallback />}>
-          <Routes>
+        <AppShell universe={universe}>
+          <Suspense fallback={<Fallback />}>
+            <Routes>
 
             {/* 🌐 Domaine principal */}
             <Route path="/" element={<Index />} />
@@ -227,8 +230,9 @@ const App = () => (
 
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+            </Routes>
+          </Suspense>
+        </AppShell>
       </BrowserRouter>
     </AppInitializer>
   </CartProvider>
