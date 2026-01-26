@@ -56,3 +56,10 @@ La plateforme propose une IA emotionnelle pour adolescents, avec un espace famil
 ## Contact
 
 contact@qvtbox.com
+
+## Build troubleshooting (Windows)
+
+If `npm run build:all` fails with `spawn EPERM` from esbuild while loading a Vite config, it is usually a local permission or antivirus rule blocking the esbuild binary. Try:
+
+- Run the build from an elevated terminal.
+- Allow `node_modules/@esbuild/win32-x64/esbuild.exe` in your security tooling.
