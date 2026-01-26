@@ -1,0 +1,68 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+*.local
+
+# Vite / caches
+.vite/
+.cache/
+*.tsbuildinfo
+
+# Env files (garde un exemple)
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Vercel (config locale machine)
+.vercel/
+
+# Tests / tooling
+coverage/
+cypress/videos/
+cypress/screenshots/
+playwright-report/
+test-results/
+storybook-static/
+
+# Supabase (artéfacts locaux)
+supabase/.branches/
+supabase/.temp/
+supabase/functions/**/node_modules/
+
+# Capacitor / natif (si présent)
+android/.gradle/
+android/.idea/
+android/app/build/
+ios/App/build/
+ios/App/Pods/
