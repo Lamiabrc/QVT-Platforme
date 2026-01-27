@@ -3,7 +3,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { CONTACT_EMAIL, QVTBOX_ROUTES } from "@qvt/shared";
-import proMeeting from "@/assets/professional-team-meeting.jpg";
+import heroWorkplace from "@/assets/hero-workplace.jpg";
+import valuesBuildingTogether from "@/assets/values-building-together.jpg";
 
 export default function EntreprisePage() {
   return (
@@ -47,7 +48,7 @@ export default function EntreprisePage() {
                 <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/50 via-transparent to-[#CFECE8]/40 blur-2xl" />
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
-                    src="/saas-dashboard.jpg"
+                    src={heroWorkplace}
                     alt="Dashboard QVT Box pour les entreprises"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                   />
@@ -90,7 +91,7 @@ export default function EntreprisePage() {
               <div className="absolute -inset-3 rounded-[28px] bg-[#E7D4F1]/40 blur-2xl" />
               <div className="relative overflow-hidden rounded-[28px] border border-white/70 shadow-[0_20px_50px_rgba(27,26,24,0.16)]">
                 <img
-                  src={proMeeting}
+                  src={valuesBuildingTogether}
                   alt="Equipe professionnelle en atelier"
                   className="h-[320px] w-full object-cover md:h-[380px]"
                 />

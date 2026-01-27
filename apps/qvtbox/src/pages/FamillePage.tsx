@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { QVTBOX_ROUTES } from "@qvt/shared";
 import careBubble from "@/assets/care-bubble.jpg";
+import valuesListening from "@/assets/values-listening.jpg";
 
 export default function FamillePage() {
   return (
@@ -47,7 +48,7 @@ export default function FamillePage() {
                 <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/50 via-transparent to-[#CFECE8]/40 blur-2xl" />
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
-                    src="/famille-still.jpg"
+                    src={valuesListening}
                     alt="Famille accompagnee par ZENA"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                   />

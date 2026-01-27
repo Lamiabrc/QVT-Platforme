@@ -3,6 +3,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { QVTBOX_ROUTES } from "@qvt/shared";
+import valuesConcreteImpact from "@/assets/values-concrete-impact.jpg";
+import valuesMutualSupport from "@/assets/values-mutual-support.jpg";
 
 export default function ChoisirSpherePage() {
   return (
@@ -28,7 +30,7 @@ export default function ChoisirSpherePage() {
             >
               <div className="relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
                 <img
-                  src="/saas-dashboard.jpg"
+                  src={valuesConcreteImpact}
                   alt="Espace entreprise"
                   className="h-40 w-full object-cover"
                 />
@@ -50,7 +52,7 @@ export default function ChoisirSpherePage() {
             >
               <div className="relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
                 <img
-                  src="/famille-still.jpg"
+                  src={valuesMutualSupport}
                   alt="Espace famille"
                   className="h-40 w-full object-cover"
                 />
