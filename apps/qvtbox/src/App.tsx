@@ -63,6 +63,14 @@ const ZenaEntreprisePage = lazy(() => import("./pages/ZenaEntreprisePage"));
 const ZenaFamilyPage = lazy(() => import("./pages/ZenaFamilyPage"));
 const ZenaChoicePage = lazy(() => import("./pages/ZenaChoicePage"));
 
+/** QVT Box - nouvelles sphères */
+const EntreprisePage = lazy(() => import("./pages/EntreprisePage"));
+const EntrepriseJoinPage = lazy(() => import("./pages/EntrepriseJoinPage"));
+const FamillePage = lazy(() => import("./pages/FamillePage"));
+const FamilleCreatePage = lazy(() => import("./pages/FamilleCreatePage"));
+const FamilleInvitePage = lazy(() => import("./pages/FamilleInvitePage"));
+const ChoisirSpherePage = lazy(() => import("./pages/ChoisirSpherePage"));
+
 /** Fallback visuel */
 function Fallback() {
   return (
@@ -219,6 +227,17 @@ const App = () => (
 
             {/* ⭐️ ZÉNA — page centrale / choix */}
             <Route path="/zena" element={<ZenaChoicePage />} />
+
+            {/* ⭐️ QVT Box — nouvelles sphères */}
+            <Route path="/entreprise" element={<EntreprisePage />} />
+            <Route
+              path="/entreprise/rejoindre"
+              element={<EntrepriseJoinPage />}
+            />
+            <Route path="/famille" element={<FamillePage />} />
+            <Route path="/famille/creer" element={<FamilleCreatePage />} />
+            <Route path="/famille/inviter" element={<FamilleInvitePage />} />
+            <Route path="/choisir-sphere" element={<ChoisirSpherePage />} />
 
             {/* ⭐️ Ancienne URL de Zena Family */}
             <Route

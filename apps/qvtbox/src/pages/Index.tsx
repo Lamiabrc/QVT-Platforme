@@ -1,256 +1,346 @@
 // src/pages/Index.tsx
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
-import boucheVideo from "@/assets/bouche.mp4";
-import { ArrowRight, Mic } from "lucide-react";
-import { ZENA_FAMILY_URL, ZENA_VOICE_URL } from "@qvt/shared";
+import { CONTACT_EMAIL, QVTBOX_ROUTES } from "@qvt/shared";
 
 export default function Index() {
   return (
     <div className="bg-[#FAF6EE] text-[#1B1A18]">
-      {/* NAVIGATION TRANSLUCIDE */}
       <Navigation />
 
-      <main>
-        {/* HERO IMMERSIF FULLSCREEN — STYLE SANDBAR */}
-        <section className="relative h-screen w-full overflow-hidden">
-          {/* IMAGE PLEIN ÉCRAN */}
-          <img
-            src="/hero-cicatrices-lumiere.jpg"
-            alt="Lumière dans les cicatrices"
-            className="absolute inset-0 w-full h-full object-cover object-center"
-          />
+      <main className="overflow-hidden">
+        {/* HERO */}
+        <section className="relative min-h-[92vh] bg-[#FAF6EE]">
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-[#FAF6EE] to-[#F7F1E4]" />
+          <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#F3E0B9]/40 blur-3xl" />
+          <div className="absolute top-24 -left-16 h-72 w-72 rounded-full bg-[#CFECE8]/40 blur-3xl" />
+          <div className="absolute bottom-10 right-12 h-48 w-48 rounded-full bg-[#E7D4F1]/40 blur-3xl" />
 
-          {/* VOILE TEINTE SABLE (pas noir) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#F7F2E6]/40 via-[#F7F2E6]/10 to-transparent pointer-events-none" />
-
-          {/* TEXTE BOTTOM-LEFT */}
-          <div className="relative z-10 h-full flex items-end">
-            <div className="px-8 md:px-16 pb-20 max-w-2xl">
-              <p className="uppercase tracking-[0.18em] text-[11px] text-[#EDE3D0]/80 mb-4">
-                QVT Box · Écouter le quotidien
+          <div className="relative z-10 mx-auto max-w-6xl px-6 pt-32 pb-16 md:pt-40">
+            <div className="max-w-3xl space-y-6">
+              <p className="text-xs uppercase tracking-[0.3em] text-[#9C8D77]">
+                QVT Box · Salut, ça va ?
               </p>
 
-              <h1 className="text-4xl md:text-6xl font-light text-white leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)]">
-                Le quotidien laisse des traces.
-                <br />
-                <span className="text-[#F3E0B9]">
-                  L'écoute et le réconfort les effacent.
-                </span>
+              <h1 className="text-4xl md:text-6xl font-semibold leading-tight text-[#1B1A18]">
+                Une plateforme pour verbaliser,
+                <span className="block text-[#6F6454]">comprendre et agir.</span>
               </h1>
 
-              <div className="flex gap-3 mt-8">
-                <Link
-                  to="/saas"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#F3E0B9]/95 text-[#151515] text-sm font-medium hover:bg-[#F8E8C9] transition"
-                >
-                  Découvrir QVT Box en entreprise
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+              <p className="text-base md:text-lg text-[#6F6454] max-w-2xl leading-relaxed">
+                QVT Box aide à parler vrai. ZENA, l’IA à qui l’on parle en pro
+                ou en perso, écoute, propose des actions, informe et aide à
+                planifier. Quand la détresse est réelle, QVT Box connecte et
+                protège en alertant la tutelle selon les règles définies.
+              </p>
 
+              <div className="flex flex-col sm:flex-row gap-3">
                 <a
-                  href={ZENA_VOICE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/20 border border-white/30 text-white text-sm hover:bg-white/30 backdrop-blur-sm transition"
+                  href="#offres"
+                  className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold shadow-[0_16px_40px_rgba(27,26,24,0.2)] hover:opacity-90 transition"
                 >
-                  <Mic className="w-4 h-4" />
-                  Parler à ZÉNA
+                  Découvrir les deux sphères
+                </a>
+                <a
+                  href="#choisir-sphere"
+                  className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white/60 px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
+                >
+                  Choisir ma sphère
                 </a>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* SCÈNE 2 — VIDÉO IMMERSIVE */}
-        <section className="py-24 px-8 md:px-16 bg-[#FAF6EE]">
-          <div className="max-w-4xl mx-auto mb-12">
-            <p className="uppercase tracking-[0.18em] text-xs text-[#9C8D77] mb-3">
-              La voix qui capte les micro-cicatrices
-            </p>
-
-            <h2 className="text-2xl md:text-3xl font-light text-[#1B1A18] mb-4">
-              Écouter ce qui ne se dit pas tout haut.
-            </h2>
-
-            <p className="max-w-xl text-sm md:text-base text-[#6F6454]">
-              ZÉNA, l’IA émotionnelle, entend les nuances : hésitations,
-              micro-tensions, silences. Pas pour contrôler. Pour comprendre, aider et soutenir.
-            </p>
-          </div>
-
-          <div className="relative rounded-[2rem] overflow-hidden border border-[#E2D6C3] shadow-sm">
-            <div className="aspect-[16/9] w-full">
-              <video
-                src={boucheVideo}
-                className="w-full h-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* SCÈNE 3 — TEXTE BRISÉ, STYLE SANDBAR */}
-        <section className="py-32 bg-[#FDF9F0] border-y border-[#E8DCC8]">
-          <p className="max-w-3xl mx-auto px-8 md:px-16 text-center text-lg md:text-xl text-[#4A4134] leading-relaxed">
-            Le quotidien va vite.  
-            <br className="hidden md:block" />
-            Les émotions, moins.
-            <br />
-            QVT Box crée une lumière dans la fissure.
-          </p>
-        </section>
-
-        {/* SCÈNE 4 — ÉCOUTER · VOIR · AGIR */}
-        <section className="py-28 px-8 md:px-16 bg-[#FAF6EE]">
-          <div className="max-w-5xl mx-auto mb-14">
-            <p className="uppercase tracking-[0.18em] text-xs text-[#9C8D77] mb-3">
-              Écouter · Comprendre · Agir
-            </p>
-            <h2 className="text-2xl md:text-3xl font-light mb-4">
-              Une seule plateforme.  
-              Trois façons de protéger.
-            </h2>
-          </div>
-
-          <div className="space-y-24">
-            {/* ZÉNA */}
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-              <div>
-                <h3 className="text-xl font-light mb-3">Écouter avec ZÉNA</h3>
-                <p className="text-[#6F6454] max-w-md">
-                  Une IA émotionnelle qui écoute sans jamais juger.  
-                  Elle capte ce que les outils classiques ne veulent pas voir.
-                </p>
-
-                <a
-                  href={ZENA_VOICE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-2 text-[#1B1A18] hover:underline"
+            <div className="mt-12 grid gap-4 md:grid-cols-3 max-w-4xl">
+              {[
+                {
+                  title: "Écoute active",
+                  text: "Une IA émotionnelle qui capte les signaux faibles.",
+                },
+                {
+                  title: "Plan d’action",
+                  text: "Des suggestions concrètes, un planning simple.",
+                },
+                {
+                  title: "Protection",
+                  text: "Alertes sécurisées pour famille, tuteur ou RH/QVT.",
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="rounded-2xl border border-[#E8DCC8] bg-white/70 p-5 shadow-sm"
                 >
-                  Découvrir ZÉNA Voice
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-              </div>
+                  <p className="text-sm font-semibold text-[#1B1A18]">
+                    {item.title}
+                  </p>
+                  <p className="text-sm text-[#6F6454] mt-2">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-              <img
-                src="/zena-still.jpg"
-                alt="Zéna IA"
-                className="w-full rounded-2xl object-cover shadow-sm"
-              />
+        {/* COMMENT CA MARCHE */}
+        <section
+          id="comment-ca-marche"
+          className="py-20 md:py-28 bg-[#FDF9F0] border-y border-[#E8DCC8]"
+        >
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="max-w-3xl mb-10">
+              <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
+                Comment ça marche
+              </p>
+              <h2 className="text-2xl md:text-3xl font-semibold mt-3">
+                Un parcours simple, pensé pour la vraie vie.
+              </h2>
+              <p className="text-sm md:text-base text-[#6F6454] mt-3">
+                Trois étapes claires, une présence qui rassure, et une
+                protection si la situation l’exige.
+              </p>
             </div>
 
-            {/* SaaS */}
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-              <img
-                src="/saas-dashboard.jpg"
-                alt="Dashboard QVT Box"
-                className="w-full rounded-2xl object-cover shadow-sm"
-              />
-
-              <div>
-                <h3 className="text-xl font-light mb-3">
-                  Voir avec le SaaS QVT Box
-                </h3>
-                <p className="text-[#6F6454] max-w-md">
-                  DUERP, RPS, météo émotionnelle, signaux faibles.  
-                  Une vision claire de ce qui tient… et de ce qui fissure.
-                </p>
-
-                <Link
-                  to="/saas"
-                  className="mt-4 inline-flex items-center gap-2 text-[#1B1A18] hover:underline"
+            <div className="grid gap-6 md:grid-cols-3">
+              {[
+                {
+                  title: "Je parle à ZENA",
+                  text: "Un espace confidentiel pour dire ce qui pèse, sans jugement.",
+                },
+                {
+                  title: "Je reçois des suggestions + un planning simple",
+                  text: "Des actions réalistes, organisées par priorité et par temps.",
+                },
+                {
+                  title: "Si nécessaire, une alerte protège et informe la tutelle",
+                  text: "Famille, tuteur, RH/QVT : chacun reçoit uniquement ce qui est prévu.",
+                },
+              ].map((item, index) => (
+                <div
+                  key={item.title}
+                  className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm"
                 >
-                  Explorer la licence SaaS
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+                  <div className="text-xs font-semibold text-[#9C8D77]">
+                    Étape {index + 1}
+                  </div>
+                  <h3 className="text-lg font-semibold mt-2">{item.title}</h3>
+                  <p className="text-sm text-[#6F6454] mt-2">{item.text}</p>
+                </div>
+              ))}
             </div>
 
-            {/* Famille + Box */}
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-              <div>
-                <h3 className="text-xl font-light mb-3">
-                  Agir avec les box & la famille
-                </h3>
-                <p className="text-[#6F6454] max-w-md">
-                  Une approche humaine : Le lien entre celui qui souffre et celui qui peut et doit l'aider.  
-                  Des box utiles — jamais gadgets.
-                </p>
+            <p className="mt-6 text-xs text-[#9C8D77]">
+              Note sécurité : ZENA ne remplace pas les urgences. En cas de
+              danger immédiat, contactez les services d’urgence.
+            </p>
+          </div>
+        </section>
 
-                <div className="mt-4 space-y-1">
+        {/* OFFRES */}
+        <section id="offres" className="py-20 md:py-28 bg-[#FAF6EE]">
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="max-w-3xl mb-12">
+              <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
+                Nos deux propositions
+              </p>
+              <h2 className="text-2xl md:text-3xl font-semibold mt-3">
+                Deux sphères, deux besoins, une même promesse.
+              </h2>
+              <p className="text-sm md:text-base text-[#6F6454] mt-3">
+                Le monde Entreprise et le monde Famille sont distincts pour
+                mieux protéger et organiser l’accompagnement.
+              </p>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-7 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                  Entreprise
+                </p>
+                <h3 className="text-xl font-semibold mt-2">
+                  La sphère pro, pensée pour l’interne.
+                </h3>
+                <div className="mt-4 space-y-3 text-sm text-[#6F6454]">
+                  <p>
+                    <span className="font-semibold text-[#1B1A18]">
+                      Pour qui ?
+                    </span>{" "}
+                    RH, managers, équipes QVT/QVCT.
+                  </p>
+                  <p>
+                    <span className="font-semibold text-[#1B1A18]">
+                      Objectifs
+                    </span>{" "}
+                    Prévenir, détecter, agir avec un cadre clair.
+                  </p>
+                  <div>
+                    <span className="font-semibold text-[#1B1A18]">
+                      Ce que ça contient
+                    </span>
+                    <ul className="mt-2 list-disc list-inside space-y-1">
+                      <li>Démo / devis et onboarding guidé.</li>
+                      <li>Code entreprise pour rejoindre en sécurité.</li>
+                      <li>Espace interne pour suivre et agir.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
                   <Link
-                    to="/box"
-                    className="inline-flex items-center gap-2 text-[#1B1A18] hover:underline"
+                    to={`${QVTBOX_ROUTES.entreprise}#demo`}
+                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition"
                   >
-                    Voir les box QVT
-                    <ArrowRight className="w-4 h-4" />
+                    Demander une démo
                   </Link>
-
-                  <a
-                    href={ZENA_FAMILY_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-[#4B5563] hover:underline"
+                  <Link
+                    to={QVTBOX_ROUTES.entrepriseJoin}
+                    className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-5 py-2.5 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
                   >
-                    Ouvrir ZÉNA Famille
-                  </a>
+                    J’ai un code entreprise
+                  </Link>
                 </div>
               </div>
 
-              <img
-                src="/famille-still.jpg"
-                alt="Zena Family"
-                className="w-full rounded-2xl object-cover shadow-sm"
-              />
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-7 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                  Famille
+                </p>
+                <h3 className="text-xl font-semibold mt-2">
+                  La sphère perso, pour soutenir le quotidien.
+                </h3>
+                <div className="mt-4 space-y-3 text-sm text-[#6F6454]">
+                  <p>
+                    <span className="font-semibold text-[#1B1A18]">
+                      Pour qui ?
+                    </span>{" "}
+                    Familles, parents, proches, tuteurs.
+                  </p>
+                  <p>
+                    <span className="font-semibold text-[#1B1A18]">
+                      Objectifs
+                    </span>{" "}
+                    Écouter, organiser, soutenir sans alourdir.
+                  </p>
+                  <div>
+                    <span className="font-semibold text-[#1B1A18]">
+                      Ce que ça contient
+                    </span>
+                    <ul className="mt-2 list-disc list-inside space-y-1">
+                      <li>Abonnement en ligne simple et flexible.</li>
+                      <li>Sous-comptes enfants et espace famille.</li>
+                      <li>Espace amis en accès sur invitation.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    to={QVTBOX_ROUTES.famille}
+                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition"
+                  >
+                    Voir l’offre Famille
+                  </Link>
+                  <Link
+                    to={QVTBOX_ROUTES.familleCreate}
+                    className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-5 py-2.5 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
+                  >
+                    Créer un compte Famille
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* CTA FINAL */}
-        <section className="py-32 bg-[#151515] text-[#FDF9F0] text-center">
-          <div className="max-w-3xl mx-auto px-8 md:px-16">
-            <p className="uppercase tracking-[0.2em] text-[11px] text-[#E5D7BF]/80 mb-5">
-              Le coup de pouce QVT Box
-            </p>
+        {/* CHOISIR SPHERE */}
+        <section
+          id="choisir-sphere"
+          className="py-20 md:py-28 bg-[#FDF9F0] border-t border-[#E8DCC8]"
+        >
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="max-w-3xl mb-10">
+              <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
+                Choisir ma sphère
+              </p>
+              <h2 className="text-2xl md:text-3xl font-semibold mt-3">
+                Commencez dans le monde qui vous correspond.
+              </h2>
+              <p className="text-sm md:text-base text-[#6F6454] mt-3">
+                Vous pourrez basculer plus tard si vous avez un double usage.
+              </p>
+            </div>
 
-            <h2 className="text-2xl md:text-3xl font-light mb-6">
-             Souvent, ils n’ont pas besoin d’un cadeau.
-              <br />
-              Ils ont besoin qu’on les entende.
-            </h2>
-
-            <p className="text-sm md:text-base text-[#E5D7BF]/85 mb-10">
-              Parlez-nous de votre contexte.  
-              On construit un dispositif discret, réaliste, qui respecte votre réalité.
-            </p>
-
-            <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <div className="grid gap-4 md:grid-cols-2">
               <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#F3E0B9] text-[#151515] hover:bg-[#F7E7C5] transition"
+                to={QVTBOX_ROUTES.entreprise}
+                className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
               >
-                Prendre contact
-                <ArrowRight className="w-4 h-4" />
+                <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                  Entreprise
+                </p>
+                <h3 className="text-lg font-semibold mt-2">
+                  Je représente une organisation.
+                </h3>
+                <p className="text-sm text-[#6F6454] mt-2">
+                  Démo, devis, code entreprise, espace interne.
+                </p>
               </Link>
 
               <Link
-                to="/simulateur"
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-[#EADCC7] text-[#FDF9F0] hover:bg-white/10 transition"
+                to={QVTBOX_ROUTES.famille}
+                className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
               >
-                Tester « Ma bulle attentionnée »
+                <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                  Famille
+                </p>
+                <h3 className="text-lg font-semibold mt-2">
+                  Je soutiens un proche au quotidien.
+                </h3>
+                <p className="text-sm text-[#6F6454] mt-2">
+                  Abonnement en ligne, sous-comptes et invitations.
+                </p>
               </Link>
             </div>
           </div>
         </section>
       </main>
 
-      <Footer />
+      {/* FOOTER CONFIANCE */}
+      <footer className="bg-[#151515] text-[#ECE7DF] border-t border-[#2D2721]">
+        <div className="mx-auto max-w-6xl px-6 py-12">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-[#F3E0B9]">
+                QVT Box
+              </h3>
+              <p className="text-xs text-[#CDBEA9] mt-2">
+                Espoir &amp; Hope · Une présence qui rassure.
+              </p>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="text-xs text-[#F3E0B9] mt-3 inline-block hover:underline"
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </div>
+
+            <div className="flex flex-wrap gap-4 text-xs text-[#DCCFB9]">
+              <Link to="/contact" className="hover:text-[#F3E0B9] transition">
+                Contact
+              </Link>
+              <Link
+                to="/politique-confidentialite"
+                className="hover:text-[#F3E0B9] transition"
+              >
+                Confidentialité
+              </Link>
+              <Link
+                to="/mentions-legales"
+                className="hover:text-[#F3E0B9] transition"
+              >
+                Mentions
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

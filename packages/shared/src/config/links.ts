@@ -12,3 +12,13 @@ export const ZENA_FAMILY_URL =
   env.VITE_ZENA_FAMILY_URL ?? "https://zena-family.qvtbox.com";
 export const ZENA_VOICE_URL = env.VITE_ZENA_VOICE_URL ?? "https://zena.qvtbox.com";
 export const CONTACT_EMAIL = env.VITE_CONTACT_EMAIL ?? "contact@qvtbox.com";
+
+export const QVTBOX_ROUTES = {
+  home: "/",
+  entreprise: "/entreprise",
+  entrepriseJoin: "/entreprise/rejoindre",
+  famille: "/famille",
+  familleCreate: "/famille/creer",
+  familleInvite: "/famille/inviter",
+  choisirSphere: "/choisir-sphere",
+} as const;

@@ -8,6 +8,7 @@ export type { ZenaChatMessage } from "./ui/ZenaChat";
 export {
   CONTACT_EMAIL,
   QVTBOX_URL,
+  QVTBOX_ROUTES,
   ZENA_FAMILY_URL,
   ZENA_VOICE_URL,
 } from "./config/links";
