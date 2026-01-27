@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import { CONTACT_EMAIL, QVTBOX_ROUTES } from "@qvt/shared";
+import boucheVideo from "@/assets/bouche.mp4";
 
 export default function Index() {
   return (
@@ -17,7 +18,8 @@ export default function Index() {
           <div className="absolute bottom-10 right-12 h-48 w-48 rounded-full bg-[#E7D4F1]/40 blur-3xl" />
 
           <div className="relative z-10 mx-auto max-w-6xl px-6 pt-32 pb-16 md:pt-40">
-            <div className="max-w-3xl space-y-6">
+            <div className="grid gap-12 lg:grid-cols-[1.1fr,0.9fr] items-center">
+              <div className="max-w-3xl space-y-6">
               <p className="text-xs uppercase tracking-[0.3em] text-[#9C8D77]">
                 QVT Box · Salut, ça va ?
               </p>
@@ -48,6 +50,18 @@ export default function Index() {
                   Choisir ma sphère
                 </a>
               </div>
+              </div>
+
+              <div className="relative">
+                <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/60 via-transparent to-[#E7D4F1]/40 blur-2xl" />
+                <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
+                  <img
+                    src="/hero-cicatrices-lumiere.jpg"
+                    alt="Lumière dans les cicatrices"
+                    className="h-[380px] w-full object-cover md:h-[460px]"
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="mt-12 grid gap-4 md:grid-cols-3 max-w-4xl">
@@ -76,6 +90,39 @@ export default function Index() {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* SCÈNE IMMERSIVE */}
+        <section className="py-24 px-6 md:px-16 bg-[#FAF6EE]">
+          <div className="mx-auto max-w-5xl space-y-10">
+            <p className="uppercase tracking-[0.22em] text-xs text-[#9C8D77]">
+              Écouter ce qui ne se dit pas tout haut
+            </p>
+            <div className="rounded-[2.2rem] overflow-hidden border border-[#E8DCC8] shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
+              <div className="aspect-[16/9] w-full">
+                <video
+                  src={boucheVideo}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* MANIFESTE VISUEL */}
+        <section className="py-28 bg-[#FDF9F0] border-y border-[#E8DCC8]">
+          <div className="mx-auto max-w-5xl px-6 text-center space-y-4">
+            <p className="text-sm uppercase tracking-[0.28em] text-[#9C8D77]">
+              Le quotidien va vite. Les émotions, moins.
+            </p>
+            <h2 className="text-2xl md:text-3xl font-semibold text-[#1B1A18]">
+              QVT Box crée une lumière dans la fissure.
+            </h2>
           </div>
         </section>
 

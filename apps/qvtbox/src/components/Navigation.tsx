@@ -6,6 +6,7 @@ import { useUserRole } from "@/hooks/useUserRole";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSelector from "@/components/LanguageSelector";
 import { Menu, X, Settings } from "lucide-react";
+import { QVTBOX_ROUTES } from "@qvt/shared";
 
 export default function Navigation() {
   const location = useLocation();
@@ -18,10 +19,12 @@ export default function Navigation() {
   /** 🔥 Version simplifiée + premium */
   const navItems = [
     { label: "Accueil", path: "/" },
-    { label: "Entreprise", path: "/saas" },
+    { label: "Entreprise", path: QVTBOX_ROUTES.entreprise },
+    { label: "Famille", path: QVTBOX_ROUTES.famille },
     { label: "Box QVT", path: "/box" },
     { label: "Engagements", path: "/engagements" },  // 🆕 AJOUT ICI
     { label: "Contact", path: "/contact" },
+    { label: "Choisir ma sphère", path: QVTBOX_ROUTES.choisirSphere },
   ];
 
   const isActive = (path: string) =>
