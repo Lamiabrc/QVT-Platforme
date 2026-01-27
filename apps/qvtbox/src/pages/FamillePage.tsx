@@ -3,8 +3,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { QVTBOX_ROUTES } from "@qvt/shared";
-import careBubble from "@/assets/care-bubble.jpg";
 import valuesListening from "@/assets/values-listening.jpg";
+import valuesMutualSupport from "@/assets/values-mutual-support.jpg";
 
 export default function FamillePage() {
   return (
@@ -47,11 +47,11 @@ export default function FamillePage() {
               <div className="relative">
                 <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/50 via-transparent to-[#CFECE8]/40 blur-2xl" />
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
-                  <img
-                    src={valuesListening}
-                    alt="Famille accompagnee par ZENA"
-                    className="h-[360px] w-full object-cover md:h-[420px]"
-                  />
+                <img
+                  src={valuesMutualSupport}
+                  alt="Famille accompagnee par ZENA"
+                  className="h-[360px] w-full object-cover md:h-[420px]"
+                />
                 </div>
               </div>
             </div>
@@ -91,7 +91,7 @@ export default function FamillePage() {
               <div className="absolute -inset-3 rounded-[28px] bg-[#E7D4F1]/40 blur-2xl" />
               <div className="relative overflow-hidden rounded-[28px] border border-white/70 shadow-[0_20px_50px_rgba(27,26,24,0.16)]">
                 <img
-                  src={careBubble}
+                  src={valuesListening}
                   alt="Bulle de soin et soutien"
                   className="h-[320px] w-full object-cover md:h-[380px]"
                 />

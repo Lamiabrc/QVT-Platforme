@@ -3,8 +3,8 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { CONTACT_EMAIL, QVTBOX_ROUTES } from "@qvt/shared";
-import heroWorkplace from "@/assets/hero-workplace.jpg";
 import valuesBuildingTogether from "@/assets/values-building-together.jpg";
+import valuesConcreteImpact from "@/assets/values-concrete-impact.jpg";
 
 export default function EntreprisePage() {
   return (
@@ -48,8 +48,8 @@ export default function EntreprisePage() {
                 <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/50 via-transparent to-[#CFECE8]/40 blur-2xl" />
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
-                    src={heroWorkplace}
-                    alt="Dashboard QVT Box pour les entreprises"
+                    src={valuesConcreteImpact}
+                    alt="Impact concret pour les organisations"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                   />
                 </div>
