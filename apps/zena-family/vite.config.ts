@@ -5,8 +5,8 @@ export default defineConfig(({ mode }) => {
   const isDev = mode === "development";
 
   return {
-    // 🔥 Indispensable pour éviter les erreurs MIME (module JS → HTML)
-    base: "./",
+    // ✅ Serve assets from the domain root on Vercel.
+    base: "/",
 
     server: {
       host: "::",
