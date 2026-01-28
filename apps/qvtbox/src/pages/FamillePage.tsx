@@ -19,11 +19,12 @@ export default function FamillePage() {
                   Sphere Famille
                 </p>
                 <h1 className="text-3xl md:text-5xl font-semibold mt-4">
-                  Un accompagnement doux pour le quotidien.
+                  ZENA Famille &amp; Ado, un refuge pour parler et avancer.
                 </h1>
                 <p className="text-base md:text-lg text-[#6F6454] mt-4 max-w-2xl">
-                  Abonnement en ligne, sous-comptes enfants, espace famille et
-                  invitations privees pour les proches.
+                  Un univers doux pour les adolescents, connecte a un compte
+                  famille. ZENA ecoute, propose des actions simples et aide a
+                  organiser le quotidien.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
@@ -37,7 +38,7 @@ export default function FamillePage() {
                     to={QVTBOX_ROUTES.familleInvite}
                     className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
                   >
-                    Inviter un proche
+                    Inviter un ado / tuteur
                   </Link>
                 </div>
               </div>
@@ -69,7 +70,7 @@ export default function FamillePage() {
               },
               {
                 title: "Espace amis",
-                text: "Des invitations privees pour les proches de confiance.",
+                text: "Invite-only, sans decouverte publique.",
               },
             ].map((item) => (
               <div
@@ -97,16 +98,70 @@ export default function FamillePage() {
             </div>
             <div className="space-y-4">
               <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
-                Une sphere douce et protegee
+                Parcours ado / parent
               </p>
               <h2 className="text-2xl md:text-3xl font-semibold">
-                Un espace pour parler, planifier et proteger.
+                Deux espaces relies, sans melange des roles.
               </h2>
               <p className="text-sm text-[#6F6454]">
-                ZENA accompagne les ados et leurs guardians avec des suggestions
-                concretes, un planning partage et des alertes transmises a la
-                tutelle.
+                L'ado a son espace pour parler a ZENA et organiser ses routines.
+                Les parents ou tuteurs voient l'essentiel, avec des regles
+                claires et un cadre protecteur.
               </p>
+              <div className="mt-4 grid gap-3 text-sm text-[#6F6454]">
+                <div className="rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3">
+                  Espace Famille commun + espace Amis invite-only.
+                </div>
+                <div className="rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3">
+                  Planning partage et suggestions simples par priorite.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 md:py-20 bg-[#FDF9F0] border-t border-[#E8DCC8]">
+          <div className="mx-auto max-w-6xl px-6 grid gap-8 md:grid-cols-[1.05fr,0.95fr] items-center">
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                Alerte detresse / harcelement
+              </p>
+              <h2 className="text-2xl md:text-3xl font-semibold mt-3">
+                Une protection active, sans dramatiser.
+              </h2>
+              <p className="text-sm text-[#6F6454] mt-3">
+                Si un signal critique apparait, une alerte peut etre transmise a
+                la tutelle (parent/tuteur) selon les regles definies. L'ado reste
+                accompagne, sans exposition publique.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link
+                  to={QVTBOX_ROUTES.familleCreate}
+                  className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
+                >
+                  Demarrer l'essai Famille
+                </Link>
+                <Link
+                  to={QVTBOX_ROUTES.familleInvite}
+                  className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
+                >
+                  Generer un code d'invitation
+                </Link>
+              </div>
+              <p className="mt-4 text-xs text-[#9C8D77]">
+                ZENA ne remplace pas les urgences. En cas de danger immediat,
+                contactez les secours.
+              </p>
+            </div>
+            <div className="relative">
+              <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/40 via-transparent to-[#CFECE8]/40 blur-2xl" />
+              <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
+                <img
+                  src="/parler%20zena.png"
+                  alt="ZENA accompagne les alertes famille"
+                  className="h-[320px] w-full object-cover md:h-[380px]"
+                />
+              </div>
             </div>
           </div>
         </section>

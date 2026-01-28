@@ -15,10 +15,11 @@ export default function ChoisirSpherePage() {
             Choisir ma sphere
           </p>
           <h1 className="text-3xl md:text-4xl font-semibold mt-4">
-            Selectionnez votre univers de depart.
+            Choisissez votre univers de depart.
           </h1>
           <p className="text-sm text-[#6F6454] mt-3">
-            Vous pourrez basculer plus tard si vous avez un double usage.
+            Les deux mondes sont isoles. Vous pourrez basculer plus tard si vous
+            avez un double usage.
           </p>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -42,6 +43,17 @@ export default function ChoisirSpherePage() {
               <p className="text-sm text-[#6F6454] mt-2">
                 Demo, code entreprise, espace interne.
               </p>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-[#9C8D77]">
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Demo / devis
+                </span>
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Espace interne
+                </span>
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Alertes RH/QVT
+                </span>
+              </div>
             </Link>
 
             <Link
@@ -59,11 +71,22 @@ export default function ChoisirSpherePage() {
                 Famille
               </p>
               <h2 className="text-lg font-semibold mt-2">
-                Parents, proches, tuteurs
+                Adolescents, parents, tuteurs
               </h2>
               <p className="text-sm text-[#6F6454] mt-2">
-                Abonnement en ligne et sous-comptes.
+                Abonnement en ligne, sous-comptes et espace amis invite-only.
               </p>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-[#9C8D77]">
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Espace Famille
+                </span>
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Espace Amis
+                </span>
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Alertes detresse
+                </span>
+              </div>
             </Link>
           </div>
         </div>
