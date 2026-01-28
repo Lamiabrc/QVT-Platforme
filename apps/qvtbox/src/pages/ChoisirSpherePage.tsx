@@ -28,7 +28,7 @@ export default function ChoisirSpherePage() {
             >
               <div className="qvt-golden-wrap relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
                 <img
-                  src="/images/contact-workspace.jpg"
+                  src="/equipe.png"
                   alt="Espace entreprise"
                   className="qvt-golden-image h-40 w-full object-cover"
                 />
@@ -50,7 +50,7 @@ export default function ChoisirSpherePage() {
             >
               <div className="qvt-golden-wrap relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
                 <img
-                  src="/images/box-parent.jpg"
+                  src="/ado.png"
                   alt="Espace famille"
                   className="qvt-golden-image h-40 w-full object-cover"
                 />
