@@ -1,8 +1,8 @@
-import { Toaster } from "@/components/ui/toaster";
+﻿import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppShell, QVTBOX_URL, ZENA_VOICE_URL } from "@qvt/shared";
 import { universe } from "@/config/universe";
 import { MobileWrapper } from "@/components/mobile/MobileWrapper";
@@ -21,6 +21,13 @@ import Calendar from "./pages/Calendar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const ExternalRedirect = ({ to }: { to: string }) => {
+  if (typeof window !== "undefined") {
+    window.location.href = to;
+  }
+  return null;
+};
 
 /**
  * ZENA Family - ena-family-heartlink
@@ -53,14 +60,8 @@ const App = () => (
               <Route path="/calendar" element={<Calendar />} />
 
               {/* Gateways to other universes */}
-              <Route
-                path="/zena-travail"
-                element={<Navigate to={ZENA_VOICE_URL} replace />}
-              />
-              <Route
-                path="/qvtbox"
-                element={<Navigate to={QVTBOX_URL} replace />}
-              />
+              <Route path="/zena-travail" element={<ExternalRedirect to={ZENA_VOICE_URL} />} />
+              <Route path="/qvtbox" element={<ExternalRedirect to={QVTBOX_URL} />} />
 
               {/* Catch-all */}
               <Route path="*" element={<NotFound />} />
