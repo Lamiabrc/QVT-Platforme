@@ -25,7 +25,6 @@ import {
 } from 'lucide-react';
 import dashboardHero from '@/assets/dashboard-hero.jpg';
 import boxManagement from '@/assets/box-management.jpg';
-import analyticsHero from '@/assets/analytics-hero.jpg';
 import ModernMoodBubbleModule from './ModernMoodBubbleModule';
 
 interface DashboardView {
@@ -301,7 +300,7 @@ const ProfessionalDashboard = () => {
               <CardContent>
                 <div 
                   className="h-64 bg-cover bg-center rounded-lg flex items-center justify-center"
-                  style={{ backgroundImage: `url(${analyticsHero})` }}
+                  style={{ backgroundImage: 'url(/saas-dashboard.jpg)' }}
                 >
                   <div className="bg-white/90 p-4 rounded-lg">
                     <p className="text-gray-600 text-center">
