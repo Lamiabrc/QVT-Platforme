@@ -54,11 +54,11 @@ export default function Index() {
 
               <div className="relative">
                 <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/60 via-transparent to-[#E7D4F1]/40 blur-2xl" />
-                <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)] qvt-golden-wrap">
+                <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
                     src="/hero-cicatrices-lumiere.jpg"
                     alt="Lumière dans les cicatrices"
-                    className="h-[380px] w-full object-cover md:h-[460px] qvt-golden-image"
+                    className="h-[380px] w-full object-cover md:h-[460px]"
                   />
                 </div>
               </div>
@@ -99,11 +99,11 @@ export default function Index() {
             <p className="uppercase tracking-[0.22em] text-xs text-[#9C8D77]">
               Écouter ce qui ne se dit pas tout haut
             </p>
-            <div className="rounded-[2.2rem] overflow-hidden border border-[#E8DCC8] shadow-[0_24px_60px_rgba(27,26,24,0.18)] qvt-golden-wrap">
+            <div className="rounded-[2.2rem] overflow-hidden border border-[#E8DCC8] shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
               <div className="aspect-[16/9] w-full">
                 <video
                   src={boucheVideo}
-                  className="w-full h-full object-cover qvt-golden-video"
+                  className="w-full h-full object-cover"
                   autoPlay
                   muted
                   loop

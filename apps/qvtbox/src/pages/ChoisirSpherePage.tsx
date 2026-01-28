@@ -26,11 +26,11 @@ export default function ChoisirSpherePage() {
               to={QVTBOX_ROUTES.entreprise}
               className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
             >
-              <div className="qvt-golden-wrap relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
+              <div className="relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
                 <img
                   src="/equipe.png"
                   alt="Espace entreprise"
-                  className="qvt-golden-image h-40 w-full object-cover"
+                  className="h-40 w-full object-cover"
                 />
               </div>
               <p className="mt-4 text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
@@ -48,11 +48,11 @@ export default function ChoisirSpherePage() {
               to={QVTBOX_ROUTES.famille}
               className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
             >
-              <div className="qvt-golden-wrap relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
+              <div className="relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
                 <img
                   src="/ado.png"
                   alt="Espace famille"
-                  className="qvt-golden-image h-40 w-full object-cover"
+                  className="h-40 w-full object-cover"
                 />
               </div>
               <p className="mt-4 text-xs uppercase tracking-[0.24em] text-[#9C8D77]">

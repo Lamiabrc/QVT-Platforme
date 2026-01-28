@@ -310,23 +310,4 @@
   /* Ancrages avec navbar fixe (si besoin) */
   [id] { scroll-margin-top: 6rem; }
 
-  /* Harmonisation visuelle dorée/pastel */
-  .qvt-golden-wrap {
-    position: relative;
-    overflow: hidden;
-  }
-  .qvt-golden-wrap::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255, 233, 200, 0.35), rgba(247, 240, 230, 0.25));
-    mix-blend-mode: screen;
-    pointer-events: none;
-  }
-  .qvt-golden-image {
-    filter: saturate(0.9) contrast(0.92) brightness(1.04) sepia(0.12);
-  }
-  .qvt-golden-video {
-    filter: saturate(0.9) contrast(0.92) brightness(1.02) sepia(0.1);
-  }
 }

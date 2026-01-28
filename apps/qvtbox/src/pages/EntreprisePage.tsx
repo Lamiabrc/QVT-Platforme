@@ -44,11 +44,11 @@ export default function EntreprisePage() {
 
               <div className="relative">
                 <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/50 via-transparent to-[#CFECE8]/40 blur-2xl" />
-                <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)] qvt-golden-wrap">
+                <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
                     src="/equipe.png"
                     alt="Impact concret pour les organisations"
-                    className="h-[360px] w-full object-cover md:h-[420px] qvt-golden-image"
+                    className="h-[360px] w-full object-cover md:h-[420px]"
                   />
                 </div>
               </div>
@@ -87,11 +87,11 @@ export default function EntreprisePage() {
           <div className="mx-auto max-w-6xl px-6 grid gap-8 md:grid-cols-[0.9fr,1.1fr] items-center">
             <div className="relative">
               <div className="absolute -inset-3 rounded-[28px] bg-[#E7D4F1]/40 blur-2xl" />
-              <div className="relative overflow-hidden rounded-[28px] border border-white/70 shadow-[0_20px_50px_rgba(27,26,24,0.16)] qvt-golden-wrap">
+              <div className="relative overflow-hidden rounded-[28px] border border-white/70 shadow-[0_20px_50px_rgba(27,26,24,0.16)]">
                 <img
                   src="/technique.png"
                   alt="Equipe professionnelle en atelier"
-                  className="h-[320px] w-full object-cover md:h-[380px] qvt-golden-image"
+                  className="h-[320px] w-full object-cover md:h-[380px]"
                 />
               </div>
             </div>
