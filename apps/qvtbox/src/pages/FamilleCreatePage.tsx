@@ -1,8 +1,8 @@
-// src/pages/FamilleCreatePage.tsx
+﻿// src/pages/FamilleCreatePage.tsx
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { QVTBOX_ROUTES } from "@qvt/shared";
+import { QVTBOX_ROUTES, ZENA_FAMILY_URL } from "@qvt/shared";
 
 export default function FamilleCreatePage() {
   return (
@@ -25,7 +25,10 @@ export default function FamilleCreatePage() {
           <div className="mt-8 grid gap-4 md:grid-cols-[1fr,0.9fr]">
             <form
               className="grid gap-4"
-              onSubmit={(event) => event.preventDefault()}
+              onSubmit={(event) => {
+                event.preventDefault();
+                window.location.href = ZENA_FAMILY_URL;
+              }}
             >
               <input
                 type="text"
@@ -70,7 +73,7 @@ export default function FamilleCreatePage() {
             <Link to={QVTBOX_ROUTES.famille} className="underline">
               Retour a l'offre Famille
             </Link>
-            <span>�</span>
+            <span>•</span>
             <Link to={QVTBOX_ROUTES.choisirSphere} className="underline">
               Choisir un autre univers
             </Link>
