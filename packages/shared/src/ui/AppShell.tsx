@@ -54,6 +54,12 @@ export const AppShell = ({ universe, children, mainClassName }: AppShellProps) =
         </header>
       ) : null}
 
+      <div className="border-b border-border/30 bg-background/70">
+        <div className="mx-auto w-full max-w-6xl px-6 py-2 text-[0.68rem] uppercase tracking-[0.35em] text-muted-foreground">
+          Écouter • Protéger • Agir
+        </div>
+      </div>
+
       <main className={mainClassName}>{children}</main>
 
       {universe.showFooter ? (
