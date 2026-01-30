@@ -1,4 +1,4 @@
-// src/components/Navigation.tsx
+﻿// src/components/Navigation.tsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,13 +22,13 @@ export default function Navigation() {
     navigate("/");
   };
 
-  /** 🔥 Version simplifiée + premium */
+  /** Version simplifiee + premium */
   const navItems = [
     { label: "Accueil", path: "/" },
     { label: "Entreprise", path: QVTBOX_ROUTES.entreprise },
     { label: "Famille", path: QVTBOX_ROUTES.famille },
     { label: "Box QVT", path: "/box" },
-    { label: "Engagements", path: "/engagements" },  // 🆕 AJOUT ICI
+    { label: "Engagements", path: "/engagements" },
     { label: "Contact", path: "/contact" },
     { label: "Choisir ma sphère", path: QVTBOX_ROUTES.choisirSphere },
   ];
