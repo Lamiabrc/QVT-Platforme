@@ -60,15 +60,12 @@ export default function FamilleCreatePage() {
   };
 
   const createFamilyAndMembership = async (userId: string, name: string, userEmail: string) => {
-    // 1) Profile (idempotent)
     const profileInfo = await ensureProfile(userId, userEmail, name);
 
-    // Si déjà rattaché à une famille → on file au dashboard
     if (profileInfo.family_id) {
       return { familyId: profileInfo.family_id };
     }
 
-    // 2) Create family
     const familyName = `Famille de ${name}`.trim() || "Ma Famille";
 
     const { data: family, error: familyError } = await supabase
@@ -79,7 +76,6 @@ export default function FamilleCreatePage() {
 
     if (familyError) throw familyError;
 
-    // 3) Create membership
     const { error: membershipError } = await supabase.from("family_members").insert({
       family_id: family.id,
       user_id: userId,
@@ -88,7 +84,6 @@ export default function FamilleCreatePage() {
 
     if (membershipError) throw membershipError;
 
-    // 4) Attach profile to family
     const { error: updateProfileError } = await supabase
       .from("profiles")
       .update({ family_id: family.id })
@@ -99,7 +94,6 @@ export default function FamilleCreatePage() {
     return { familyId: family.id as string };
   };
 
-  // ✅ Si l’utilisateur est déjà connecté, on vérifie s’il a déjà une famille.
   useEffect(() => {
     const run = async () => {
       if (!isAuthenticated || !user?.id) return;
@@ -117,14 +111,12 @@ export default function FamilleCreatePage() {
         const famId = (data as any)?.family_id ?? null;
         if (famId) {
           setAlreadyHasFamily(true);
-          // petit confort : si déjà configuré, on redirige direct
           navigate(ROUTES.dashboard, { replace: true });
         } else {
           setAlreadyHasFamily(false);
         }
       } catch (e) {
         console.error(e);
-        // si on ne peut pas lire le profil, on laisse la page afficher le mode “Créer”
         setAlreadyHasFamily(false);
       } finally {
         setCheckingExisting(false);
@@ -183,7 +175,6 @@ export default function FamilleCreatePage() {
 
       if (error) throw error;
 
-      // Supabase peut renvoyer session = null si confirmation email requise
       const sessionUser = data.session?.user ?? null;
 
       if (!sessionUser) {
@@ -191,12 +182,11 @@ export default function FamilleCreatePage() {
         toast({
           title: "Vérification email requise",
           description:
-            "Votre compte est créé. Vérifiez votre email pour finaliser l'inscription, puis revenez ici ou connectez-vous.",
+            "Votre compte est créé. Vérifiez votre email pour finaliser l'inscription, puis connectez-vous.",
         });
         return;
       }
 
-      // ✅ Confirme l’auth côté app (même si auto-confirm existe)
       await confirmAuth();
 
       const userId = sessionUser.id;
@@ -228,7 +218,7 @@ export default function FamilleCreatePage() {
       const emailToUse = (user.email ?? normalizedEmail ?? "").toLowerCase().trim();
       const nameToUse = fullName.trim() || (user.user_metadata as any)?.full_name || "Parent";
 
-      const { familyId } = await createFamilyAndMembership(user.id, nameToUse, emailToUse);
+      await createFamilyAndMembership(user.id, nameToUse, emailToUse);
 
       toast({
         title: "Espace famille créé",
@@ -236,7 +226,6 @@ export default function FamilleCreatePage() {
       });
 
       navigate(ROUTES.dashboard);
-      return familyId;
     } catch (error: any) {
       toast({
         title: "Impossible de créer l'espace Famille",
@@ -294,7 +283,6 @@ export default function FamilleCreatePage() {
             et inviter un ado ou un tuteur.
           </p>
 
-          {/* ✅ Mode “déjà connecté” : création d’espace famille sans re-créer un compte */}
           {isAuthenticated ? (
             <div className="mt-8 rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
               <div className="text-sm text-[#6F6454]">
@@ -388,6 +376,16 @@ export default function FamilleCreatePage() {
               </form>
 
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 text-sm text-[#6F6454] shadow-sm">
+                {/* ✅ Image “consolidation famille” */}
+                <div className="relative overflow-hidden rounded-2xl border border-[#E8DCC8] mb-4">
+                  <img
+                    src="/famille-still.jpg"
+                    alt="Consolidation familiale, soutien et lien"
+                    className="h-40 w-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+
                 <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
                   Parcours en 3 étapes
                 </p>
