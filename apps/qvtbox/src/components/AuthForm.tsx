@@ -1,15 +1,17 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AuthFormProps {
   onSuccess?: () => void;
 }
 
 export default function AuthForm({ onSuccess }: AuthFormProps) {
+  const { confirmAuth } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -27,13 +29,15 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
           email,
           password,
         });
-        
+
         if (error) throw error;
-        
+        await confirmAuth();
+
         toast({
           title: "Connexion réussie !",
           description: "Bienvenue dans votre espace QVT Box",
         });
+        onSuccess?.();
       } else {
         const { error } = await supabase.auth.signUp({
           email,
@@ -45,16 +49,14 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
             }
           }
         });
-        
+
         if (error) throw error;
-        
+
         toast({
           title: "Inscription réussie !",
           description: "Vérifiez vos emails pour confirmer votre compte",
         });
       }
-      
-      onSuccess?.();
     } catch (error: any) {
       toast({
         title: "Erreur",

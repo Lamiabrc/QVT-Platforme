@@ -92,7 +92,7 @@ function Fallback() {
 
 const AppShellWithAuth = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -103,8 +103,8 @@ const AppShellWithAuth = ({ children }: { children: React.ReactNode }) => {
     <AppShell
       universe={universe}
       account={{
-        isAuthenticated: !!user,
-        accountHref: user ? "/profil" : "/auth",
+        isAuthenticated,
+        accountHref: isAuthenticated && user ? "/profil" : "/auth",
         onSignOut: handleSignOut,
       }}
     >

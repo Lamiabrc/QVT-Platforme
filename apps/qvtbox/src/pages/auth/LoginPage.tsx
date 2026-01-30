@@ -7,14 +7,14 @@ import MagicLinkForm from "@/components/auth/MagicLinkForm";
 import { useAuth } from "@/hooks/useAuth";
 
 const LoginPage = () => {
-  const { user, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (isAuthenticated) {
       navigate("/profil");
     }
-  }, [user, navigate]);
+  }, [isAuthenticated, navigate]);
 
   if (loading) {
     return (

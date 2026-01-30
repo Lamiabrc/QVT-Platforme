@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import FloatingBubbles from "./FloatingBubbles";
@@ -8,17 +8,17 @@ interface AuthGuardProps {
 }
 
 const AuthGuard = ({ children }: AuthGuardProps) => {
-  const { user, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !isAuthenticated) {
       // Redirect to login with current path as return url
       const returnUrl = encodeURIComponent(location.pathname + location.search);
       navigate(`/auth/login?returnUrl=${returnUrl}`);
     }
-  }, [user, loading, navigate, location]);
+  }, [isAuthenticated, loading, navigate, location]);
 
   if (loading) {
     return (
@@ -34,7 +34,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     );
   }
 
-  if (!user) {
+  if (!isAuthenticated) {
     return null; // Navigation will be handled by useEffect
   }
 

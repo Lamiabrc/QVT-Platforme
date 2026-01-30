@@ -6,14 +6,14 @@ import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 
 export default function ProfileRedirectPage() {
-  const { user, loading } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     const resolveDestination = async () => {
       if (loading) return;
-      if (!user) {
+      if (!isAuthenticated || !user) {
         navigate("/auth");
         return;
       }
@@ -46,7 +46,7 @@ export default function ProfileRedirectPage() {
     };
 
     resolveDestination().finally(() => setChecking(false));
-  }, [user, loading, navigate]);
+  }, [user, isAuthenticated, loading, navigate]);
 
   if (checking || loading) {
     return (

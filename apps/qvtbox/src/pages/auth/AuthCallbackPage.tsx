@@ -4,11 +4,13 @@ import FloatingBubbles from "@/components/FloatingBubbles";
 import { CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 const AuthCallbackPage = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { confirmAuth } = useAuth();
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -43,6 +45,7 @@ const AuthCallbackPage = () => {
         const cleanUrl = `${url.protocol}//${url.host}${url.pathname}`;
         window.history.replaceState({}, document.title, cleanUrl);
 
+        await confirmAuth();
         setStatus('success');
         
         toast({
@@ -77,7 +80,7 @@ const AuthCallbackPage = () => {
     };
 
     handleAuthCallback();
-  }, [navigate, toast]);
+  }, [navigate, toast, confirmAuth]);
 
   return (
     <div className="min-h-screen bg-gradient-hero flex items-center justify-center">

@@ -5,14 +5,14 @@ import AuthForm from '@/components/AuthForm';
 import Navigation from '@/components/Navigation';
 
 const AuthPage = () => {
-  const { user, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    if (isAuthenticated) {
       navigate('/profil');
     }
-  }, [user, navigate]);
+  }, [isAuthenticated, navigate]);
 
   if (loading) {
     return (

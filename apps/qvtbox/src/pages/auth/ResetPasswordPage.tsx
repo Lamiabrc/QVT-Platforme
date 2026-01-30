@@ -8,12 +8,12 @@ import NewPasswordForm from "@/components/auth/NewPasswordForm";
 import { useAuth } from "@/hooks/useAuth";
 
 const ResetPasswordPage = () => {
-  const { user, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState<'request' | 'reset'>('request');
 
   useEffect(() => {
-    if (user) {
+    if (isAuthenticated) {
       navigate("/profil");
       return;
     }
@@ -24,7 +24,7 @@ const ResetPasswordPage = () => {
                      (url.searchParams.get('code') && url.searchParams.get('type') === 'recovery');
     
     setMode(hasToken ? 'reset' : 'request');
-  }, [user, navigate]);
+  }, [isAuthenticated, navigate]);
 
   if (loading) {
     return (

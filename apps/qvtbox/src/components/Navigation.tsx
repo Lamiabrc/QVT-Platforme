@@ -10,7 +10,7 @@ import { QVTBOX_ROUTES } from "@qvt/shared";
 export default function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { isAuthenticated, signOut } = useAuth();
   const { language, setLanguage } = useLanguage();
 
   const [open, setOpen] = useState(false);
@@ -88,7 +88,7 @@ export default function Navigation() {
           />
 
           {/* COMPTE */}
-          {user ? (
+          {isAuthenticated ? (
             <div className="flex items-center gap-2">
               <Link
                 to="/profil"
@@ -158,7 +158,7 @@ export default function Navigation() {
           />
 
           {/* COMPTE */}
-          {user ? (
+          {isAuthenticated ? (
             <div className="grid gap-2">
               <Link
                 to="/profil"
