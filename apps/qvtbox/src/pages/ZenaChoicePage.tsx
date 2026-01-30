@@ -1,4 +1,4 @@
-// src/pages/ZenaChoicePage.tsx
+﻿// src/pages/ZenaChoicePage.tsx
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ArrowRight } from "lucide-react";
@@ -15,7 +15,7 @@ export default function ZenaChoicePage() {
           <div className="relative inline-block">
             <div className="absolute -inset-10 bg-[#F3E0B9]/12 blur-2xl rounded-full" />
             <h1 className="relative text-4xl md:text-5xl font-bold tracking-tight">
-              Choisissez votre univers Zéna
+              Choisissez votre univers ZÉNA
             </h1>
           </div>
 
@@ -28,7 +28,7 @@ export default function ZenaChoicePage() {
               to="/zena-page"
               className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#3A332D] bg-[#1D1B19] hover:bg-[#2A2520] text-lg font-semibold flex items-center justify-center gap-3 transition"
             >
-              Zéna Entreprise
+              ZÉNA Entreprise
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
             </Link>
 
@@ -36,7 +36,7 @@ export default function ZenaChoicePage() {
               to="/zena-family-page"
               className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#3A332D] bg-[#1D1B19] hover:bg-[#2A2520] text-lg font-semibold flex items-center justify-center gap-3 transition"
             >
-              Zéna Famille
+              ZÉNA Famille
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
             </Link>
           </div>

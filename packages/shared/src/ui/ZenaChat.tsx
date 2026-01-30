@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 
 export type ZenaChatMessage = {
   id: string;
@@ -21,7 +21,7 @@ export const ZenaChat = ({
   role,
   messages,
   onSend,
-  placeholder = "Parlez a ZENA...",
+  placeholder = "Parlez à ZÉNA...",
   disclaimer,
 }: ZenaChatProps) => {
   const [draft, setDraft] = useState("");
@@ -36,12 +36,12 @@ export const ZenaChat = ({
   return (
     <div className="rounded-2xl border border-border bg-background/80 p-4 shadow-sm">
       <div className="mb-3 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Sphere: {sphere} · Role: {role}
+        Sphère: {sphere} · Rôle: {role}
       </div>
       <div className="space-y-3 max-h-[45vh] overflow-auto pr-2">
         {messages.length === 0 ? (
           <div className="text-sm text-muted-foreground">
-            ZENA est prete a ecouter.
+            ZÉNA est prête à écouter.
           </div>
         ) : (
           messages.map((message) => (

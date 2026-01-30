@@ -1,10 +1,32 @@
-// src/pages/ZenaFamilyPage.tsx
+﻿// src/pages/ZenaFamilyPage.tsx
+import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ArrowRight, HeartHandshake, Smile, Home, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import ZenaChatPanel from "@/components/ZenaChatPanel";
 
 const ZenaFamilyPage = () => {
+  const { user, isAuthenticated } = useAuth();
+  const [familyId, setFamilyId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadFamily = async () => {
+      if (!isAuthenticated || !user) return;
+      const { data } = await supabase
+        .from("family_members")
+        .select("family_id")
+        .eq("user_id", user.id)
+        .limit(1)
+        .maybeSingle();
+      setFamilyId(data?.family_id ?? null);
+    };
+
+    loadFamily();
+  }, [isAuthenticated, user]);
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#F2F7F6] via-[#FFF3EA] to-[#FFF9F4] text-[#212121]">
       <Navigation />
@@ -16,15 +38,15 @@ const ZenaFamilyPage = () => {
             <div className="grid gap-10 lg:grid-cols-[1.1fr,0.9fr] items-center">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary/70 mb-3">
-                  Zéna · Univers famille & ado
+                  ZÉNA · Univers famille & ado
                 </p>
 
                 <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-[#5B4B8A] via-[#4FD1C5] to-[#5B4B8A] text-transparent bg-clip-text">
-                  Zéna Family, une bulle pour parler vraiment
+                  ZÉNA Family, une bulle pour parler vraiment
                 </h1>
 
                 <p className="text-sm md:text-base text-[#212121]/75 max-w-3xl mb-6 leading-relaxed">
-                  Zéna Family est un espace sécurisé pour les ados, les parents, les grands-parents
+                  ZÉNA Family est un espace sécurisé pour les ados, les parents, les grands-parents
                   et les adultes de confiance. On y parle émotions, fatigue, conflits, joie,
                   pression scolaire, sans jugement et avec des mots simples.
                 </p>
@@ -47,7 +69,7 @@ const ZenaFamilyPage = () => {
                     className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#5B4B8A] to-[#4FD1C5] px-8 py-3 text-sm font-medium text-white shadow-lg hover:scale-[1.03] transition-all"
                   >
                     <Sparkles className="w-4 h-4" />
-                    Accéder à Zéna Family
+                    Accéder à ZÉNA Family
                     <ArrowRight className="w-4 h-4" />
                   </Link>
 
@@ -63,7 +85,7 @@ const ZenaFamilyPage = () => {
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
                     src="/images/zena-portrait.jpg"
-                    alt="Visage de Zéna"
+                    alt="Visage de ZÉNA"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                     loading="lazy"
                   />
@@ -76,6 +98,17 @@ const ZenaFamilyPage = () => {
           </div>
         </section>
 
+        <section className="px-6 pb-16">
+          <div className="mx-auto max-w-5xl">
+            <ZenaChatPanel
+              sphere="family"
+              familyId={familyId}
+              title="Parler à ZÉNA en famille"
+              subtitle="Un espace confidentiel pour exprimer ce qui ne sort pas. ZÉNA peut déclencher une alerte si un signal faible apparaît."
+            />
+          </div>
+        </section>
+
         {/* BLOC FAMILLE */}
         <section className="pb-20 px-6">
           <div className="mx-auto max-w-5xl grid gap-8 md:grid-cols-3">
@@ -85,7 +118,7 @@ const ZenaFamilyPage = () => {
               </div>
               <h2 className="text-base font-semibold mb-2">Donner des mots aux ados</h2>
               <p className="text-xs text-[#212121]/70 leading-relaxed">
-                Zéna aide les ados à exprimer ce qu’ils ressentent vraiment, sans pression de
+                ZÉNA aide les ados à exprimer ce qu’ils ressentent vraiment, sans pression de
                 performance et sans avoir à "faire semblant que tout va bien".
               </p>
             </div>
@@ -107,7 +140,7 @@ const ZenaFamilyPage = () => {
               </div>
               <h2 className="text-base font-semibold mb-2">Créer des moments qui comptent</h2>
               <p className="text-xs text-[#212121]/70 leading-relaxed">
-                En lien avec QVT Box, Zéna Family peut déclencher des idées d’activités, des box
+                En lien avec QVT Box, ZÉNA Family peut déclencher des idées d’activités, des box
                 parent/ado ou des routines simples pour apaiser le quotidien.
               </p>
             </div>
@@ -134,7 +167,7 @@ const ZenaFamilyPage = () => {
                 Deux espaces reliés, sans mélange des rôles.
               </h2>
               <p className="text-sm text-[#6F6454]">
-                L’ado a son espace pour parler à Zéna et organiser ses routines. Les parents ou
+                L’ado a son espace pour parler à ZÉNA et organiser ses routines. Les parents ou
                 tuteurs voient l’essentiel, avec des règles claires et un cadre protecteur.
               </p>
               <div className="mt-4 grid gap-3 text-sm text-[#6F6454]">
@@ -178,7 +211,7 @@ const ZenaFamilyPage = () => {
                 </Link>
               </div>
               <p className="mt-4 text-xs text-[#9C8D77]">
-                Zéna ne remplace pas les urgences. En cas de danger immédiat, contactez
+                ZÉNA ne remplace pas les urgences. En cas de danger immédiat, contactez
                 les secours.
               </p>
             </div>
@@ -187,7 +220,7 @@ const ZenaFamilyPage = () => {
               <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                 <img
                   src="/parler%20zena.png"
-                  alt="Zéna accompagne les alertes famille"
+                  alt="ZÉNA accompagne les alertes famille"
                   className="h-[320px] w-full object-cover md:h-[380px]"
                 />
               </div>

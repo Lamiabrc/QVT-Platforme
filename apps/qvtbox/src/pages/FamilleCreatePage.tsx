@@ -14,6 +14,27 @@ export default function FamilleCreatePage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+  const [resendLoading, setResendLoading] = useState(false);
+
+  const ensureProfile = async (userId: string, userEmail: string, name: string) => {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (!profile) {
+      const { error } = await supabase.from("profiles").insert({
+        id: userId,
+        email: userEmail,
+        full_name: name,
+        role: "parent",
+      });
+
+      if (error) throw error;
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -33,6 +54,7 @@ export default function FamilleCreatePage() {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             full_name: fullName,
             default_sphere: "family",
@@ -44,15 +66,17 @@ export default function FamilleCreatePage() {
 
       const sessionUser = data.session?.user;
       if (!sessionUser) {
+        setPendingEmail(email);
         toast({
           title: "Vérification email requise",
-          description:
-            "Votre compte est créé. Vérifiez votre email pour finaliser l'inscription.",
+          description: "Votre compte est créé. Vérifiez votre email pour finaliser l'inscription.",
         });
         return;
       }
 
       const userId = sessionUser.id;
+
+      await ensureProfile(userId, email, fullName);
 
       const familyName = `Famille de ${fullName}`;
 
@@ -74,6 +98,11 @@ export default function FamilleCreatePage() {
 
       if (membershipError) throw membershipError;
 
+      await supabase
+        .from("profiles")
+        .update({ family_id: family.id })
+        .eq("id", userId);
+
       toast({
         title: "Espace famille créé",
         description: "Votre espace Famille est prêt.",
@@ -87,6 +116,30 @@ export default function FamilleCreatePage() {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!pendingEmail) return;
+    setResendLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: pendingEmail,
+      });
+      if (error) throw error;
+      toast({
+        title: "Email renvoyé",
+        description: "Vérifiez votre boîte de réception (et vos spams).",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Impossible de renvoyer",
+        description: error?.message ?? "Réessayez plus tard.",
+        variant: "destructive",
+      });
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -140,6 +193,25 @@ export default function FamilleCreatePage() {
               >
                 {loading ? "Création en cours..." : "Demarrer mon essai"}
               </button>
+
+              {pendingEmail ? (
+                <div className="rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3 text-xs text-[#6F6454]">
+                  <div className="font-semibold text-[#1B1A18]">
+                    Vérification email requise
+                  </div>
+                  <p className="mt-1">
+                    Votre compte est créé. Vérifiez votre email pour finaliser l'inscription.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={resendLoading}
+                    className="mt-3 inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-3 py-1 text-[11px] font-semibold text-[#1B1A18]"
+                  >
+                    {resendLoading ? "Envoi..." : "Renvoyer l'email"}
+                  </button>
+                </div>
+              ) : null}
             </form>
 
             <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 text-sm text-[#6F6454] shadow-sm">

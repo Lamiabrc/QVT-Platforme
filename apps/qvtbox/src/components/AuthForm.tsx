@@ -17,6 +17,8 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+  const [resendLoading, setResendLoading] = useState(false);
   const { toast } = useToast();
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -39,11 +41,11 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
         });
         onSuccess?.();
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/`,
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
             data: {
               full_name: fullName,
             }
@@ -52,10 +54,16 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
 
         if (error) throw error;
 
-        toast({
-          title: "Inscription réussie !",
-          description: "Vérifiez vos emails pour confirmer votre compte",
-        });
+        if (!data.session) {
+          setPendingEmail(email);
+          toast({
+            title: "Vérification email requise",
+            description: "Votre compte est créé. Vérifiez votre email pour finaliser l'inscription.",
+          });
+        } else {
+          await confirmAuth();
+          onSuccess?.();
+        }
       }
     } catch (error: any) {
       toast({
@@ -65,6 +73,30 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!pendingEmail) return;
+    setResendLoading(true);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: pendingEmail,
+      });
+      if (error) throw error;
+      toast({
+        title: "Email renvoyé",
+        description: "Vérifiez votre boîte de réception (et vos spams).",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Impossible de renvoyer",
+        description: error?.message ?? "Réessayez plus tard.",
+        variant: "destructive",
+      });
+    } finally {
+      setResendLoading(false);
     }
   };
 
@@ -131,6 +163,23 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
             {loading ? "..." : (isLogin ? "Se connecter" : "S'inscrire")}
           </Button>
         </form>
+
+        {pendingEmail ? (
+          <div className="mt-5 rounded-2xl border border-white/20 bg-white/10 p-4 text-xs text-foreground/80">
+            <div className="font-semibold">Vérification email requise</div>
+            <p className="mt-1">
+              Votre compte est créé. Vérifiez votre email pour finaliser l'inscription.
+            </p>
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={resendLoading}
+              className="mt-3 inline-flex items-center justify-center rounded-full border border-white/40 px-3 py-1 text-[11px] font-semibold text-foreground/90 hover:border-white/70"
+            >
+              {resendLoading ? "Envoi..." : "Renvoyer l'email"}
+            </button>
+          </div>
+        ) : null}
         
         <div className="mt-6 text-center">
           <button

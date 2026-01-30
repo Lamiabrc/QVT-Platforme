@@ -62,7 +62,44 @@ Copier `.env.example` en base.
 
 Aucun secret ne doit etre commite.
 
-## Famille MVP (SQL)
+## Supabase (SQL MVP)
+
+Fichier unique :
+
+```
+docs/sql/0001_family_and_zena_mvp.sql
+```
+
+### Pas a pas (comme un enfant)
+
+1. Ouvre Supabase (Dashboard).
+2. Clique sur "SQL Editor".
+3. Clique sur "New query".
+4. Ouvre le fichier `docs/sql/0001_family_and_zena_mvp.sql`.
+5. Copie tout le contenu.
+6. Colle dans l'editor Supabase.
+7. Clique sur "Run".
+8. Attends "Success" en bas.
+
+C'est tout. Les tables Famille + ZENA sont creees.
+
+## API ZENA (serverless)
+
+L'endpoint est :
+
+```
+/apps/qvtbox/api/zena/chat.ts
+```
+
+Variables requises dans l'environnement Vercel (Project Settings > Environment Variables) :
+
+- SUPABASE_URL
+- SUPABASE_SERVICE_ROLE_KEY
+- OPENAI_API_KEY (optionnel: si absent, reponse mock)
+
+Sans `SUPABASE_SERVICE_ROLE_KEY`, la conversation ne sera pas sauvegardee.
+
+## Famille MVP (SQL) - ancien fichier
 
 Le schema Famille (families, family_members, family_invitations, alerts) est fourni dans :
 

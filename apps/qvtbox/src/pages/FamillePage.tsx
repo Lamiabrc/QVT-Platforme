@@ -1,4 +1,4 @@
-// src/pages/FamillePage.tsx
+﻿// src/pages/FamillePage.tsx
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
@@ -16,15 +16,15 @@ export default function FamillePage() {
             <div className="grid gap-10 lg:grid-cols-[1.05fr,0.95fr] items-center">
               <div>
                 <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
-                  Sphere Famille
+                  Sphère Famille
                 </p>
                 <h1 className="text-3xl md:text-5xl font-semibold mt-4">
-                  ZENA Famille, un univers complet pour parler et agir ensemble.
+                  ZÉNA Famille, un univers complet pour parler et agir ensemble.
                 </h1>
                 <p className="text-base md:text-lg text-[#6F6454] mt-4 max-w-2xl">
                   Un espace parent/tuteur, un espace ado, et un espace commun
-                  pour organiser la vie familiale. ZENA ecoute, propose des
-                  actions simples et aide a prioriser le quotidien.
+                  pour organiser la vie familiale. ZÉNA écoute, propose des
+                  actions simples et aide à prioriser le quotidien.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
@@ -32,7 +32,7 @@ export default function FamillePage() {
                     to={QVTBOX_ROUTES.familleCreate}
                     className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
                   >
-                    Creer un compte Famille
+                    Créer un compte Famille
                   </Link>
                   <Link
                     to={QVTBOX_ROUTES.familleInvite}
@@ -48,7 +48,7 @@ export default function FamillePage() {
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
                     src="/ado.png"
-                    alt="Famille accompagnee par ZENA"
+                    alt="Famille accompagnée par ZÉNA"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                   />
                 </div>
@@ -64,7 +64,7 @@ export default function FamillePage() {
                 Univers Famille
               </p>
               <h2 className="text-2xl md:text-3xl font-semibold mt-3">
-                Trois espaces complementaires, chacun avec son role.
+                Trois espaces complémentaires, chacun avec son rôle.
               </h2>
             </div>
 
@@ -72,11 +72,11 @@ export default function FamillePage() {
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-semibold">Espace Ados</h3>
                 <p className="text-sm text-[#6F6454] mt-2">
-                  Questions, conseils, vie scolaire et soutien discret avec ZENA.
+                  Questions, conseils, vie scolaire et soutien discret avec ZÉNA.
                 </p>
                 <div className="mt-4 grid gap-2 text-xs text-[#9C8D77]">
                   <span>• Journal et signaux faibles</span>
-                  <span>• Conseils adaptes a l'ado</span>
+                  <span>• Conseils adaptés à l'ado</span>
                   <span>• Espace amis invite-only</span>
                 </div>
               </div>
@@ -84,11 +84,11 @@ export default function FamillePage() {
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-semibold">Espace Parents / Tuteurs</h3>
                 <p className="text-sm text-[#6F6454] mt-2">
-                  Charge mentale, conseils d'accompagnement et alerts utiles.
+                  Charge mentale, conseils d'accompagnement et alertes utiles.
                 </p>
                 <div className="mt-4 grid gap-2 text-xs text-[#9C8D77]">
-                  <span>• Aide a la decision</span>
-                  <span>• Alertes ciblees et protegees</span>
+                  <span>• Aide à la décision</span>
+                  <span>• Alertes ciblées et protégées</span>
                   <span>• Suivi des actions familiales</span>
                 </div>
               </div>
@@ -96,12 +96,12 @@ export default function FamillePage() {
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-semibold">Espace Commun</h3>
                 <p className="text-sm text-[#6F6454] mt-2">
-                  Activites familiales, messages et planning partage.
+                  Activités familiales, messages et planning partagé.
                 </p>
                 <div className="mt-4 grid gap-2 text-xs text-[#9C8D77]">
                   <span>• Planning commun</span>
-                  <span>• Messages et partages autorises</span>
-                  <span>• Actions familiales prioritisees</span>
+                  <span>• Messages et partages autorisés</span>
+                  <span>• Actions familiales priorisées</span>
                 </div>
               </div>
             </div>
@@ -125,11 +125,11 @@ export default function FamillePage() {
                 Parcours ado / parent
               </p>
               <h2 className="text-2xl md:text-3xl font-semibold">
-                Deux espaces relies, sans melange des roles.
+                Deux espaces reliés, sans mélange des rôles.
               </h2>
               <p className="text-sm text-[#6F6454]">
-                L'ado a son espace pour parler a ZENA et organiser ses routines.
-                Les parents ou tuteurs voient l'essentiel, avec des regles
+                L'ado a son espace pour parler à ZÉNA et organiser ses routines.
+                Les parents ou tuteurs voient l'essentiel, avec des règles
                 claires et un cadre protecteur.
               </p>
               <div className="mt-4 grid gap-3 text-sm text-[#6F6454]">
@@ -137,7 +137,7 @@ export default function FamillePage() {
                   Espace Famille commun + espace Amis invite-only.
                 </div>
                 <div className="rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3">
-                  Planning partage et suggestions simples par priorite.
+                  Planning partagé et suggestions simples par priorité.
                 </div>
               </div>
             </div>
@@ -148,32 +148,32 @@ export default function FamillePage() {
           <div className="mx-auto max-w-6xl px-6 grid gap-8 md:grid-cols-[1.05fr,0.95fr] items-center">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
-                Alerte detresse / harcelement
+                Alerte détresse / harcèlement
               </p>
               <h2 className="text-2xl md:text-3xl font-semibold mt-3">
                 Une protection active, sans dramatiser.
               </h2>
               <p className="text-sm text-[#6F6454] mt-3">
-                Si un signal critique apparait, une alerte peut etre transmise a
-                la tutelle (parent/tuteur) selon les regles definies. L'ado reste
-                accompagne, sans exposition publique.
+                Si un signal critique apparaît, une alerte peut être transmise à
+                la tutelle (parent/tuteur) selon les règles définies. L'ado reste
+                accompagné, sans exposition publique.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   to={QVTBOX_ROUTES.familleCreate}
                   className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
                 >
-                  Demarrer l'essai Famille
+                  Démarrer l'essai Famille
                 </Link>
                 <Link
                   to={QVTBOX_ROUTES.familleInvite}
                   className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
                 >
-                  Generer un code d'invitation
+                  Générer un code d'invitation
                 </Link>
               </div>
               <p className="mt-4 text-xs text-[#9C8D77]">
-                ZENA ne remplace pas les urgences. En cas de danger immediat,
+                ZÉNA ne remplace pas les urgences. En cas de danger immédiat,
                 contactez les secours.
               </p>
             </div>
@@ -182,7 +182,7 @@ export default function FamillePage() {
               <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                 <img
                   src="/parler%20zena.png"
-                  alt="ZENA accompagne les alertes famille"
+                  alt="ZÉNA accompagne les alertes famille"
                   className="h-[320px] w-full object-cover md:h-[380px]"
                 />
               </div>
