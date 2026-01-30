@@ -1,10 +1,19 @@
-﻿// src/pages/FamillePage.tsx
+// src/pages/FamillePage.tsx
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { QVTBOX_ROUTES } from "@qvt/shared";
+import { useAuth } from "@/hooks/useAuth";
+
+const ROUTES = {
+  create: "/famille/creer",
+  invite: "/famille/inviter",
+  join: "/famille/rejoindre",
+  dashboard: "/famille/dashboard",
+};
 
 export default function FamillePage() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="bg-[#FAF6EE] text-[#1B1A18]">
       <Navigation />
@@ -18,9 +27,11 @@ export default function FamillePage() {
                 <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
                   Sphère Famille
                 </p>
+
                 <h1 className="text-3xl md:text-5xl font-semibold mt-4">
                   ZÉNA Famille, un univers complet pour parler et agir ensemble.
                 </h1>
+
                 <p className="text-base md:text-lg text-[#6F6454] mt-4 max-w-2xl">
                   Un espace parent/tuteur, un espace ado, et un espace commun
                   pour organiser la vie familiale. ZÉNA écoute, propose des
@@ -28,19 +39,48 @@ export default function FamillePage() {
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Link
-                    to={QVTBOX_ROUTES.familleCreate}
-                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
-                  >
-                    Créer un compte Famille
-                  </Link>
-                  <Link
-                    to={QVTBOX_ROUTES.familleInvite}
-                    className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
-                  >
-                    Inviter un ado / tuteur
-                  </Link>
+                  {isAuthenticated ? (
+                    <>
+                      <Link
+                        to={ROUTES.dashboard}
+                        className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
+                      >
+                        Accéder à mon espace Famille
+                      </Link>
+                      <Link
+                        to={ROUTES.invite}
+                        className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
+                      >
+                        Inviter un membre
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to={ROUTES.create}
+                        className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
+                      >
+                        Créer un compte Famille
+                      </Link>
+                      <Link
+                        to={ROUTES.join}
+                        className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
+                      >
+                        Rejoindre une famille
+                      </Link>
+                      <Link
+                        to={ROUTES.invite}
+                        className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
+                      >
+                        Inviter un ado / tuteur
+                      </Link>
+                    </>
+                  )}
                 </div>
+
+                <p className="mt-4 text-xs text-[#9C8D77]">
+                  Astuce : si tu es déjà membre d’un espace Famille, utilise “Rejoindre une famille”.
+                </p>
               </div>
 
               <div className="relative">
@@ -50,6 +90,7 @@ export default function FamillePage() {
                     src="/ado.png"
                     alt="Famille accompagnée par ZÉNA"
                     className="h-[360px] w-full object-cover md:h-[420px]"
+                    loading="lazy"
                   />
                 </div>
               </div>
@@ -76,7 +117,7 @@ export default function FamillePage() {
                 </p>
                 <div className="mt-4 grid gap-2 text-xs text-[#9C8D77]">
                   <span>• Journal et signaux faibles</span>
-                  <span>• Conseils adaptés à l'ado</span>
+                  <span>• Conseils adaptés à l&apos;ado</span>
                   <span>• Espace amis invite-only</span>
                 </div>
               </div>
@@ -84,7 +125,7 @@ export default function FamillePage() {
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
                 <h3 className="text-lg font-semibold">Espace Parents / Tuteurs</h3>
                 <p className="text-sm text-[#6F6454] mt-2">
-                  Charge mentale, conseils d'accompagnement et alertes utiles.
+                  Charge mentale, conseils d&apos;accompagnement et alertes utiles.
                 </p>
                 <div className="mt-4 grid gap-2 text-xs text-[#9C8D77]">
                   <span>• Aide à la décision</span>
@@ -117,9 +158,11 @@ export default function FamillePage() {
                   src="/luciole.png"
                   alt="Bulle de soin et soutien"
                   className="h-[320px] w-full object-cover md:h-[380px]"
+                  loading="lazy"
                 />
               </div>
             </div>
+
             <div className="space-y-4">
               <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
                 Parcours ado / parent
@@ -128,10 +171,11 @@ export default function FamillePage() {
                 Deux espaces reliés, sans mélange des rôles.
               </h2>
               <p className="text-sm text-[#6F6454]">
-                L'ado a son espace pour parler à ZÉNA et organiser ses routines.
-                Les parents ou tuteurs voient l'essentiel, avec des règles
+                L&apos;ado a son espace pour parler à ZÉNA et organiser ses routines.
+                Les parents ou tuteurs voient l&apos;essentiel, avec des règles
                 claires et un cadre protecteur.
               </p>
+
               <div className="mt-4 grid gap-3 text-sm text-[#6F6454]">
                 <div className="rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3">
                   Espace Famille commun + espace Amis invite-only.
@@ -155,28 +199,31 @@ export default function FamillePage() {
               </h2>
               <p className="text-sm text-[#6F6454] mt-3">
                 Si un signal critique apparaît, une alerte peut être transmise à
-                la tutelle (parent/tuteur) selon les règles définies. L'ado reste
+                la tutelle (parent/tuteur) selon les règles définies. L&apos;ado reste
                 accompagné, sans exposition publique.
               </p>
+
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  to={QVTBOX_ROUTES.familleCreate}
+                  to={ROUTES.create}
                   className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
                 >
-                  Démarrer l'essai Famille
+                  Démarrer l&apos;essai Famille
                 </Link>
                 <Link
-                  to={QVTBOX_ROUTES.familleInvite}
+                  to={ROUTES.invite}
                   className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
                 >
-                  Générer un code d'invitation
+                  Générer un code d&apos;invitation
                 </Link>
               </div>
+
               <p className="mt-4 text-xs text-[#9C8D77]">
                 ZÉNA ne remplace pas les urgences. En cas de danger immédiat,
                 contactez les secours.
               </p>
             </div>
+
             <div className="relative">
               <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/40 via-transparent to-[#CFECE8]/40 blur-2xl" />
               <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
@@ -184,6 +231,7 @@ export default function FamillePage() {
                   src="/parler%20zena.png"
                   alt="ZÉNA accompagne les alertes famille"
                   className="h-[320px] w-full object-cover md:h-[380px]"
+                  loading="lazy"
                 />
               </div>
             </div>
