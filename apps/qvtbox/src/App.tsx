@@ -1,7 +1,7 @@
 // src/App.tsx
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { AppShell, ZENA_FAMILY_URL } from "@qvt/shared";
+import { AppShell } from "@qvt/shared";
 import { universe } from "@/config/universe";
 
 // UI notifications
@@ -243,7 +243,7 @@ const App = () => (
             <Route
               path="/zena-family"
               element={
-                <Navigate to={ZENA_FAMILY_URL} replace />
+                <Navigate to="/zena-family-page" replace />
               }
             />
 

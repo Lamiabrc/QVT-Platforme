@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, Gift, ShieldCheck, ArrowRight, Sparkles } from "lucide-react";
-import { ZENA_VOICE_URL } from "@qvt/shared";
 import heroImage from "@/assets/hero-workplace.jpg";
 
 const Hero = () => {
@@ -81,13 +80,11 @@ const Hero = () => {
             </Button>
           </div>
 
-          {/* ZENA Voice CTA */}
+          {/* ZENA CTA */}
           <div className="mt-10">
             <Link
-              to={ZENA_VOICE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-full 
+              to="/zena"
+                            className="inline-flex items-center gap-2 px-5 py-3 rounded-full 
                          bg-gradient-to-r from-primary/90 to-secondary/90 text-white 
                          font-medium shadow-lg hover:scale-[1.05] transition-all duration-300"
             >

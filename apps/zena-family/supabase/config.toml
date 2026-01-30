@@ -1,4 +1,0 @@
-project_id = "lcfdkokwqjdyruevlpdr"
-
-[functions.chat-with-zena]
-verify_jwt = false

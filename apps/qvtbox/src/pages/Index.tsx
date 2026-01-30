@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
-import { CONTACT_EMAIL, QVTBOX_ROUTES, ZENA_VOICE_URL } from "@qvt/shared";
+import { CONTACT_EMAIL, QVTBOX_ROUTES } from "@qvt/shared";
 import boucheVideo from "@/assets/bouche.mp4";
 
 const BubbleDivider = () => (
@@ -190,9 +190,7 @@ export default function Index() {
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
                   <Link
-                    to={ZENA_VOICE_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    to="/zena"
                     className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-5 py-2.5 text-sm font-semibold shadow-[0_14px_30px_rgba(27,26,24,0.16)] hover:opacity-90 transition"
                   >
                     Parler à ZÉNA
