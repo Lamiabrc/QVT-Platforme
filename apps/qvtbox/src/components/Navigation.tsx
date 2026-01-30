@@ -1,5 +1,5 @@
 // src/components/Navigation.tsx
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -10,11 +10,17 @@ import { QVTBOX_ROUTES } from "@qvt/shared";
 
 export default function Navigation() {
   const location = useLocation();
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const { isAdmin } = useUserRole();
   const { language, setLanguage } = useLanguage();
 
   const [open, setOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   /** 🔥 Version simplifiée + premium */
   const navItems = [
@@ -84,12 +90,30 @@ export default function Navigation() {
           />
 
           {/* COMPTE */}
-          <Link
-            to={user ? "/dashboard" : "/auth"}
-            className="px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-xs font-semibold hover:bg-[#F7E7C5] transition"
-          >
-            {user ? "Dashboard" : "Connexion"}
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2">
+              <Link
+                to="/profil"
+                className="px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-xs font-semibold hover:bg-[#F7E7C5] transition"
+              >
+                Mon compte
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="px-4 py-2 rounded-full border border-[#3A332D] text-xs text-[#E5D7BF] hover:border-[#F3E0B9] hover:text-[#F3E0B9] transition"
+              >
+                Se déconnecter
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-xs font-semibold hover:bg-[#F7E7C5] transition"
+            >
+              Connexion
+            </Link>
+          )}
 
           {/* ADMIN */}
           {user && isAdmin && (
@@ -145,12 +169,35 @@ export default function Navigation() {
           />
 
           {/* COMPTE */}
-          <Link
-            to={user ? "/dashboard" : "/auth"}
-            className="block text-center px-4 py-2 rounded-full bg-[#151515] border border-[#F3E0B9] text-[#F3E0B9] text-sm font-medium"
-          >
-            {user ? "Dashboard" : "Connexion"}
-          </Link>
+          {user ? (
+            <div className="grid gap-2">
+              <Link
+                to="/profil"
+                className="block text-center px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-sm font-medium"
+                onClick={() => setOpen(false)}
+              >
+                Mon compte
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  handleLogout();
+                  setOpen(false);
+                }}
+                className="block text-center px-4 py-2 rounded-full border border-[#F3E0B9] text-[#F3E0B9] text-sm font-medium"
+              >
+                Se déconnecter
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="block text-center px-4 py-2 rounded-full bg-[#151515] border border-[#F3E0B9] text-[#F3E0B9] text-sm font-medium"
+              onClick={() => setOpen(false)}
+            >
+              Connexion
+            </Link>
+          )}
         </div>
       )}
     </nav>

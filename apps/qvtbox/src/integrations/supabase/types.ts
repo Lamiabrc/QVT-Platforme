@@ -142,42 +142,57 @@ export type Database = {
       alerts: {
         Row: {
           anonymized_message: boolean | null
+          category: string | null
           created_at: string | null
+          created_by: string | null
+          family_id: string | null
           id: string
+          message: string | null
           notes: string | null
-          primary_axis: string
+          primary_axis: string | null
           resolved_at: string | null
-          risk_level: string
+          risk_level: string | null
+          severity: string | null
           status: string | null
           target_role: string | null
           user_consent: boolean | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           anonymized_message?: boolean | null
+          category?: string | null
           created_at?: string | null
+          created_by?: string | null
+          family_id?: string | null
           id?: string
+          message?: string | null
           notes?: string | null
-          primary_axis: string
+          primary_axis?: string | null
           resolved_at?: string | null
-          risk_level: string
+          risk_level?: string | null
+          severity?: string | null
           status?: string | null
           target_role?: string | null
           user_consent?: boolean | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           anonymized_message?: boolean | null
+          category?: string | null
           created_at?: string | null
+          created_by?: string | null
+          family_id?: string | null
           id?: string
+          message?: string | null
           notes?: string | null
-          primary_axis?: string
+          primary_axis?: string | null
           resolved_at?: string | null
-          risk_level?: string
+          risk_level?: string | null
+          severity?: string | null
           status?: string | null
           target_role?: string | null
           user_consent?: boolean | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -2840,6 +2855,84 @@ export type Database = {
         Relationships: []
       }
     }
+      families: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string | null
+        }
+        Relationships: []
+      }
+      family_invitations: {
+        Row: {
+          code: string
+          created_at: string | null
+          created_by: string | null
+          expires_at: string | null
+          family_id: string
+          id: string
+          role: string
+          used_at: string | null
+          used_by: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          family_id: string
+          id?: string
+          role: string
+          used_at?: string | null
+          used_by?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          created_by?: string | null
+          expires_at?: string | null
+          family_id?: string
+          id?: string
+          role?: string
+          used_at?: string | null
+          used_by?: string | null
+        }
+        Relationships: []
+      }
+      family_members: {
+        Row: {
+          created_at: string | null
+          family_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          family_id: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          family_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     Views: {
       [_ in never]: never
     }
