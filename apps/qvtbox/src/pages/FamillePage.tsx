@@ -86,13 +86,17 @@ export default function FamillePage() {
               <div className="relative">
                 <div className="absolute -inset-4 rounded-[32px] bg-gradient-to-br from-[#F3E0B9]/50 via-transparent to-[#CFECE8]/40 blur-2xl" />
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
+                  {/* ✅ Nouvelle image "consolidation famille" */}
                   <img
-                    src="/ado.png"
-                    alt="Famille accompagnée par ZÉNA"
+                    src="/famille-still.jpg"
+                    alt="Lien familial, soutien et sécurité"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                     loading="lazy"
                   />
                 </div>
+                <p className="mt-3 text-xs text-[#9C8D77] text-center">
+                  Un lien simple, une présence discrète — la luciole veille.
+                </p>
               </div>
             </div>
           </div>
