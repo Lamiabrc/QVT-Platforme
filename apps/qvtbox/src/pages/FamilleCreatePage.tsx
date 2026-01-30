@@ -2,7 +2,7 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
-import { QVTBOX_ROUTES, ZENA_FAMILY_URL } from "@qvt/shared";
+import { QVTBOX_ROUTES } from "@qvt/shared";
 
 export default function FamilleCreatePage() {
   return (
@@ -27,7 +27,7 @@ export default function FamilleCreatePage() {
               className="grid gap-4"
               onSubmit={(event) => {
                 event.preventDefault();
-                window.location.href = ZENA_FAMILY_URL;
+                window.location.href = QVTBOX_ROUTES.famille;
               }}
             >
               <input
