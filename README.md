@@ -62,6 +62,19 @@ Copier `.env.example` en base.
 
 Aucun secret ne doit etre commite.
 
+## Famille MVP (SQL)
+
+Le schÃ©ma Famille (families, family_members, family_invitations, alerts) est fourni dans :
+
+```
+docs/sql/family_mvp.sql
+```
+
+Pour l'appliquer :
+1. Ouvrir Supabase SQL Editor
+2. Coller le fichier ci-dessus
+3. ExÃ©cuter la migration
+
 ## Deploiement (Vercel)
 
 Ce monorepo correspond a 3 projets Vercel distincts. Pour chacun :

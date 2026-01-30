@@ -52,7 +52,7 @@ const AuthCallbackPage = () => {
 
         // Redirect after a short delay to show success state
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate('/profil');
         }, 1500);
 
       } catch (error: any) {

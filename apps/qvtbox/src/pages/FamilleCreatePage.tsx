@@ -1,10 +1,90 @@
 ﻿// src/pages/FamilleCreatePage.tsx
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { QVTBOX_ROUTES } from "@qvt/shared";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 export default function FamilleCreatePage() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!fullName || !email || !password) {
+      toast({
+        title: "Champs incomplets",
+        description: "Merci de renseigner nom, email et mot de passe.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            default_sphere: "family",
+          },
+        },
+      });
+
+      if (error) throw error;
+
+      const userId = data.user?.id;
+      if (!userId) {
+        throw new Error(
+          "Compte créé. Vérifiez votre email pour finaliser la création."
+        );
+      }
+
+      const familyName = `Famille de ${fullName}`;
+
+      const { data: family, error: familyError } = await supabase
+        .from("families")
+        .insert({ name: familyName, created_by: userId })
+        .select("id")
+        .single();
+
+      if (familyError) throw familyError;
+
+      const { error: membershipError } = await supabase
+        .from("family_members")
+        .insert({
+          family_id: family.id,
+          user_id: userId,
+          role: "parent",
+        });
+
+      if (membershipError) throw membershipError;
+
+      toast({
+        title: "Espace famille créé",
+        description: "Votre espace Famille est prêt.",
+      });
+      navigate("/famille/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Impossible de créer le compte",
+        description: error?.message ?? "Réessayez plus tard.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-[#FAF6EE] text-[#1B1A18]">
       <Navigation />
@@ -25,31 +105,35 @@ export default function FamilleCreatePage() {
           <div className="mt-8 grid gap-4 md:grid-cols-[1fr,0.9fr]">
             <form
               className="grid gap-4"
-              onSubmit={(event) => {
-                event.preventDefault();
-                window.location.href = QVTBOX_ROUTES.famille;
-              }}
+              onSubmit={handleSubmit}
             >
               <input
                 type="text"
                 placeholder="Nom et prenom"
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
                 className="w-full rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3 text-sm"
               />
               <input
                 type="email"
                 placeholder="Email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 className="w-full rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3 text-sm"
               />
               <input
                 type="password"
                 placeholder="Mot de passe"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
                 className="w-full rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3 text-sm"
               />
               <button
                 type="submit"
+                disabled={loading}
                 className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
               >
-                Demarrer mon essai
+                {loading ? "Création en cours..." : "Demarrer mon essai"}
               </button>
             </form>
 

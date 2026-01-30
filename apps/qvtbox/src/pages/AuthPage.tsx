@@ -10,7 +10,7 @@ const AuthPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      navigate('/profil');
     }
   }, [user, navigate]);
 
@@ -43,7 +43,7 @@ const AuthPage = () => {
               </p>
             </div>
             
-            <AuthForm onSuccess={() => navigate('/dashboard')} />
+            <AuthForm onSuccess={() => navigate('/profil')} />
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from "@/hooks/useAuth";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useProducts, useCategories } from "@/hooks/useProducts";
@@ -15,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShoppingBag, Package, Plus, Upload, Users, Shield } from "lucide-react";
+import { ShoppingBag, Package, Plus, Upload, Users, Shield, Home } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -25,6 +25,18 @@ const AdminPage = () => {
   const { toast } = useToast();
   const { products, loading: productsLoading } = useProducts();
   const { categories } = useCategories();
+
+  const [familyLoading, setFamilyLoading] = useState(false);
+  const [familyStats, setFamilyStats] = useState({
+    families: 0,
+    members: 0,
+    invites: 0,
+    alerts: 0,
+  });
+  const [families, setFamilies] = useState<any[]>([]);
+  const [familyMembers, setFamilyMembers] = useState<any[]>([]);
+  const [familyInvites, setFamilyInvites] = useState<any[]>([]);
+  const [familyAlerts, setFamilyAlerts] = useState<any[]>([]);
   
   const [productForm, setProductForm] = useState({
     name: '',
@@ -48,6 +60,60 @@ const AdminPage = () => {
   });
 
   const loading = authLoading || roleLoading;
+
+  useEffect(() => {
+    if (isAdmin) {
+      loadFamilyData();
+    }
+  }, [isAdmin]);
+
+  const loadFamilyData = async () => {
+    setFamilyLoading(true);
+    try {
+      const { data: familiesData } = await supabase
+        .from("families")
+        .select("id, name, created_at")
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      const { data: membersData } = await supabase
+        .from("family_members")
+        .select("family_id, user_id, role, created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      const { data: invitesData } = await supabase
+        .from("family_invitations")
+        .select("family_id, code, role, created_at, used_at, expires_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      const { data: alertsData } = await supabase
+        .from("alerts")
+        .select("family_id, category, severity, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(100);
+
+      setFamilies(familiesData || []);
+      setFamilyMembers(membersData || []);
+      setFamilyInvites(invitesData || []);
+      setFamilyAlerts(alertsData || []);
+      setFamilyStats({
+        families: familiesData?.length || 0,
+        members: membersData?.length || 0,
+        invites: invitesData?.length || 0,
+        alerts: alertsData?.length || 0,
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur Famille",
+        description: "Impossible de charger les données famille.",
+        variant: "destructive"
+      });
+    } finally {
+      setFamilyLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -200,7 +266,7 @@ const AdminPage = () => {
           </div>
 
           <Tabs defaultValue="products" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="products" className="flex items-center gap-2">
                 <ShoppingBag className="h-4 w-4" />
                 Produits
@@ -220,6 +286,10 @@ const AdminPage = () => {
               <TabsTrigger value="users" className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 Utilisateurs
+              </TabsTrigger>
+              <TabsTrigger value="family" className="flex items-center gap-2">
+                <Home className="h-4 w-4" />
+                Famille
               </TabsTrigger>
             </TabsList>
 
@@ -502,6 +572,101 @@ const AdminPage = () => {
 
             <TabsContent value="users" className="space-y-6">
               <UserManagement />
+            </TabsContent>
+
+            <TabsContent value="family" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Vue Famille</CardTitle>
+                  <CardDescription>Données temps réel des familles et alertes</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {familyLoading ? (
+                    <div className="text-center py-8">Chargement...</div>
+                  ) : (
+                    <div className="grid gap-4 md:grid-cols-4">
+                      <div className="rounded-xl border p-4">
+                        <div className="text-xs text-muted-foreground">Familles</div>
+                        <div className="text-2xl font-semibold">{familyStats.families}</div>
+                      </div>
+                      <div className="rounded-xl border p-4">
+                        <div className="text-xs text-muted-foreground">Membres</div>
+                        <div className="text-2xl font-semibold">{familyStats.members}</div>
+                      </div>
+                      <div className="rounded-xl border p-4">
+                        <div className="text-xs text-muted-foreground">Invitations</div>
+                        <div className="text-2xl font-semibold">{familyStats.invites}</div>
+                      </div>
+                      <div className="rounded-xl border p-4">
+                        <div className="text-xs text-muted-foreground">Alertes</div>
+                        <div className="text-2xl font-semibold">{familyStats.alerts}</div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Familles récentes</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {families.map((family) => (
+                      <div key={family.id} className="flex items-center justify-between text-sm border-b pb-2">
+                        <span className="font-medium">{family.name || family.id}</span>
+                        <span className="text-muted-foreground">
+                          {family.created_at ? new Date(family.created_at).toLocaleDateString() : "—"}
+                        </span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Invitations</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    {familyInvites.map((invite) => (
+                      <div key={invite.code} className="flex items-center justify-between border-b pb-2">
+                        <span className="font-medium">{invite.code}</span>
+                        <span className="text-muted-foreground">{invite.role}</span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Membres</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    {familyMembers.map((member) => (
+                      <div key={`${member.family_id}-${member.user_id}`} className="flex items-center justify-between border-b pb-2">
+                        <span className="font-medium">{member.user_id}</span>
+                        <span className="text-muted-foreground">{member.role}</span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Alertes</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
+                    {familyAlerts.map((alert) => (
+                      <div key={alert.id} className="flex items-center justify-between border-b pb-2">
+                        <span className="font-medium">{alert.category || "Alerte"}</span>
+                        <span className="text-muted-foreground">{alert.status || alert.severity || "—"}</span>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </div>

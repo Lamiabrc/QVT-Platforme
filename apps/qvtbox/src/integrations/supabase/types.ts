@@ -2854,7 +2854,6 @@ export type Database = {
         }
         Relationships: []
       }
-    }
       families: {
         Row: {
           created_at: string | null
@@ -2933,6 +2932,7 @@ export type Database = {
         }
         Relationships: []
       }
+    }
     Views: {
       [_ in never]: never
     }

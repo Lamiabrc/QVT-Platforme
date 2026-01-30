@@ -1,6 +1,12 @@
-// src/App.tsx
+﻿// src/App.tsx
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import { AppShell } from "@qvt/shared";
 import { universe } from "@/config/universe";
 
@@ -12,6 +18,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { CartProvider } from "./hooks/useCart";
 import AppInitializer from "./components/AppInitializer";
 import GlobalSEO from "./components/GlobalSEO";
+import { useAuth } from "@/hooks/useAuth";
 
 /** -------- Lazy pages -------- */
 const Index = lazy(() => import("./pages/Index"));
@@ -55,10 +62,10 @@ const MobilePage = lazy(() => import("./pages/MobilePage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ManifestPage = lazy(() => import("./pages/ManifestPage"));
 
-/** ⭐️ Engagements */
+/** Engagements */
 const EngagementsPage = lazy(() => import("./pages/EngagementsPage"));
 
-/** ⭐️ ZÉNA — Pages internes */
+/** ZÉNA — Pages internes */
 const ZenaEntreprisePage = lazy(() => import("./pages/ZenaEntreprisePage"));
 const ZenaFamilyPage = lazy(() => import("./pages/ZenaFamilyPage"));
 const ZenaChoicePage = lazy(() => import("./pages/ZenaChoicePage"));
@@ -69,16 +76,42 @@ const EntrepriseJoinPage = lazy(() => import("./pages/EntrepriseJoinPage"));
 const FamillePage = lazy(() => import("./pages/FamillePage"));
 const FamilleCreatePage = lazy(() => import("./pages/FamilleCreatePage"));
 const FamilleInvitePage = lazy(() => import("./pages/FamilleInvitePage"));
+const FamilleJoinPage = lazy(() => import("./pages/FamilleJoinPage"));
+const FamilleDashboardPage = lazy(() => import("./pages/FamilleDashboardPage"));
 const ChoisirSpherePage = lazy(() => import("./pages/ChoisirSpherePage"));
+const ProfileRedirectPage = lazy(() => import("./pages/ProfileRedirectPage"));
 
 /** Fallback visuel */
 function Fallback() {
   return (
     <div className="min-h-[40vh] flex items-center justify-center text-sm text-foreground/60">
-      Chargement…
+      Chargement...
     </div>
   );
 }
+
+const AppShellWithAuth = ({ children }: { children: React.ReactNode }) => {
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
+  return (
+    <AppShell
+      universe={universe}
+      account={{
+        isAuthenticated: !!user,
+        accountHref: user ? "/profil" : "/auth",
+        onSignOut: handleSignOut,
+      }}
+    >
+      {children}
+    </AppShell>
+  );
+};
 
 const App = () => (
   <CartProvider>
@@ -89,169 +122,156 @@ const App = () => (
       <Sonner />
 
       <BrowserRouter>
-        <AppShell universe={universe}>
+        <AppShellWithAuth>
           <Suspense fallback={<Fallback />}>
             <Routes>
+              {/* Domaine principal */}
+              <Route path="/" element={<Index />} />
+              <Route path="/box" element={<BoxPage />} />
+              <Route path="/saas" element={<ProfessionalSaasPage />} />
+              <Route path="/boutique" element={<BoutiquePage />} />
+              <Route path="/mobile" element={<MobilePage />} />
+              <Route path="/boutique/produit/:slug" element={<ProductDetailPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/simulateur" element={<SimulateurPage />} />
 
-            {/* 🌐 Domaine principal */}
-            <Route path="/" element={<Index />} />
-            <Route path="/box" element={<BoxPage />} />
-            <Route path="/saas" element={<ProfessionalSaasPage />} />
-            <Route path="/boutique" element={<BoutiquePage />} />
-            <Route path="/mobile" element={<MobilePage />} />
-            <Route
-              path="/boutique/produit/:slug"
-              element={<ProductDetailPage />}
-            />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/simulateur" element={<SimulateurPage />} />
+              {/* Engagements */}
+              <Route path="/engagements" element={<EngagementsPage />} />
 
-            {/* ⭐ Engagements (nouvelle page forte) */}
-            <Route path="/engagements" element={<EngagementsPage />} />
+              {/* Paiement */}
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
+              <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
 
-            {/* Paiement */}
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route
-              path="/checkout/success"
-              element={<CheckoutSuccessPage />}
-            />
-            <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
+              {/* Auth */}
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/auth/login" element={<LoginPage />} />
+              <Route path="/auth/callback" element={<AuthCallbackPage />} />
+              <Route path="/auth/logout" element={<LogoutPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-            {/* Auth */}
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/auth/login" element={<LoginPage />} />
-            <Route path="/auth/callback" element={<AuthCallbackPage />} />
-            <Route path="/auth/logout" element={<LogoutPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
+              {/* Dashboards */}
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/entreprise/dashboard" element={<DashboardPage />} />
+              <Route path="/mood" element={<MoodDashboard />} />
+              <Route path="/user-dashboard" element={<UserDashboard />} />
+              <Route path="/profil" element={<ProfileRedirectPage />} />
 
-            {/* Dashboards */}
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/mood" element={<MoodDashboard />} />
-            <Route path="/user-dashboard" element={<UserDashboard />} />
+              {/* Admin */}
+              <Route path="/admin" element={<AdminPage />} />
 
-            {/* ⭐ Admin (bouton présent dans la navigation) */}
-            <Route path="/admin" element={<AdminPage />} />
+              {/* CMS */}
+              <Route
+                path="/cms"
+                element={
+                  <CMSLayout>
+                    <CMSIndexPage />
+                  </CMSLayout>
+                }
+              />
+              <Route
+                path="/cms/products"
+                element={
+                  <CMSLayout>
+                    <ProductsPage />
+                  </CMSLayout>
+                }
+              />
+              <Route
+                path="/cms/products/new"
+                element={
+                  <CMSLayout>
+                    <ProductFormPage />
+                  </CMSLayout>
+                }
+              />
+              <Route
+                path="/cms/products/edit/:id"
+                element={
+                  <CMSLayout>
+                    <ProductFormPage />
+                  </CMSLayout>
+                }
+              />
+              <Route
+                path="/cms/images"
+                element={
+                  <CMSLayout>
+                    <ImagesPage />
+                  </CMSLayout>
+                }
+              />
+              <Route
+                path="/cms/partners/applications"
+                element={
+                  <CMSLayout>
+                    <CMSPartnersPage />
+                  </CMSLayout>
+                }
+              />
+              <Route
+                path="/cms/partners/approved"
+                element={
+                  <CMSLayout>
+                    <CMSPartnersPage />
+                  </CMSLayout>
+                }
+              />
+              <Route
+                path="/cms/media"
+                element={
+                  <CMSLayout>
+                    <MediaPage />
+                  </CMSLayout>
+                }
+              />
+              <Route
+                path="/cms/settings"
+                element={
+                  <CMSLayout>
+                    <SettingsPage />
+                  </CMSLayout>
+                }
+              />
 
-            {/* CMS */}
-            <Route
-              path="/cms"
-              element={
-                <CMSLayout>
-                  <CMSIndexPage />
-                </CMSLayout>
-              }
-            />
-            <Route
-              path="/cms/products"
-              element={
-                <CMSLayout>
-                  <ProductsPage />
-                </CMSLayout>
-              }
-            />
-            <Route
-              path="/cms/products/new"
-              element={
-                <CMSLayout>
-                  <ProductFormPage />
-                </CMSLayout>
-              }
-            />
-            <Route
-              path="/cms/products/edit/:id"
-              element={
-                <CMSLayout>
-                  <ProductFormPage />
-                </CMSLayout>
-              }
-            />
-            <Route
-              path="/cms/images"
-              element={
-                <CMSLayout>
-                  <ImagesPage />
-                </CMSLayout>
-              }
-            />
-            <Route
-              path="/cms/partners/applications"
-              element={
-                <CMSLayout>
-                  <CMSPartnersPage />
-                </CMSLayout>
-              }
-            />
-            <Route
-              path="/cms/partners/approved"
-              element={
-                <CMSLayout>
-                  <CMSPartnersPage />
-                </CMSLayout>
-              }
-            />
-            <Route
-              path="/cms/media"
-              element={
-                <CMSLayout>
-                  <MediaPage />
-                </CMSLayout>
-              }
-            />
-            <Route
-              path="/cms/settings"
-              element={
-                <CMSLayout>
-                  <SettingsPage />
-                </CMSLayout>
-              }
-            />
+              {/* Légal */}
+              <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
+              <Route
+                path="/politique-confidentialite"
+                element={<PolitiqueConfidentialitePage />}
+              />
+              <Route path="/cgv" element={<CGVPage />} />
 
-            {/* Légal */}
-            <Route
-              path="/mentions-legales"
-              element={<MentionsLegalesPage />}
-            />
-            <Route
-              path="/politique-confidentialite"
-              element={<PolitiqueConfidentialitePage />}
-            />
-            <Route path="/cgv" element={<CGVPage />} />
+              {/* Page Manifeste */}
+              <Route path="/manifeste" element={<ManifestPage />} />
 
-            {/* Page Manifeste */}
-            <Route path="/manifeste" element={<ManifestPage />} />
+              {/* ZÉNA — pages internes */}
+              <Route path="/zena-page" element={<ZenaEntreprisePage />} />
+              <Route path="/zena-family-page" element={<ZenaFamilyPage />} />
 
-            {/* ⭐️ ZÉNA — pages internes */}
-            <Route path="/zena-page" element={<ZenaEntreprisePage />} />
-            <Route path="/zena-family-page" element={<ZenaFamilyPage />} />
+              {/* ZÉNA — page centrale / choix */}
+              <Route path="/zena" element={<ZenaChoicePage />} />
 
-            {/* ⭐️ ZÉNA — page centrale / choix */}
-            <Route path="/zena" element={<ZenaChoicePage />} />
+              {/* QVT Box — sphères */}
+              <Route path="/entreprise" element={<EntreprisePage />} />
+              <Route path="/entreprise/rejoindre" element={<EntrepriseJoinPage />} />
+              <Route path="/famille" element={<FamillePage />} />
+              <Route path="/famille/creer" element={<FamilleCreatePage />} />
+              <Route path="/famille/inviter" element={<FamilleInvitePage />} />
+              <Route path="/famille/rejoindre" element={<FamilleJoinPage />} />
+              <Route path="/famille/dashboard" element={<FamilleDashboardPage />} />
+              <Route path="/choisir-sphere" element={<ChoisirSpherePage />} />
+              <Route path="/choisir-ma-sphere" element={<ChoisirSpherePage />} />
 
-            {/* ⭐️ QVT Box — nouvelles sphères */}
-            <Route path="/entreprise" element={<EntreprisePage />} />
-            <Route
-              path="/entreprise/rejoindre"
-              element={<EntrepriseJoinPage />}
-            />
-            <Route path="/famille" element={<FamillePage />} />
-            <Route path="/famille/creer" element={<FamilleCreatePage />} />
-            <Route path="/famille/inviter" element={<FamilleInvitePage />} />
-            <Route path="/choisir-sphere" element={<ChoisirSpherePage />} />
+              {/* Ancienne URL de Zena Family */}
+              <Route path="/zena-family" element={<Navigate to="/zena-family-page" replace />} />
 
-            {/* ⭐️ Ancienne URL de Zena Family */}
-            <Route
-              path="/zena-family"
-              element={
-                <Navigate to="/zena-family-page" replace />
-              }
-            />
-
-            {/* 404 */}
-            <Route path="*" element={<NotFound />} />
+              {/* 404 */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
-        </AppShell>
+        </AppShellWithAuth>
       </BrowserRouter>
     </AppInitializer>
   </CartProvider>

@@ -6,9 +6,19 @@ type AppShellProps = {
   universe: UniverseConfig;
   children: ReactNode;
   mainClassName?: string;
+  account?: {
+    isAuthenticated: boolean;
+    accountHref: string;
+    onSignOut: () => void;
+  };
 };
 
-export const AppShell = ({ universe, children, mainClassName }: AppShellProps) => {
+export const AppShell = ({
+  universe,
+  children,
+  mainClassName,
+  account,
+}: AppShellProps) => {
   const styleVars: Record<string, string> = {
     "--background": universe.background,
     "--foreground": universe.foreground,
@@ -41,6 +51,32 @@ export const AppShell = ({ universe, children, mainClassName }: AppShellProps) =
                   {link.label}
                 </a>
               ))}
+              {account ? (
+                account.isAuthenticated ? (
+                  <>
+                    <a
+                      href={account.accountHref}
+                      className="ml-1 inline-flex items-center justify-center rounded-md border border-border px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
+                    >
+                      Mon compte
+                    </a>
+                    <button
+                      type="button"
+                      onClick={account.onSignOut}
+                      className="inline-flex items-center justify-center rounded-md border border-border px-3 py-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Se déconnecter
+                    </button>
+                  </>
+                ) : (
+                  <a
+                    href={account.accountHref}
+                    className="ml-1 inline-flex items-center justify-center rounded-md border border-border px-3 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
+                  >
+                    Mon compte
+                  </a>
+                )
+              ) : null}
               {universe.cta ? (
                 <a
                   href={universe.cta.href}

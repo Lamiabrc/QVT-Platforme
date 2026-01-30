@@ -14,7 +14,7 @@ const ResetPasswordPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/profil");
       return;
     }
 
@@ -61,7 +61,7 @@ const ResetPasswordPage = () => {
           {mode === 'request' ? (
             <ResetRequestForm onSuccess={() => navigate("/auth/login")} />
           ) : (
-            <NewPasswordForm onSuccess={() => navigate("/dashboard")} />
+            <NewPasswordForm onSuccess={() => navigate("/profil")} />
           )}
         </div>
       </div>

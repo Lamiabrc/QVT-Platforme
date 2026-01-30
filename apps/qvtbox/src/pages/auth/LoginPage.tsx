@@ -12,7 +12,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      navigate("/profil");
     }
   }, [user, navigate]);
 
@@ -41,7 +41,7 @@ const LoginPage = () => {
             </p>
           </div>
           
-          <MagicLinkForm onSuccess={() => navigate("/dashboard")} />
+          <MagicLinkForm onSuccess={() => navigate("/profil")} />
         </div>
       </div>
       
