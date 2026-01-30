@@ -19,27 +19,27 @@ export default function ZenaEntreprisePage() {
             <div className="grid gap-10 lg:grid-cols-[1.1fr,0.9fr] items-center">
               <div>
                 <p className="text-xs uppercase tracking-[0.22em] text-[#00A5A8]/70 mb-3 font-semibold">
-                  IA ?motionnelle ? Univers entreprise
+                  IA émotionnelle · Univers entreprise
                 </p>
 
                 <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#5B4B8A] via-[#00A5A8] to-[#5B4B8A]">
-                  Z?na : l?IA ?motionnelle qui ?coute vos ?quipes
+                  Zéna : l’IA émotionnelle qui écoute vos équipes
                 </h1>
 
                 <p className="text-base md:text-lg text-[#3A3A3A]/80 max-w-3xl mb-8 leading-relaxed">
-                  Z?na cr?e un espace d??coute continue pour les collaborateurs : check-ins
-                  vocaux, signaux faibles, m?t?o ?motionnelle, alertes anonymis?es et
-                  insights pour les RH et les managers. Une ?coute douce, quotidienne,
+                  Zéna crée un espace d’écoute continue pour les collaborateurs : check-ins
+                  vocaux, signaux faibles, météo émotionnelle, alertes anonymisées et
+                  insights pour les RH et les managers. Une écoute douce, quotidienne,
                   sans jamais trahir la confiance.
                 </p>
 
                 {/* Badges */}
                 <div className="flex flex-wrap gap-3 mb-10">
                   {[
-                    "?? Check-ins vocaux / ?crits quotidiens",
-                    "?? D?tection des signaux faibles",
-                    "?? M?t?o ?motionnelle anonymis?e",
-                    "?? Respect RGPD et seuils minimum",
+                    "Check-ins vocaux / écrits quotidiens",
+                    "Détection des signaux faibles",
+                    "Météo émotionnelle anonymisée",
+                    "Respect RGPD et seuils minimum",
                   ].map((item, i) => (
                     <span
                       key={i}
@@ -57,12 +57,12 @@ export default function ZenaEntreprisePage() {
                     className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#5B4B8A] to-[#00A5A8] rounded-full text-white text-sm font-medium shadow-lg hover:scale-[1.03] transition-transform"
                   >
                     <Sparkles className="w-4 h-4" />
-                    Acc?der ? Z?na Entreprise
+                    Accéder à Zéna Entreprise
                     <ArrowRight className="w-4 h-4" />
                   </Link>
 
                   <p className="text-xs text-[#5A5A5A]/70 max-w-xs">
-                    Vous souhaitez un pilote Z?na + QVT Box dans votre organisation ?
+                    Vous souhaitez un pilote Zéna + QVT Box dans votre organisation ?
                     Nous vous accompagnons.
                   </p>
                 </div>
@@ -73,13 +73,13 @@ export default function ZenaEntreprisePage() {
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
                     src="/images/zena-portrait.jpg"
-                    alt="Visage de Z?na"
+                    alt="Visage de Zéna"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                     loading="lazy"
                   />
                 </div>
                 <div className="absolute bottom-4 left-4 rounded-full bg-white/70 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#5B4B8A]">
-                  Z?NA ? ?coute
+                  ZÉNA • Écoute
                 </div>
               </div>
             </div>
@@ -93,10 +93,10 @@ export default function ZenaEntreprisePage() {
               <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-[#00A5A8]/10 mb-3">
                 <Brain className="w-5 h-5 text-[#00A5A8]" />
               </div>
-              <h2 className="text-lg font-semibold mb-2">Comprendre les ?motions</h2>
+              <h2 className="text-lg font-semibold mb-2">Comprendre les émotions</h2>
               <p className="text-sm text-[#3A3A3A]/70 leading-relaxed">
-                Check-ins r?guliers, ?motions contextualis?es, perception des ?quipes :
-                Z?na cr?e une m?t?o ?motionnelle vivante, au plus pr?s du terrain.
+                Check-ins réguliers, émotions contextualisées, perception des équipes :
+                Zéna crée une météo émotionnelle vivante, au plus près du terrain.
               </p>
             </div>
 
@@ -104,10 +104,10 @@ export default function ZenaEntreprisePage() {
               <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-[#00A5A8]/10 mb-3">
                 <ShieldCheck className="w-5 h-5 text-[#00A5A8]" />
               </div>
-              <h2 className="text-lg font-semibold mb-2">Pr?venir plut?t que r?parer</h2>
+              <h2 className="text-lg font-semibold mb-2">Prévenir plutôt que réparer</h2>
               <p className="text-sm text-[#3A3A3A]/70 leading-relaxed">
-                D?tection pr?coce des signaux faibles : surcharge, tensions, baisse
-                d??nergie? Z?na aide ? agir avant que les situations ne deviennent des
+                Détection précoce des signaux faibles : surcharge, tensions, baisse
+                d’énergie… Zéna aide à agir avant que les situations ne deviennent des
                 crises.
               </p>
             </div>
@@ -116,10 +116,10 @@ export default function ZenaEntreprisePage() {
               <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-[#00A5A8]/10 mb-3">
                 <Users className="w-5 h-5 text-[#00A5A8]" />
               </div>
-              <h2 className="text-lg font-semibold mb-2">Donner une vraie voix aux ?quipes</h2>
+              <h2 className="text-lg font-semibold mb-2">Donner une vraie voix aux équipes</h2>
               <p className="text-sm text-[#3A3A3A]/70 leading-relaxed">
-                Z?na n?analyse pas pour juger : elle cr?e un espace d?expression
-                confidentiel, prot?g?, o? chaque collaborateur peut dire ? ?a ne va pas ?
+                Zéna n’analyse pas pour juger : elle crée un espace d’expression
+                confidentiel, protégé, où chaque collaborateur peut dire « ça ne va pas »
                 sans crainte.
               </p>
             </div>
