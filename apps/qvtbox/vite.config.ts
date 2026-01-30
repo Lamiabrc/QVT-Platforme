@@ -4,6 +4,7 @@ import path from "path";
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === "development";
+  const isCapacitor = mode === "capacitor";
 
   return {
     /**
@@ -12,7 +13,7 @@ export default defineConfig(({ mode }) => {
      * - "/" garantit des assets propres, même dans un sous-domaine (zena.qvtbox.com)
      * - fonctionne aussi si ton projet est dans /zena (car Vercel réécrit correctement)
      */
-    base: "/",
+    base: isCapacitor ? "./" : "/",
 
     server: {
       host: "::",
