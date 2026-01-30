@@ -9,10 +9,35 @@ import { useAuth } from "@/hooks/useAuth";
 
 type Status = "loading" | "success" | "error";
 
+const RETURN_URL_KEY = "qvtbox.auth.returnUrl";
+
 function parseHashParams(hash: string) {
-  // hash is like: "#access_token=...&refresh_token=...&type=recovery"
   const clean = hash.startsWith("#") ? hash.slice(1) : hash;
   return new URLSearchParams(clean);
+}
+
+function sanitizeReturnUrl(raw: string | null) {
+  if (!raw) return "/profil";
+  if (!raw.startsWith("/")) return "/profil";
+  if (raw.startsWith("//")) return "/profil";
+  return raw;
+}
+
+function getStoredReturnUrl() {
+  try {
+    const raw = window.localStorage.getItem(RETURN_URL_KEY);
+    return sanitizeReturnUrl(raw);
+  } catch {
+    return "/profil";
+  }
+}
+
+function clearStoredReturnUrl() {
+  try {
+    window.localStorage.removeItem(RETURN_URL_KEY);
+  } catch {
+    // ignore
+  }
 }
 
 const AuthCallbackPage = () => {
@@ -43,7 +68,6 @@ const AuthCallbackPage = () => {
         const typeHash = hashParams.get("type");
 
         const isRecovery = typeQuery === "recovery" || typeHash === "recovery";
-
         const hasAuthParams = Boolean(code || accessToken || refreshToken || isRecovery);
 
         if (!hasAuthParams) {
@@ -82,6 +106,9 @@ const AuthCallbackPage = () => {
 
         setStatus("success");
 
+        const destination = isRecovery ? "/reset-password" : getStoredReturnUrl();
+        if (!isRecovery) clearStoredReturnUrl();
+
         toast({
           title: "Connexion réussie !",
           description: isRecovery
@@ -89,9 +116,8 @@ const AuthCallbackPage = () => {
             : "Redirection vers votre espace...",
         });
 
-        // Redirect after short delay (nice UX)
         setTimeout(() => {
-          navigate(isRecovery ? "/reset-password" : "/profil", { replace: true });
+          navigate(destination, { replace: true });
         }, 900);
       } catch (error: any) {
         console.error("Auth callback error:", error);
