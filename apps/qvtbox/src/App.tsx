@@ -1,4 +1,4 @@
-﻿// src/App.tsx
+// src/App.tsx
 import React, { Suspense, lazy } from "react";
 import {
   BrowserRouter,
@@ -6,6 +6,7 @@ import {
   Route,
   Navigate,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 import { AppShell } from "@qvt/shared";
 import { universe } from "@/config/universe";
@@ -90,13 +91,94 @@ function Fallback() {
   );
 }
 
+/**
+ * Pages protégées (auth obligatoire)
+ * - évite les écrans vides / coquilles quand la donnée dépend d'une session
+ */
+const RequireAuth = ({ children }: { children: React.ReactElement }) => {
+  const location = useLocation();
+  const auth = useAuth() as any;
+
+  const isAuthenticated = Boolean(auth?.isAuthenticated);
+  const isLoading = Boolean(auth?.isLoading ?? auth?.loading);
+
+  if (isLoading) return <Fallback />;
+
+  if (!isAuthenticated) {
+    return (
+      <Navigate
+        to="/auth/login"
+        replace
+        state={{ from: location.pathname }}
+      />
+    );
+  }
+
+  return children;
+};
+
+/**
+ * Admin/CMS (protection simple, à renforcer ensuite via rôles/RLS Supabase)
+ */
+const RequireAdmin = ({ children }: { children: React.ReactElement }) => {
+  const location = useLocation();
+  const auth = useAuth() as any;
+
+  const isLoading = Boolean(auth?.isLoading ?? auth?.loading);
+  const isAuthenticated = Boolean(auth?.isAuthenticated);
+
+  if (isLoading) return <Fallback />;
+
+  if (!isAuthenticated) {
+    return (
+      <Navigate
+        to="/auth/login"
+        replace
+        state={{ from: location.pathname }}
+      />
+    );
+  }
+
+  const email = String(auth?.user?.email ?? "").toLowerCase();
+  const role =
+    auth?.user?.role ??
+    auth?.user?.app_metadata?.role ??
+    auth?.user?.user_metadata?.role;
+
+  const ADMIN_EMAILS = [
+    "lamia.brechet@outlook.fr",
+    "sabullelam@gmail.com",
+    "contact@qvtbox.com",
+  ];
+
+  const isAdmin = ADMIN_EMAILS.includes(email) || role === "admin";
+
+  if (!isAdmin) {
+    return <Navigate to="/profil" replace />;
+  }
+
+  return children;
+};
+
 const AppShellWithAuth = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, signOut } = useAuth();
+  const auth = useAuth() as any;
+
+  const user = auth?.user;
+  const isAuthenticated = Boolean(auth?.isAuthenticated);
+  const signOut = auth?.signOut;
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
+    try {
+      // tentative de déconnexion "propre"
+      await signOut?.();
+    } catch (e) {
+      // en cas de bug silencieux côté auth, on force la route logout
+      console.error("Sign out failed:", e);
+    } finally {
+      // route dédiée (doit effectuer signOut + clear state + redirect)
+      navigate("/auth/logout", { replace: true });
+    }
   };
 
   return (
@@ -104,8 +186,10 @@ const AppShellWithAuth = ({ children }: { children: React.ReactNode }) => {
       universe={universe}
       account={{
         isAuthenticated,
-        accountHref: isAuthenticated && user ? "/profil" : "/auth",
+        accountHref: isAuthenticated && user ? "/profil" : "/auth/login",
         onSignOut: handleSignOut,
+        // au cas où AppShell préfère une navigation plutôt qu’un callback
+        signOutHref: "/auth/logout",
       }}
     >
       {children}
@@ -125,117 +209,180 @@ const App = () => (
         <AppShellWithAuth>
           <Suspense fallback={<Fallback />}>
             <Routes>
-              {/* Domaine principal */}
+              {/* Domaine principal (public) */}
               <Route path="/" element={<Index />} />
               <Route path="/box" element={<BoxPage />} />
               <Route path="/saas" element={<ProfessionalSaasPage />} />
               <Route path="/boutique" element={<BoutiquePage />} />
               <Route path="/mobile" element={<MobilePage />} />
-              <Route path="/boutique/produit/:slug" element={<ProductDetailPage />} />
+              <Route
+                path="/boutique/produit/:slug"
+                element={<ProductDetailPage />}
+              />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/simulateur" element={<SimulateurPage />} />
 
-              {/* Engagements */}
+              {/* Engagements (public) */}
               <Route path="/engagements" element={<EngagementsPage />} />
 
-              {/* Paiement */}
+              {/* Paiement (public) */}
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
               <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
 
-              {/* Auth */}
+              {/* Auth (public) */}
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/auth/login" element={<LoginPage />} />
               <Route path="/auth/callback" element={<AuthCallbackPage />} />
               <Route path="/auth/logout" element={<LogoutPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-              {/* Dashboards */}
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/entreprise/dashboard" element={<DashboardPage />} />
-              <Route path="/mood" element={<MoodDashboard />} />
-              <Route path="/user-dashboard" element={<UserDashboard />} />
-              <Route path="/profil" element={<ProfileRedirectPage />} />
+              {/* Dashboards (protégé) */}
+              <Route
+                path="/dashboard"
+                element={
+                  <RequireAuth>
+                    <DashboardPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/entreprise/dashboard"
+                element={
+                  <RequireAuth>
+                    <DashboardPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/mood"
+                element={
+                  <RequireAuth>
+                    <MoodDashboard />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/user-dashboard"
+                element={
+                  <RequireAuth>
+                    <UserDashboard />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/profil"
+                element={
+                  <RequireAuth>
+                    <ProfileRedirectPage />
+                  </RequireAuth>
+                }
+              />
 
-              {/* Admin */}
-              <Route path="/admin" element={<AdminPage />} />
+              {/* Admin (protégé admin) */}
+              <Route
+                path="/admin"
+                element={
+                  <RequireAdmin>
+                    <AdminPage />
+                  </RequireAdmin>
+                }
+              />
 
-              {/* CMS */}
+              {/* CMS (protégé admin) */}
               <Route
                 path="/cms"
                 element={
-                  <CMSLayout>
-                    <CMSIndexPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <CMSIndexPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
               <Route
                 path="/cms/products"
                 element={
-                  <CMSLayout>
-                    <ProductsPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <ProductsPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
               <Route
                 path="/cms/products/new"
                 element={
-                  <CMSLayout>
-                    <ProductFormPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <ProductFormPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
               <Route
                 path="/cms/products/edit/:id"
                 element={
-                  <CMSLayout>
-                    <ProductFormPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <ProductFormPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
               <Route
                 path="/cms/images"
                 element={
-                  <CMSLayout>
-                    <ImagesPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <ImagesPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
               <Route
                 path="/cms/partners/applications"
                 element={
-                  <CMSLayout>
-                    <CMSPartnersPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <CMSPartnersPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
               <Route
                 path="/cms/partners/approved"
                 element={
-                  <CMSLayout>
-                    <CMSPartnersPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <CMSPartnersPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
               <Route
                 path="/cms/media"
                 element={
-                  <CMSLayout>
-                    <MediaPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <MediaPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
               <Route
                 path="/cms/settings"
                 element={
-                  <CMSLayout>
-                    <SettingsPage />
-                  </CMSLayout>
+                  <RequireAdmin>
+                    <CMSLayout>
+                      <SettingsPage />
+                    </CMSLayout>
+                  </RequireAdmin>
                 }
               />
 
-              {/* Légal */}
+              {/* Légal (public) */}
               <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
               <Route
                 path="/politique-confidentialite"
@@ -243,29 +390,37 @@ const App = () => (
               />
               <Route path="/cgv" element={<CGVPage />} />
 
-              {/* Page Manifeste */}
+              {/* Page Manifeste (public) */}
               <Route path="/manifeste" element={<ManifestPage />} />
 
-              {/* ZÉNA — pages internes */}
+              {/* ZÉNA — pages internes (public pour l’instant) */}
               <Route path="/zena-page" element={<ZenaEntreprisePage />} />
               <Route path="/zena-family-page" element={<ZenaFamilyPage />} />
-
-              {/* ZÉNA — page centrale / choix */}
               <Route path="/zena" element={<ZenaChoicePage />} />
 
-              {/* QVT Box — sphères */}
+              {/* QVT Box — sphères (public sauf dashboard) */}
               <Route path="/entreprise" element={<EntreprisePage />} />
               <Route path="/entreprise/rejoindre" element={<EntrepriseJoinPage />} />
               <Route path="/famille" element={<FamillePage />} />
               <Route path="/famille/creer" element={<FamilleCreatePage />} />
               <Route path="/famille/inviter" element={<FamilleInvitePage />} />
               <Route path="/famille/rejoindre" element={<FamilleJoinPage />} />
-              <Route path="/famille/dashboard" element={<FamilleDashboardPage />} />
+              <Route
+                path="/famille/dashboard"
+                element={
+                  <RequireAuth>
+                    <FamilleDashboardPage />
+                  </RequireAuth>
+                }
+              />
               <Route path="/choisir-sphere" element={<ChoisirSpherePage />} />
               <Route path="/choisir-ma-sphere" element={<ChoisirSpherePage />} />
 
               {/* Ancienne URL de Zena Family */}
-              <Route path="/zena-family" element={<Navigate to="/zena-family-page" replace />} />
+              <Route
+                path="/zena-family"
+                element={<Navigate to="/zena-family-page" replace />}
+              />
 
               {/* 404 */}
               <Route path="*" element={<NotFound />} />
