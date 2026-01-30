@@ -11,25 +11,30 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 60_000, refetchOnWindowFocus: false, retry: 1 } },
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
 });
 
 const rootEl = document.getElementById("root");
 if (!rootEl) throw new Error("Root element #root not found");
 
 createRoot(rootEl).render(
-  <React.StrictMode>
-    {/* 👇 Le provider langue enveloppe TOUT le reste */}
-    <LanguageProvider>
-      <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <TooltipProvider delayDuration={200}>
-              <App />
-            </TooltipProvider>
-          </AuthProvider>
-        </QueryClientProvider>
-      </HelmetProvider>
-    </LanguageProvider>
-  </React.StrictMode>
+  // ⚠️ StrictMode peut doubler les useEffect en dev (React 18) et provoquer des listeners auth dupliqués.
+  // On le retire pour stabiliser l'auth (login/logout) tant que AuthProvider n'est pas 100% idempotent.
+  <LanguageProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider delayDuration={200}>
+            <App />
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
+  </LanguageProvider>
 );
