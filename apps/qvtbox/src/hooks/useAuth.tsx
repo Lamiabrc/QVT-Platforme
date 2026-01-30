@@ -28,6 +28,14 @@ export const useAuth = () => {
 
 const isBrowser = typeof window !== 'undefined';
 
+const isSessionValid = (session: Session | null) => {
+  if (!session) return false;
+  if (session.expires_at && session.expires_at * 1000 <= Date.now()) {
+    return false;
+  }
+  return true;
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -36,15 +44,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+        if (isSessionValid(session)) {
+          setSession(session);
+          setUser(session?.user ?? null);
+        } else {
+          setSession(null);
+          setUser(null);
+        }
         setLoading(false);
       }
     );
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+      if (isSessionValid(session)) {
+        setSession(session);
+        setUser(session?.user ?? null);
+      } else {
+        setSession(null);
+        setUser(null);
+      }
       setLoading(false);
     });
 

@@ -76,6 +76,15 @@ create policy "families_select_members"
   on public.families for select
   using (public.is_family_member(id));
 
+create policy "families_select_admin"
+  on public.families for select
+  using (
+    exists (
+      select 1 from public.user_roles admin
+      where admin.user_id = auth.uid() and admin.role = 'admin'
+    )
+  );
+
 create policy "families_insert_owner"
   on public.families for insert
   with check (auth.uid() = created_by);
@@ -87,6 +96,15 @@ create policy "families_update_guardian"
 create policy "family_members_select"
   on public.family_members for select
   using (public.is_family_member(family_id));
+
+create policy "family_members_select_admin"
+  on public.family_members for select
+  using (
+    exists (
+      select 1 from public.user_roles admin
+      where admin.user_id = auth.uid() and admin.role = 'admin'
+    )
+  );
 
 create policy "family_members_insert_self"
   on public.family_members for insert
@@ -100,6 +118,16 @@ create policy "family_members_insert_self"
     )
   );
 
+create policy "family_members_insert_owner"
+  on public.family_members for insert
+  with check (
+    auth.uid() = user_id
+    and exists (
+      select 1 from public.families f
+      where f.id = family_id and f.created_by = auth.uid()
+    )
+  );
+
 create policy "family_members_insert_guardian"
   on public.family_members for insert
   with check (public.is_family_guardian(family_id));
@@ -108,15 +136,38 @@ create policy "family_invitations_select_guardian"
   on public.family_invitations for select
   using (public.is_family_guardian(family_id));
 
+create policy "family_invitations_select_admin"
+  on public.family_invitations for select
+  using (
+    exists (
+      select 1 from public.user_roles admin
+      where admin.user_id = auth.uid() and admin.role = 'admin'
+    )
+  );
+
 create policy "family_invitations_insert_guardian"
   on public.family_invitations for insert
   with check (public.is_family_guardian(family_id));
+
+create policy "family_invitations_update_consumer"
+  on public.family_invitations for update
+  using (used_at is null and (expires_at is null or expires_at > now()))
+  with check (used_by = auth.uid());
 
 create policy "alerts_select_guardian_or_creator"
   on public.alerts for select
   using (
     (family_id is not null and public.is_family_guardian(family_id))
     or created_by = auth.uid()
+  );
+
+create policy "alerts_select_admin"
+  on public.alerts for select
+  using (
+    exists (
+      select 1 from public.user_roles admin
+      where admin.user_id = auth.uid() and admin.role = 'admin'
+    )
   );
 
 create policy "alerts_insert_member"

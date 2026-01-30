@@ -42,12 +42,17 @@ export default function FamilleCreatePage() {
 
       if (error) throw error;
 
-      const userId = data.user?.id;
-      if (!userId) {
-        throw new Error(
-          "Compte créé. Vérifiez votre email pour finaliser la création."
-        );
+      const sessionUser = data.session?.user;
+      if (!sessionUser) {
+        toast({
+          title: "Vérification email requise",
+          description:
+            "Votre compte est créé. Vérifiez votre email pour finaliser l'inscription.",
+        });
+        return;
       }
+
+      const userId = sessionUser.id;
 
       const familyName = `Famille de ${fullName}`;
 

@@ -1,4 +1,4 @@
-// src/hooks/useUserRole.ts
+﻿// src/hooks/useUserRole.ts
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useAuth } from './useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -140,7 +140,7 @@ export const useUserRole = (): UserRoleHook => {
     [checkRole]
   );
 
-  // Dérivés mémoïsés
+  // Dérivés mémorisés
   const isAdmin = useMemo(() => role === 'admin', [role]);
   const isRH = useMemo(() => role === 'rh' || isAdmin, [role, isAdmin]);
   const isResponsableQVT = useMemo(() => role === 'responsable_qvt' || isAdmin, [role, isAdmin]);

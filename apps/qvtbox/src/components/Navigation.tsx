@@ -2,17 +2,15 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useUserRole } from "@/hooks/useUserRole";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSelector from "@/components/LanguageSelector";
-import { Menu, X, Settings } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { QVTBOX_ROUTES } from "@qvt/shared";
 
 export default function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  const { isAdmin } = useUserRole();
   const { language, setLanguage } = useLanguage();
 
   const [open, setOpen] = useState(false);
@@ -115,15 +113,6 @@ export default function Navigation() {
             </Link>
           )}
 
-          {/* ADMIN */}
-          {user && isAdmin && (
-            <Link
-              to="/admin"
-              className="p-2 rounded-full border border-[#3A332D] text-[#E5D7BF] hover:border-[#F3E0B9] transition"
-            >
-              <Settings className="w-4 h-4" />
-            </Link>
-          )}
         </div>
 
         {/* MOBILE MENU BUTTON */}

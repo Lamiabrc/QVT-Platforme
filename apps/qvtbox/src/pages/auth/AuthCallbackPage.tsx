@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FloatingBubbles from "@/components/FloatingBubbles";
 import { CheckCircle, AlertTriangle, Loader2 } from "lucide-react";

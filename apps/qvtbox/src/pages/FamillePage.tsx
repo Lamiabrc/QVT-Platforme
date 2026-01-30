@@ -19,12 +19,12 @@ export default function FamillePage() {
                   Sphere Famille
                 </p>
                 <h1 className="text-3xl md:text-5xl font-semibold mt-4">
-                  ZENA Famille &amp; Ado, un refuge pour parler et avancer.
+                  ZENA Famille, un univers complet pour parler et agir ensemble.
                 </h1>
                 <p className="text-base md:text-lg text-[#6F6454] mt-4 max-w-2xl">
-                  Un univers doux pour les adolescents, connecte a un compte
-                  famille. ZENA ecoute, propose des actions simples et aide a
-                  organiser le quotidien.
+                  Un espace parent/tuteur, un espace ado, et un espace commun
+                  pour organiser la vie familiale. ZENA ecoute, propose des
+                  actions simples et aide a prioriser le quotidien.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
@@ -58,29 +58,53 @@ export default function FamillePage() {
         </section>
 
         <section className="py-16 md:py-20 bg-[#FDF9F0] border-y border-[#E8DCC8]">
-          <div className="mx-auto max-w-6xl px-6 grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: "Abonnement en ligne",
-                text: "Une formule simple pour demarrer rapidement.",
-              },
-              {
-                title: "Sous-comptes enfants",
-                text: "Un espace securise pour chaque membre de la famille.",
-              },
-              {
-                title: "Espace amis",
-                text: "Invite-only, sans decouverte publique.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm"
-              >
-                <h3 className="text-lg font-semibold">{item.title}</h3>
-                <p className="text-sm text-[#6F6454] mt-2">{item.text}</p>
+          <div className="mx-auto max-w-6xl px-6">
+            <div className="text-center mb-10">
+              <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                Univers Famille
+              </p>
+              <h2 className="text-2xl md:text-3xl font-semibold mt-3">
+                Trois espaces complementaires, chacun avec son role.
+              </h2>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
+                <h3 className="text-lg font-semibold">Espace Ados</h3>
+                <p className="text-sm text-[#6F6454] mt-2">
+                  Questions, conseils, vie scolaire et soutien discret avec ZENA.
+                </p>
+                <div className="mt-4 grid gap-2 text-xs text-[#9C8D77]">
+                  <span>• Journal et signaux faibles</span>
+                  <span>• Conseils adaptes a l'ado</span>
+                  <span>• Espace amis invite-only</span>
+                </div>
               </div>
-            ))}
+
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
+                <h3 className="text-lg font-semibold">Espace Parents / Tuteurs</h3>
+                <p className="text-sm text-[#6F6454] mt-2">
+                  Charge mentale, conseils d'accompagnement et alerts utiles.
+                </p>
+                <div className="mt-4 grid gap-2 text-xs text-[#9C8D77]">
+                  <span>• Aide a la decision</span>
+                  <span>• Alertes ciblees et protegees</span>
+                  <span>• Suivi des actions familiales</span>
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
+                <h3 className="text-lg font-semibold">Espace Commun</h3>
+                <p className="text-sm text-[#6F6454] mt-2">
+                  Activites familiales, messages et planning partage.
+                </p>
+                <div className="mt-4 grid gap-2 text-xs text-[#9C8D77]">
+                  <span>• Planning commun</span>
+                  <span>• Messages et partages autorises</span>
+                  <span>• Actions familiales prioritisees</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 

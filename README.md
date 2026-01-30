@@ -1,4 +1,4 @@
-# QVT Platform
+﻿# QVT Platform
 
 Monorepo de la plateforme QVT Box avec trois applications :
 
@@ -64,7 +64,7 @@ Aucun secret ne doit etre commite.
 
 ## Famille MVP (SQL)
 
-Le schÃ©ma Famille (families, family_members, family_invitations, alerts) est fourni dans :
+Le schema Famille (families, family_members, family_invitations, alerts) est fourni dans :
 
 ```
 docs/sql/family_mvp.sql
@@ -73,7 +73,7 @@ docs/sql/family_mvp.sql
 Pour l'appliquer :
 1. Ouvrir Supabase SQL Editor
 2. Coller le fichier ci-dessus
-3. ExÃ©cuter la migration
+3. Executer la migration
 
 ## Deploiement (Vercel)
 
