@@ -1,10 +1,65 @@
 // src/pages/Index.tsx
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
-import { CONTACT_EMAIL, QVTBOX_ROUTES } from "@qvt/shared";
+import { CONTACT_EMAIL, QVTBOX_ROUTES, ZENA_VOICE_URL } from "@qvt/shared";
 import boucheVideo from "@/assets/bouche.mp4";
 
+const BubbleDivider = () => (
+  <div className="flex items-center justify-center gap-3" aria-hidden="true">
+    <span className="h-2 w-2 rounded-full bg-[#E8DCC8]" />
+    <span className="h-3 w-3 rounded-full bg-[#F3E0B9]" />
+    <span className="h-2 w-2 rounded-full bg-[#E7D4F1]/70" />
+  </div>
+);
+
 export default function Index() {
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const videoContainerRef = useRef<HTMLDivElement | null>(null);
+  const videoPoster = "/zena-still.jpg";
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+    updatePreference();
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", updatePreference);
+    } else {
+      mediaQuery.addListener(updatePreference);
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener("change", updatePreference);
+      } else {
+        mediaQuery.removeListener(updatePreference);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      return;
+    }
+    const target = videoContainerRef.current;
+    if (!target) {
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoadVideo(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [prefersReducedMotion]);
   return (
     <div className="bg-[#FAF6EE] text-[#1B1A18]">
       <Navigation />
@@ -93,30 +148,10 @@ export default function Index() {
           </div>
         </section>
 
-        {/* SCÈNE IMMERSIVE */}
-        <section className="py-24 px-6 md:px-16 bg-[#FAF6EE]">
-          <div className="mx-auto max-w-5xl space-y-10">
-            <p className="uppercase tracking-[0.22em] text-xs text-[#9C8D77]">
-              Écouter ce qui ne se dit pas tout haut
-            </p>
-            <div className="rounded-[2.2rem] overflow-hidden border border-[#E8DCC8] shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
-              <div className="aspect-[16/9] w-full">
-                <video
-                  src={boucheVideo}
-                  className="w-full h-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* MANIFESTE VISUEL */}
-        <section className="py-28 bg-[#FDF9F0] border-y border-[#E8DCC8]">
+        <section className="py-16 md:py-20 bg-[#FDF9F0] border-y border-[#E8DCC8]">
           <div className="mx-auto max-w-5xl px-6 text-center space-y-4">
+            <BubbleDivider />
             <p className="text-sm uppercase tracking-[0.28em] text-[#9C8D77]">
               Le quotidien va vite. Les émotions, moins.
             </p>
@@ -129,35 +164,103 @@ export default function Index() {
         {/* COMMENT CA MARCHE */}
         <section
           id="comment-ca-marche"
-          className="py-20 md:py-28 bg-[#FDF9F0] border-y border-[#E8DCC8]"
+          className="py-16 md:py-20 bg-[#FDF9F0] border-y border-[#E8DCC8]"
         >
           <div className="mx-auto max-w-6xl px-6">
             <div className="max-w-3xl mb-10">
+              <BubbleDivider />
               <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
-                Comment ça marche
+                Comment ?a marche
               </p>
               <h2 className="text-2xl md:text-3xl font-semibold mt-3">
-                Un parcours simple, pensé pour la vraie vie.
+                Un parcours simple, pens? pour la vraie vie.
               </h2>
               <p className="text-sm md:text-base text-[#6F6454] mt-3">
-                Trois étapes claires, une présence qui rassure, et une
-                protection si la situation l’exige.
+                Trois ?tapes claires, une pr?sence qui rassure, et une
+                protection si la situation l?exige.
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-8 lg:grid-cols-[1.05fr,0.95fr] items-center">
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
+                <div className="text-xs font-semibold text-[#9C8D77]">?tape 1</div>
+                <h3 className="text-xl font-semibold mt-2">Je parle ? ZENA</h3>
+                <p className="text-sm text-[#6F6454] mt-2">
+                  Un espace confidentiel pour dire ce qui p?se, sans jugement.
+                </p>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Link
+                    to={ZENA_VOICE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-5 py-2.5 text-sm font-semibold shadow-[0_14px_30px_rgba(27,26,24,0.16)] hover:opacity-90 transition"
+                  >
+                    Parler ? Z?NA
+                  </Link>
+                  <span className="text-xs text-[#9C8D77] self-center">
+                    Z?NA est l? pour ?couter, pas pour juger.
+                  </span>
+                </div>
+              </div>
+
+              <div
+                ref={videoContainerRef}
+                className="relative overflow-hidden rounded-[28px] border border-[#E8DCC8] bg-[#F7F1E4] shadow-[0_24px_60px_rgba(27,26,24,0.16)]"
+              >
+                <div className="aspect-[5/4] sm:aspect-[4/5] lg:aspect-[5/4] w-full">
+                  {prefersReducedMotion || !shouldLoadVideo ? (
+                    <img
+                      src={videoPoster}
+                      alt="Z?NA en ?coute active"
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <video
+                      src={boucheVideo}
+                      className="h-full w-full object-cover"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="none"
+                      poster={videoPoster}
+                      aria-label="Mini-vid?o de Z?NA en ?coute active"
+                    />
+                  )}
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1B1A18]/55 via-transparent to-transparent" />
+                <div className="absolute left-5 right-5 top-5 flex items-center justify-between">
+                  <span className="rounded-full bg-[#1B1A18]/55 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-[#F7F1E4]">
+                    Z?NA ? ?coute active
+                  </span>
+                  <div className="flex items-center gap-1 opacity-80" aria-hidden="true">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <span
+                        key={index}
+                        className="h-1.5 w-1.5 rounded-full bg-[#F7F1E4] animate-pulse"
+                        style={{ animationDelay: `${index * 0.2}s` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="absolute bottom-5 left-5 right-5">
+                  <p className="text-sm text-[#F7F1E4] max-w-xs leading-relaxed">
+                    Dites-le ? Z?NA. M?me quand ?a ne sort pas.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-6 md:grid-cols-2">
               {[
                 {
-                  title: "Je parle à ZENA",
-                  text: "Un espace confidentiel pour dire ce qui pèse, sans jugement.",
+                  title: "Je re?ois des suggestions + un planning simple",
+                  text: "Des actions r?alistes, organis?es par priorit? et par temps.",
                 },
                 {
-                  title: "Je reçois des suggestions + un planning simple",
-                  text: "Des actions réalistes, organisées par priorité et par temps.",
-                },
-                {
-                  title: "Si nécessaire, une alerte protège et informe la tutelle",
-                  text: "Famille, tuteur, RH/QVT : chacun reçoit uniquement ce qui est prévu.",
+                  title: "Si n?cessaire, une alerte prot?ge et informe la tutelle",
+                  text: "Famille, tuteur, RH/QVT : chacun re?oit uniquement ce qui est pr?vu.",
                 },
               ].map((item, index) => (
                 <div
@@ -165,7 +268,7 @@ export default function Index() {
                   className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm"
                 >
                   <div className="text-xs font-semibold text-[#9C8D77]">
-                    Étape {index + 1}
+                    ?tape {index + 2}
                   </div>
                   <h3 className="text-lg font-semibold mt-2">{item.title}</h3>
                   <p className="text-sm text-[#6F6454] mt-2">{item.text}</p>
@@ -174,16 +277,17 @@ export default function Index() {
             </div>
 
             <p className="mt-6 text-xs text-[#9C8D77]">
-              Note sécurité : ZENA ne remplace pas les urgences. En cas de
-              danger immédiat, contactez les services d’urgence.
+              Note s?curit? : ZENA ne remplace pas les urgences. En cas de
+              danger imm?diat, contactez les services d?urgence.
             </p>
           </div>
         </section>
 
         {/* OFFRES */}
-        <section id="offres" className="py-20 md:py-28 bg-[#FAF6EE]">
+        <section id="offres" className="py-16 md:py-20 bg-[#FAF6EE]">
           <div className="mx-auto max-w-6xl px-6">
             <div className="max-w-3xl mb-12">
+              <BubbleDivider />
               <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
                 Nos deux propositions
               </p>
@@ -299,10 +403,11 @@ export default function Index() {
         {/* CHOISIR SPHERE */}
         <section
           id="choisir-sphere"
-          className="py-20 md:py-28 bg-[#FDF9F0] border-t border-[#E8DCC8]"
+          className="py-16 md:py-20 bg-[#FDF9F0] border-t border-[#E8DCC8]"
         >
           <div className="mx-auto max-w-6xl px-6">
             <div className="max-w-3xl mb-10">
+              <BubbleDivider />
               <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
                 Choisir ma sphère
               </p>
