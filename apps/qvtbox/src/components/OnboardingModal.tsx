@@ -71,7 +71,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
 
   const [isLogged, setIsLogged] = useState<boolean | null>(null);
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setIsLogged(!!data?.user));
+    supabase.auth.getUser().then(({ data }) => setIsLogged(!!data.user));
   }, []);
 
   const selectedRoleObj = useMemo(() => ROLES.find(r => r.id === selectedRole), [selectedRole]);
@@ -153,7 +153,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
           </DialogTitle>
         </DialogHeader>
 
-        {authOpen ? (
+        {authOpen  (
           <div className="max-w-md mx-auto w-full">
             <h3 className="text-center font-kalam text-2xl mb-3">🫧 Créer votre bulle</h3>
             <AuthForm onSuccess={handleAuthSuccess} />
@@ -177,7 +177,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                         key={role.id}
                         className={cn(
                           "p-6 cursor-pointer transition-all duration-300 border-2 hover:shadow-floating",
-                          active ? `${tone.border} ${tone.bg}` : "border-border hover:border-primary/30"
+                          active  `${tone.border} ${tone.bg}` : "border-border hover:border-primary/30"
                         )}
                         onClick={() => handleRoleSelect(role.id)}
                       >
@@ -201,7 +201,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                     Maintenant, choisissez votre parcours bien-être
                   </p>
                   <p className="text-sm text-foreground/50">
-                    Vous êtes : <span className="text-primary font-medium">{selectedRoleObj?.title}</span>
+                    Vous êtes : <span className="text-primary font-medium">{selectedRoleObj.title}</span>
                   </p>
                 </div>
 
@@ -213,7 +213,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                         key={journey.id}
                         className={cn(
                           "p-6 cursor-pointer transition-all duration-300 border-2 hover:shadow-floating",
-                          active ? "border-secondary bg-secondary/5" : "border-border hover:border-secondary/30"
+                          active  "border-secondary bg-secondary/5" : "border-border hover:border-secondary/30"
                         )}
                         onClick={() => handleJourneySelect(journey.id)}
                       >
@@ -239,7 +239,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                 {/* PROJET FAMILLE */}
                 <div className="rounded-2xl border border-secondary/30 bg-secondary/5 p-4 space-y-2">
                   <p className="text-sm text-foreground/80">
-                    Vous souhaitez aussi prendre soin de votre foyer ?  
+                    Vous souhaitez aussi prendre soin de votre foyer   
                     Découvrez le <span className="font-semibold">Projet Famille – Bulle</span>.
                   </p>
 
@@ -274,11 +274,11 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                 <div className="glass-effect rounded-2xl p-6 space-y-4">
                   <div className="flex justify-between">
                     <span>Rôle : </span>
-                    <span className="font-semibold text-primary">{selectedRoleObj?.title}</span>
+                    <span className="font-semibold text-primary">{selectedRoleObj.title}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Parcours : </span>
-                    <span className="font-semibold text-secondary">{selectedJourneyObj?.title}</span>
+                    <span className="font-semibold text-secondary">{selectedJourneyObj.title}</span>
                   </div>
                 </div>
 
@@ -287,7 +287,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                     ← Modifier
                   </Button>
                   <Button onClick={handleCompleteOnboarding} disabled={saving} className="btn-bubble">
-                    {saving ? "Configuration…" : "🫧 Finaliser ma bulle"}
+                    {saving  "Configuration…" : "🫧 Finaliser ma bulle"}
                   </Button>
                 </div>
 
