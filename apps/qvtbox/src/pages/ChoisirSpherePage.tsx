@@ -15,7 +15,7 @@ export default function ChoisirSpherePage() {
             Choisir ma sphere
           </p>
           <h1 className="text-3xl md:text-4xl font-semibold mt-4">
-            Choisissez votre univers de depart.
+            Commencez par QVT Family, puis explorez l'entreprise si besoin.
           </h1>
           <p className="text-sm text-[#6F6454] mt-3">
             Les deux mondes sont isoles. Vous pourrez basculer plus tard si vous
@@ -24,41 +24,8 @@ export default function ChoisirSpherePage() {
 
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <Link
-              to={QVTBOX_ROUTES.entreprise}
-              className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
-            >
-              <div className="relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
-                <img
-                  src="/equipe.png"
-                  alt="Espace entreprise"
-                  className="h-40 w-full object-cover"
-                />
-              </div>
-              <p className="mt-4 text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
-                Entreprise
-              </p>
-              <h2 className="text-lg font-semibold mt-2">
-                Organisation, RH, QVT/QVCT
-              </h2>
-              <p className="text-sm text-[#6F6454] mt-2">
-                Demo, code entreprise, espace interne.
-              </p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs text-[#9C8D77]">
-                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
-                  Demo / devis
-                </span>
-                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
-                  Espace interne
-                </span>
-                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
-                  Alertes RH/QVT
-                </span>
-              </div>
-            </Link>
-
-            <Link
               to={QVTBOX_ROUTES.famille}
-              className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
+              className="group rounded-3xl border border-[#1B1A18]/25 bg-[#FFF8EC] p-6 shadow-sm hover:shadow-md transition"
             >
               <div className="relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
                 <img
@@ -85,6 +52,39 @@ export default function ChoisirSpherePage() {
                 </span>
                 <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
                   Alertes detresse
+                </span>
+              </div>
+            </Link>
+
+            <Link
+              to={QVTBOX_ROUTES.entreprise}
+              className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
+            >
+              <div className="relative overflow-hidden rounded-2xl border border-[#E8DCC8]">
+                <img
+                  src="/equipe.png"
+                  alt="Espace entreprise"
+                  className="h-40 w-full object-cover"
+                />
+              </div>
+              <p className="mt-4 text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                Entreprise (secondaire)
+              </p>
+              <h2 className="text-lg font-semibold mt-2">
+                Organisation, RH, QVT/QVCT
+              </h2>
+              <p className="text-sm text-[#6F6454] mt-2">
+                Demo, code entreprise, espace interne.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-[#9C8D77]">
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Demo / devis
+                </span>
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Espace interne
+                </span>
+                <span className="rounded-full border border-[#E8DCC8] px-3 py-1">
+                  Alertes RH/QVT
                 </span>
               </div>
             </Link>

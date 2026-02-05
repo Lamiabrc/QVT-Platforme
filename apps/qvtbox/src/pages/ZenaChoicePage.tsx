@@ -20,23 +20,23 @@ export default function ZenaChoicePage() {
           </div>
 
           <p className="mt-4 text-lg text-[#E5D7BF]/80">
-            La même voix attentionnée, adaptée à votre réalité : entreprise ou famille.
+            La meme voix attentionnee, avec QVT Family en premier plan.
           </p>
 
           <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-6">
             <Link
-              to="/zena-page"
-              className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#3A332D] bg-[#1D1B19] hover:bg-[#2A2520] text-lg font-semibold flex items-center justify-center gap-3 transition"
+              to="/zena-family-page"
+              className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#F3E0B9]/70 bg-[#2A2520] hover:bg-[#342E28] text-lg font-semibold flex items-center justify-center gap-3 transition"
             >
-              ZÉNA Entreprise
+              ZENA Family
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
             </Link>
 
             <Link
-              to="/zena-family-page"
+              to="/zena-page"
               className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#3A332D] bg-[#1D1B19] hover:bg-[#2A2520] text-lg font-semibold flex items-center justify-center gap-3 transition"
             >
-              ZÉNA Famille
+              ZENA Entreprise
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
             </Link>
           </div>

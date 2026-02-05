@@ -23,12 +23,12 @@ export default function Navigation() {
   /** Version simplifiee + premium */
   const navItems = [
     { label: "Accueil", path: "/" },
-    { label: "Entreprise", path: QVTBOX_ROUTES.entreprise },
-    { label: "Famille", path: QVTBOX_ROUTES.famille },
+    { label: "QVT Family", path: QVTBOX_ROUTES.famille },
     { label: "Box QVT", path: "/box" },
     { label: "Engagements", path: "/engagements" },
     { label: "Contact", path: "/contact" },
-    { label: "Choisir ma sphère", path: QVTBOX_ROUTES.choisirSphere },
+    { label: "Choisir ma sphere", path: QVTBOX_ROUTES.choisirSphere },
+    { label: "Entreprise", path: QVTBOX_ROUTES.entreprise, secondary: true },
   ];
 
   const isActive = (path: string) =>
@@ -61,6 +61,8 @@ export default function Navigation() {
                 className={`transition-colors ${
                   isActive(item.path)
                     ? "text-[#F3E0B9] font-medium"
+                    : item.secondary
+                    ? "text-[#E5D7BF]/45 hover:text-[#E5D7BF]"
                     : "text-[#E5D7BF]/75 hover:text-[#F3E0B9]"
                 }`}
               >
@@ -75,10 +77,10 @@ export default function Navigation() {
 
           {/* CTA ZÉNA */}
           <Link
-            to="/zena"
-            className="px-4 py-1.5 rounded-full border border-[#3A332D] text-[11px] uppercase tracking-[0.16em] text-[#E5D7BF]/90 hover:border-[#F3E0B9]/70 hover:text-[#F3E0B9] transition"
+            to="/zena-family-page"
+            className="px-4 py-1.5 rounded-full border border-[#F3E0B9]/70 text-[11px] uppercase tracking-[0.16em] text-[#F3E0B9] hover:border-[#F3E0B9] hover:text-white transition"
           >
-            ZÉNA
+            ZENA Family
           </Link>
 
           {/* LANGUE */}
@@ -136,6 +138,8 @@ export default function Navigation() {
               className={`block px-3 py-3 rounded-lg text-sm ${
                 isActive(item.path)
                   ? "bg-[#F3E0B9] text-[#151515]"
+                  : item.secondary
+                  ? "text-[#E5D7BF]/50 bg-[#201D19] hover:bg-[#2A2520]"
                   : "text-[#E5D7BF]/80 bg-[#201D19] hover:bg-[#2A2520]"
               }`}
             >
@@ -145,10 +149,10 @@ export default function Navigation() {
 
           {/* ZÉNA */}
           <Link
-            to="/zena"
+            to="/zena-family-page"
             className="block text-center px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-sm font-medium"
           >
-            ZÉNA
+            ZENA Family
           </Link>
 
           {/* LANGUE */}

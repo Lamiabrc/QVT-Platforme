@@ -76,34 +76,40 @@ export default function Index() {
             <div className="grid gap-12 lg:grid-cols-[1.1fr,0.9fr] items-center">
               <div className="max-w-3xl space-y-6">
               <p className="text-xs uppercase tracking-[0.3em] text-[#9C8D77]">
-                QVT Box · Salut, ça va ?
+                QVT Box - QVT Family & Zena Family
               </p>
 
               <h1 className="text-4xl md:text-6xl font-semibold leading-tight text-[#1B1A18]">
-                Une plateforme pour verbaliser,
-                <span className="block text-[#6F6454]">comprendre et agir.</span>
+                Une presence pour les familles,
+                <span className="block text-[#6F6454]">des actions qui apaisent.</span>
               </h1>
 
               <p className="text-base md:text-lg text-[#6F6454] max-w-2xl leading-relaxed">
-                QVT Box aide à parler vrai. ZENA, l’IA à qui l’on parle en pro
-                ou en perso, écoute, propose des actions, informe et aide à
-                planifier. Quand la détresse est réelle, QVT Box connecte et
-                protège en alertant la tutelle selon les règles définies.
+                QVT Family met au premier plan l'accompagnement des familles.
+                Zena Family ecoute, propose des actions, informe et aide a
+                planifier. Le volet entreprise reste disponible en second
+                plan quand il le faut.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <a
-                  href="#offres"
+                <Link
+                  to={QVTBOX_ROUTES.famille}
                   className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold shadow-[0_16px_40px_rgba(27,26,24,0.2)] hover:opacity-90 transition"
                 >
-                  Découvrir les deux sphères
-                </a>
-                <a
-                  href="#choisir-sphere"
+                  Decouvrir QVT Family
+                </Link>
+                <Link
+                  to="/zena-family-page"
                   className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white/60 px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
                 >
-                  Choisir ma sphère
-                </a>
+                  Parler a ZENA Family
+                </Link>
+              </div>
+              <div className="text-xs text-[#9C8D77]">
+                Volet entreprise en second plan: {" "}
+                <Link to={QVTBOX_ROUTES.entreprise} className="underline">
+                  acceder a l'espace entreprise
+                </Link>
               </div>
               </div>
 
@@ -288,94 +294,51 @@ export default function Index() {
             <div className="max-w-3xl mb-12">
               <BubbleDivider />
               <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
-                Nos deux propositions
+                QVT Family en premier plan
               </p>
               <h2 className="text-2xl md:text-3xl font-semibold mt-3">
-                Deux sphères, deux besoins, une même promesse.
+                Famille d'abord, entreprise en soutien.
               </h2>
               <p className="text-sm md:text-base text-[#6F6454] mt-3">
-                Le monde Entreprise et le monde Famille sont distincts pour
-                mieux protéger et organiser l’accompagnement.
+                Le monde Famille est prioritaire pour proteger et accompagner.
+              </p>
+              <p className="text-sm md:text-base text-[#6F6454]">
+                Le volet entreprise reste disponible en second plan.
               </p>
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
-              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-7 shadow-sm">
-                <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
-                  Entreprise
-                </p>
-                <h3 className="text-xl font-semibold mt-2">
-                  La sphère pro, pensée pour l’interne.
-                </h3>
-                <div className="mt-4 space-y-3 text-sm text-[#6F6454]">
-                  <p>
-                    <span className="font-semibold text-[#1B1A18]">
-                      Pour qui ?
-                    </span>{" "}
-                    RH, managers, équipes QVT/QVCT.
-                  </p>
-                  <p>
-                    <span className="font-semibold text-[#1B1A18]">
-                      Objectifs
-                    </span>{" "}
-                    Prévenir, détecter, agir avec un cadre clair.
-                  </p>
-                  <div>
-                    <span className="font-semibold text-[#1B1A18]">
-                      Ce que ça contient
-                    </span>
-                    <ul className="mt-2 list-disc list-inside space-y-1">
-                      <li>Démo / devis et onboarding guidé.</li>
-                      <li>Code entreprise pour rejoindre en sécurité.</li>
-                      <li>Espace interne pour suivre et agir.</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Link
-                    to={`${QVTBOX_ROUTES.entreprise}#demo`}
-                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition"
-                  >
-                    Demander une démo
-                  </Link>
-                  <Link
-                    to={QVTBOX_ROUTES.entrepriseJoin}
-                    className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-5 py-2.5 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
-                  >
-                    J’ai un code entreprise
-                  </Link>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-7 shadow-sm">
+              <div className="rounded-3xl border border-[#1B1A18]/30 bg-[#FFF8EC] p-7 shadow-sm">
                 <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
                   Famille
                 </p>
-                <h3 className="text-xl font-semibold mt-2">
-                  La sphère perso, pour soutenir le quotidien.
+                <div className="inline-flex items-center rounded-full border border-[#1B1A18]/30 px-3 py-1 text-[10px] uppercase tracking-[0.24em] text-[#1B1A18]">
+                  Priorite QVT Family
+                </div>
+                <h3 className="text-xl font-semibold mt-3">
+                  La sphere perso, pour soutenir le quotidien.
                 </h3>
                 <div className="mt-4 space-y-3 text-sm text-[#6F6454]">
                   <p>
                     <span className="font-semibold text-[#1B1A18]">
-                      Pour qui ?
+                    Pour qui ?
                     </span>{" "}
                     Familles, parents, proches, tuteurs.
                   </p>
                   <p>
                     <span className="font-semibold text-[#1B1A18]">
-                      Objectifs
+                    Objectifs
                     </span>{" "}
-                    Écouter, organiser, soutenir sans alourdir.
+                    Ecouter, organiser, soutenir sans alourdir.
                   </p>
                   <div>
                     <span className="font-semibold text-[#1B1A18]">
-                      Ce que ça contient
+                    Ce que ca contient
                     </span>
                     <ul className="mt-2 list-disc list-inside space-y-1">
-                      <li>Abonnement en ligne simple et flexible.</li>
-                      <li>Sous-comptes enfants et espace famille.</li>
-                      <li>Espace amis en accès sur invitation.</li>
+                    <li>Abonnement en ligne simple et flexible.</li>
+                    <li>Sous-comptes enfants et espace famille.</li>
+                    <li>Espace amis en acces sur invitation.</li>
                     </ul>
                   </div>
                 </div>
@@ -385,13 +348,61 @@ export default function Index() {
                     to={QVTBOX_ROUTES.famille}
                     className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition"
                   >
-                    Voir l’offre Famille
+                    Voir l'offre Famille
                   </Link>
                   <Link
                     to={QVTBOX_ROUTES.familleCreate}
                     className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-5 py-2.5 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
                   >
-                    Créer un compte Famille
+                    Creer un compte Famille
+                  </Link>
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white/70 p-7 shadow-sm">
+                <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                  Entreprise (secondaire)
+                </p>
+                <h3 className="text-xl font-semibold mt-2">
+                  La sphere pro, pensee pour l'interne.
+                </h3>
+                <div className="mt-4 space-y-3 text-sm text-[#6F6454]">
+                  <p>
+                    <span className="font-semibold text-[#1B1A18]">
+                    Pour qui ?
+                    </span>{" "}
+                    RH, managers, equipes QVT/QVCT.
+                  </p>
+                  <p>
+                    <span className="font-semibold text-[#1B1A18]">
+                    Objectifs
+                    </span>{" "}
+                    Prevenir, detecter, agir avec un cadre clair.
+                  </p>
+                  <div>
+                    <span className="font-semibold text-[#1B1A18]">
+                    Ce que ca contient
+                    </span>
+                    <ul className="mt-2 list-disc list-inside space-y-1">
+                    <li>Demo / devis et onboarding guide.</li>
+                    <li>Code entreprise pour rejoindre en securite.</li>
+                    <li>Espace interne pour suivre et agir.</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    to={QVTBOX_ROUTES.entreprise + "#demo"}
+                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition"
+                  >
+                    Demander une demo
+                  </Link>
+                  <Link
+                    to={QVTBOX_ROUTES.entrepriseJoin}
+                    className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-5 py-2.5 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
+                  >
+                    J'ai un code entreprise
                   </Link>
                 </div>
               </div>
@@ -408,35 +419,20 @@ export default function Index() {
             <div className="max-w-3xl mb-10">
               <BubbleDivider />
               <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
-                Choisir ma sphère
+                Choisir ma sphere
               </p>
               <h2 className="text-2xl md:text-3xl font-semibold mt-3">
-                Commencez dans le monde qui vous correspond.
+                Commencez par QVT Family, puis explorez l'entreprise si besoin.
               </h2>
               <p className="text-sm md:text-base text-[#6F6454] mt-3">
-                Vous pourrez basculer plus tard si vous avez un double usage.
+                Les deux mondes sont isoles. Vous pourrez basculer plus tard.
               </p>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <Link
-                to={QVTBOX_ROUTES.entreprise}
-                className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
-              >
-                <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
-                  Entreprise
-                </p>
-                <h3 className="text-lg font-semibold mt-2">
-                  Je représente une organisation.
-                </h3>
-                <p className="text-sm text-[#6F6454] mt-2">
-                  Démo, devis, code entreprise, espace interne.
-                </p>
-              </Link>
-
-              <Link
                 to={QVTBOX_ROUTES.famille}
-                className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
+                className="group rounded-3xl border border-[#1B1A18]/25 bg-[#FFF8EC] p-6 shadow-sm hover:shadow-md transition"
               >
                 <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
                   Famille
@@ -446,6 +442,21 @@ export default function Index() {
                 </h3>
                 <p className="text-sm text-[#6F6454] mt-2">
                   Abonnement en ligne, sous-comptes et invitations.
+                </p>
+              </Link>
+
+              <Link
+                to={QVTBOX_ROUTES.entreprise}
+                className="group rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm hover:shadow-md transition"
+              >
+                <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">
+                  Entreprise (secondaire)
+                </p>
+                <h3 className="text-lg font-semibold mt-2">
+                  Je represente une organisation.
+                </h3>
+                <p className="text-sm text-[#6F6454] mt-2">
+                  Demo, devis, code entreprise, espace interne.
                 </p>
               </Link>
             </div>

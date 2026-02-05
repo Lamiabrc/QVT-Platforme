@@ -50,8 +50,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/saas" className="hover:text-[#F3E0B9] transition">
-                  Entreprise (Licence SaaS)
+                <Link to="/famille" className="hover:text-[#F3E0B9] transition">
+                  QVT Family
+                </Link>
+              </li>
+              <li>
+                <Link to="/zena-family-page" className="hover:text-[#F3E0B9] transition">
+                  ZENA Family
                 </Link>
               </li>
               <li>
@@ -65,16 +70,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/simulateur"
-                  className="hover:text-[#F3E0B9] transition"
-                >
-                  Ma Bulle Attentionnée
+                <Link to="/simulateur" className="hover:text-[#F3E0B9] transition">
+                  Ma Bulle Attentionnee
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="hover:text-[#F3E0B9] transition">
-                  À propos
+                  A propos
                 </Link>
               </li>
               <li>
@@ -83,16 +85,13 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/zena" className="hover:text-[#F3E0B9] transition">
-                  ZÉNA Entreprise
+                <Link to="/saas" className="hover:text-[#F3E0B9] transition">
+                  Entreprise (secondaire)
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/zena-family"
-                  className="hover:text-[#F3E0B9] transition"
-                >
-                  ZÉNA Family
+                <Link to="/zena" className="hover:text-[#F3E0B9] transition">
+                  ZENA Entreprise
                 </Link>
               </li>
             </ul>
