@@ -1,0 +1,10 @@
+{
+  "name": "zena-voice",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node ./scripts/build-qvtbox.js",
+    "dev": "node ./scripts/dev-qvtbox.js"
+  }
+}
