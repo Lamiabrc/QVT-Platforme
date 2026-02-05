@@ -75,10 +75,14 @@ const ZenaChoicePage = lazy(() => import("./pages/ZenaChoicePage"));
 const EntreprisePage = lazy(() => import("./pages/EntreprisePage"));
 const EntrepriseJoinPage = lazy(() => import("./pages/EntrepriseJoinPage"));
 const FamillePage = lazy(() => import("./pages/FamillePage"));
+const FamilySpacePage = lazy(() => import("./pages/FamilySpacePage"));
 const FamilleCreatePage = lazy(() => import("./pages/FamilleCreatePage"));
 const FamilleInvitePage = lazy(() => import("./pages/FamilleInvitePage"));
 const FamilleJoinPage = lazy(() => import("./pages/FamilleJoinPage"));
 const FamilleDashboardPage = lazy(() => import("./pages/FamilleDashboardPage"));
+const MentorApplyPage = lazy(() => import("./pages/MentorApplyPage"));
+const MentorDashboardPage = lazy(() => import("./pages/MentorDashboardPage"));
+const SupervisionPage = lazy(() => import("./pages/SupervisionPage"));
 const ChoisirSpherePage = lazy(() => import("./pages/ChoisirSpherePage"));
 const ProfileRedirectPage = lazy(() => import("./pages/ProfileRedirectPage"));
 
@@ -401,10 +405,27 @@ const App = () => (
               {/* QVT Box — sphères (public sauf dashboard) */}
               <Route path="/entreprise" element={<EntreprisePage />} />
               <Route path="/entreprise/rejoindre" element={<EntrepriseJoinPage />} />
-              <Route path="/famille" element={<FamillePage />} />
+              <Route path="/famille" element={<FamilySpacePage />} />
               <Route path="/famille/creer" element={<FamilleCreatePage />} />
               <Route path="/famille/inviter" element={<FamilleInvitePage />} />
               <Route path="/famille/rejoindre" element={<FamilleJoinPage />} />
+              <Route path="/famille/mentor/apply" element={<MentorApplyPage />} />
+              <Route
+                path="/mentor"
+                element={
+                  <RequireAuth>
+                    <MentorDashboardPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/supervision"
+                element={
+                  <RequireAuth>
+                    <SupervisionPage />
+                  </RequireAuth>
+                }
+              />
               <Route
                 path="/famille/dashboard"
                 element={
