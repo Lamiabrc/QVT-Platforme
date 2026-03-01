@@ -50,48 +50,33 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/famille" className="hover:text-[#F3E0B9] transition">
-                  QVT Family
+                <Link to="/entreprise" className="hover:text-[#F3E0B9] transition">
+                  Entreprise
                 </Link>
               </li>
               <li>
-                <Link to="/zena-family-page" className="hover:text-[#F3E0B9] transition">
-                  ZENA Family
+                <Link to="/famille" className="hover:text-[#F3E0B9] transition">
+                  Famille
+                </Link>
+              </li>
+              <li>
+                <Link to="/zena" className="hover:text-[#F3E0B9] transition">
+                  ZÉNA
+                </Link>
+              </li>
+              <li>
+                <Link to="/securite" className="hover:text-[#F3E0B9] transition">
+                  Sécurité
                 </Link>
               </li>
               <li>
                 <Link to="/box" className="hover:text-[#F3E0B9] transition">
-                  Box QVT
-                </Link>
-              </li>
-              <li>
-                <Link to="/boutique" className="hover:text-[#F3E0B9] transition">
-                  Boutique
-                </Link>
-              </li>
-              <li>
-                <Link to="/simulateur" className="hover:text-[#F3E0B9] transition">
-                  Ma Bulle Attentionnee
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="hover:text-[#F3E0B9] transition">
-                  A propos
+                  Box
                 </Link>
               </li>
               <li>
                 <Link to="/contact" className="hover:text-[#F3E0B9] transition">
                   Contact
-                </Link>
-              </li>
-              <li>
-                <Link to="/saas" className="hover:text-[#F3E0B9] transition">
-                  Entreprise (secondaire)
-                </Link>
-              </li>
-              <li>
-                <Link to="/zena" className="hover:text-[#F3E0B9] transition">
-                  ZENA Entreprise
                 </Link>
               </li>
             </ul>

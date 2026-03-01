@@ -9,12 +9,11 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:qvtbox": "npm --workspace apps/qvtbox run dev",
-    "build:qvtbox": "npm --workspace apps/qvtbox run build",
-    "build:all": "npm run build:qvtbox",
-    "typecheck:all": "npm --workspace apps/qvtbox run typecheck",
-    "lint:all": "npm --workspace apps/qvtbox run lint",
-    "lint": "npm run lint:all",
-    "typecheck": "npm run typecheck:all"
+    "dev": "npm --workspace apps/qvtbox run dev",
+    "build": "npm --workspace apps/qvtbox run build",
+    "lint": "npm --workspace apps/qvtbox run lint",
+    "typecheck": "npm --workspace apps/qvtbox run typecheck",
+    "dev:qvtbox": "npm run dev",
+    "build:qvtbox": "npm run build"
   }
 }

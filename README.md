@@ -1,24 +1,20 @@
-﻿# QVT Platform
+# QVT Platform
 
-Monorepo de la plateforme QVT Box avec trois applications :
+Monorepo QVT Box centré sur un seul site produit :
 
-- QVT Box (hub compte et creation de compte famille) : https://qvtbox.com
-- ZENA Family (ados/famille) : https://zena-family.qvtbox.com
-- ZENA Voice (moteur IA/voix) : https://zena.qvtbox.com
+- Site principal : `https://www.qvtbox.com`
+- Parcours : `/entreprise`, `/famille`, `/zena`, `/securite`, `/box`
+
+Les anciens projets `zena-family` et `zena-voice` sont conservés uniquement pour rediriger vers `qvtbox.com`.
 
 ## Structure
 
 ```
-apps/qvtbox
-apps/zena-family
-apps/zena-voice
-packages/shared
+apps/qvtbox        # app principale
+apps/zena-family   # redirect-only -> /famille
+apps/zena-voice    # redirect-only -> /zena
+packages/shared    # liens, types, utilitaires partagés
 ```
-
-## Auth et backend partages
-
-Les trois apps utilisent le meme backend Supabase et la meme authentification.
-Le client Supabase et les types communs sont centralises dans `packages/shared`.
 
 ## Installation
 
@@ -29,110 +25,58 @@ npm install
 ## Scripts racine
 
 ```sh
-npm run dev:qvtbox
-npm run dev:family
-npm run dev:voice
-
-npm run build:all
+npm run dev
+npm run build
 npm run lint
 npm run typecheck
 ```
 
+Tous ces scripts ciblent `apps/qvtbox`.
+
 ## Variables d'environnement
 
-Chaque app charge ses variables depuis un fichier `.env.local` dans son dossier.
-Copier `.env.example` en base.
+Copier `.env.example` en `.env.local` (ou variables Vercel).
 
-- apps/qvtbox
-  - VITE_SUPABASE_URL
-  - VITE_SUPABASE_ANON_KEY
-  - VITE_RESEND_API_KEY
-  - VITE_APP_BASE_URL
+### Frontend (`VITE_*`)
 
-- apps/zena-family
-  - VITE_SUPABASE_URL
-  - VITE_SUPABASE_ANON_KEY
-  - VITE_APP_BASE_URL
-  - VITE_ALERT_WEBHOOK_URL (optionnel)
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+- `VITE_APP_BASE_URL`
+- `VITE_GA_ID` (optionnel)
+- `VITE_QVTBOX_URL`, `VITE_ZENA_FAMILY_URL`, `VITE_ZENA_VOICE_URL`, `VITE_CONTACT_EMAIL` (optionnels)
 
-- apps/zena-voice
-  - VITE_SUPABASE_URL
-  - VITE_SUPABASE_ANON_KEY
-  - VITE_APP_BASE_URL
+Ne jamais mettre de secret dans `VITE_*`.
 
-Aucun secret ne doit etre commite.
+### Server-side (API routes / functions)
 
-## Supabase (SQL MVP)
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `OPENAI_API_KEY` (optionnel pour `/api/zena/chat`)
+- `RESEND_API_KEY` (obligatoire pour `/api/contact`)
+- `CONTACT_FROM_EMAIL` (optionnel)
+- `CONTACT_TO_EMAIL` (optionnel)
 
-Fichier unique :
+## API serverless (qvtbox)
 
-```
-docs/sql/0001_family_and_zena_mvp.sql
-```
+- `apps/qvtbox/api/zena/chat.ts`
+- `apps/qvtbox/api/contact.ts`
 
-### Pas a pas (comme un enfant)
+Les clés sensibles restent côté serveur uniquement.
 
-1. Ouvre Supabase (Dashboard).
-2. Clique sur "SQL Editor".
-3. Clique sur "New query".
-4. Ouvre le fichier `docs/sql/0001_family_and_zena_mvp.sql`.
-5. Copie tout le contenu.
-6. Colle dans l'editor Supabase.
-7. Clique sur "Run".
-8. Attends "Success" en bas.
+## Déploiement Vercel
 
-C'est tout. Les tables Famille + ZENA sont creees.
+### App principale
 
-## API ZENA (serverless)
+- Project root : `apps/qvtbox`
+- Build command : `npm run build`
+- Output directory : `dist`
+- SPA rewrite : géré par `apps/qvtbox/vercel.json`
 
-L'endpoint est :
+### Anciens sous-domaines
 
-```
-/apps/qvtbox/api/zena/chat.ts
-```
-
-Variables requises dans l'environnement Vercel (Project Settings > Environment Variables) :
-
-- SUPABASE_URL
-- SUPABASE_SERVICE_ROLE_KEY
-- OPENAI_API_KEY (optionnel: si absent, reponse mock)
-
-Sans `SUPABASE_SERVICE_ROLE_KEY`, la conversation ne sera pas sauvegardee.
-
-## Famille MVP (SQL) - ancien fichier
-
-Le schema Famille (families, family_members, family_invitations, alerts) est fourni dans :
-
-```
-docs/sql/family_mvp.sql
-```
-
-Pour l'appliquer :
-1. Ouvrir Supabase SQL Editor
-2. Coller le fichier ci-dessus
-3. Executer la migration
-
-## Deploiement (Vercel)
-
-Ce monorepo correspond a 3 projets Vercel distincts. Pour chacun :
-
-- Root Directory : `apps/qvtbox` ou `apps/zena-family` ou `apps/zena-voice`
-- Build Command : `npm run build`
-- Output Directory : `dist`
-
-Les `vercel.json` par app gerent les rewrites SPA pour React Router.
-
-## Contexte produit
-
-La plateforme propose une IA emotionnelle pour adolescents, avec un espace famille commun, un espace amis independant, et des alertes en cas de detresse ou de harcelement. Le projet s'inscrit dans une periode de restructuration du paysage numerique francais, de maniere factuelle et non partisane.
+- `apps/zena-family` redirige vers `https://www.qvtbox.com/famille`
+- `apps/zena-voice` redirige vers `https://www.qvtbox.com/zena`
 
 ## Contact
 
-contact@qvtbox.com
-
-## Build troubleshooting (Windows)
-
-If `npm run build:all` fails with `spawn EPERM` from esbuild while loading a Vite config, it is usually a local permission or antivirus rule blocking the esbuild binary. Try:
-
-- Run the build from an elevated terminal.
-- Allow `node_modules/@esbuild/win32-x64/esbuild.exe` in your security tooling.
+`contact@qvtbox.com`

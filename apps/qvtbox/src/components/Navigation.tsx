@@ -5,7 +5,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import LanguageSelector from "@/components/LanguageSelector";
 import { Menu, X } from "lucide-react";
-import { QVTBOX_ROUTES } from "@qvt/shared";
 
 export default function Navigation() {
   const location = useLocation();
@@ -20,15 +19,12 @@ export default function Navigation() {
     navigate("/");
   };
 
-  /** Version simplifiee + premium */
   const navItems = [
-    { label: "Accueil", path: "/" },
-    { label: "QVT Family", path: QVTBOX_ROUTES.famille },
-    { label: "Box QVT", path: "/box" },
-    { label: "Engagements", path: "/engagements" },
-    { label: "Contact", path: "/contact" },
-    { label: "Choisir ma sphere", path: QVTBOX_ROUTES.choisirSphere },
-    { label: "Entreprise", path: QVTBOX_ROUTES.entreprise, secondary: true },
+    { label: "Entreprise", path: "/entreprise" },
+    { label: "Famille", path: "/famille" },
+    { label: "ZÉNA", path: "/zena" },
+    { label: "Sécurité", path: "/securite" },
+    { label: "Box", path: "/box" },
   ];
 
   const isActive = (path: string) =>
@@ -75,14 +71,6 @@ export default function Navigation() {
         {/* RIGHT ACTIONS */}
         <div className="hidden md:flex items-center gap-4">
 
-          {/* CTA ZÉNA */}
-          <Link
-            to="/zena-family-page"
-            className="px-4 py-1.5 rounded-full border border-[#F3E0B9]/70 text-[11px] uppercase tracking-[0.16em] text-[#F3E0B9] hover:border-[#F3E0B9] hover:text-white transition"
-          >
-            ZENA Family
-          </Link>
-
           {/* LANGUE */}
           <LanguageSelector
             currentLanguage={language}
@@ -108,7 +96,7 @@ export default function Navigation() {
             </div>
           ) : (
             <Link
-              to="/auth"
+              to="/auth/login"
               className="px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-xs font-semibold hover:bg-[#F7E7C5] transition"
             >
               Connexion
@@ -147,14 +135,6 @@ export default function Navigation() {
             </Link>
           ))}
 
-          {/* ZÉNA */}
-          <Link
-            to="/zena-family-page"
-            className="block text-center px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-sm font-medium"
-          >
-            ZENA Family
-          </Link>
-
           {/* LANGUE */}
           <LanguageSelector
             currentLanguage={language}
@@ -184,7 +164,7 @@ export default function Navigation() {
             </div>
           ) : (
             <Link
-              to="/auth"
+              to="/auth/login"
               className="block text-center px-4 py-2 rounded-full bg-[#151515] border border-[#F3E0B9] text-[#F3E0B9] text-sm font-medium"
               onClick={() => setOpen(false)}
             >

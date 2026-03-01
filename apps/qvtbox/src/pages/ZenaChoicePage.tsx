@@ -1,46 +1,72 @@
-﻿// src/pages/ZenaChoicePage.tsx
+import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import ZenaChatPanel from "@/components/ZenaChatPanel";
+
+type ZenaMode = "family" | "company";
 
 export default function ZenaChoicePage() {
+  const [mode, setMode] = useState<ZenaMode>("family");
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#151515] via-[#1D1B19] to-[#111010] text-[#F3E0B9]">
+    <div className="min-h-screen bg-[#FAF6EE] text-[#1B1A18]">
       <Navigation />
 
-      <main className="flex-1 pt-28 pb-24 px-6">
-        <div className="mx-auto max-w-3xl text-center">
-          {/* Halo doux autour du titre */}
-          <div className="relative inline-block">
-            <div className="absolute -inset-10 bg-[#F3E0B9]/12 blur-2xl rounded-full" />
-            <h1 className="relative text-4xl md:text-5xl font-bold tracking-tight">
-              Choisissez votre univers ZÉNA
+      <main>
+        <section className="relative overflow-hidden pt-32 pb-14 md:pt-40">
+          <div className="absolute inset-0 bg-gradient-to-b from-white via-[#FAF6EE] to-[#F7F1E4]" />
+          <div className="absolute -top-24 left-0 h-72 w-72 rounded-full bg-[#CFECE8]/40 blur-3xl" />
+          <div className="absolute top-16 right-0 h-72 w-72 rounded-full bg-[#F3E0B9]/40 blur-3xl" />
+
+          <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+            <p className="text-xs uppercase tracking-[0.3em] text-[#9C8D77]">ZÉNA</p>
+            <h1 className="text-4xl md:text-5xl font-semibold mt-4">
+              Parlez à ZÉNA.
             </h1>
+            <p className="text-base md:text-lg text-[#6F6454] mt-4 max-w-3xl mx-auto">
+              Décrivez ce que vous ressentez, ZÉNA vous aide à mettre des mots et
+              propose une action concrète.
+            </p>
+            <p className="text-xs text-[#9C8D77] mt-4">
+              Voice arrive ensuite, dans la même expérience.
+            </p>
           </div>
+        </section>
 
-          <p className="mt-4 text-lg text-[#E5D7BF]/80">
-            La meme voix attentionnee, avec QVT Family en premier plan.
-          </p>
+        <section className="pb-20">
+          <div className="mx-auto max-w-5xl px-6">
+            <div className="mb-5 inline-flex rounded-full border border-[#E8DCC8] bg-white p-1">
+              <button
+                type="button"
+                onClick={() => setMode("family")}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  mode === "family" ? "bg-[#1B1A18] text-[#FAF6EE]" : "text-[#6F6454]"
+                }`}
+              >
+                Famille
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("company")}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  mode === "company" ? "bg-[#1B1A18] text-[#FAF6EE]" : "text-[#6F6454]"
+                }`}
+              >
+                Entreprise
+              </button>
+            </div>
 
-          <div className="mt-12 flex flex-col md:flex-row items-center justify-center gap-6">
-            <Link
-              to="/zena-family-page"
-              className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#F3E0B9]/70 bg-[#2A2520] hover:bg-[#342E28] text-lg font-semibold flex items-center justify-center gap-3 transition"
-            >
-              ZENA Family
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
-            </Link>
-
-            <Link
-              to="/zena-page"
-              className="group w-full md:w-auto px-8 py-5 rounded-2xl border border-[#3A332D] bg-[#1D1B19] hover:bg-[#2A2520] text-lg font-semibold flex items-center justify-center gap-3 transition"
-            >
-              ZENA Entreprise
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition" />
-            </Link>
+            <ZenaChatPanel
+              sphere={mode}
+              title={mode === "family" ? "Parler à ZÉNA en famille" : "Parler à ZÉNA en entreprise"}
+              subtitle={
+                mode === "family"
+                  ? "ZÉNA accompagne l’expression ado/parent avec partage choisi."
+                  : "ZÉNA aide à capter les signaux faibles et propose des actions simples."
+              }
+            />
           </div>
-        </div>
+        </section>
       </main>
 
       <Footer />

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.resolve(__dirname, "..", "dist");
-const target = "https://www.qvtbox.com/zena";
+const target = "https://www.qvtbox.com/famille";
 
 const html = `<!doctype html>
 <html lang="fr">
@@ -26,4 +26,4 @@ mkdirSync(distDir, { recursive: true });
 writeFileSync(path.join(distDir, "index.html"), html, "utf8");
 writeFileSync(path.join(distDir, "404.html"), html, "utf8");
 
-console.log("zena-voice redirect build generated");
+console.log("zena-family redirect build generated");

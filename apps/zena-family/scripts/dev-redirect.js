@@ -1,7 +1,7 @@
 import http from "node:http";
 
-const target = "https://www.qvtbox.com/zena";
-const port = Number(process.env.PORT || 4173);
+const target = "https://www.qvtbox.com/famille";
+const port = Number(process.env.PORT || 4174);
 
 const server = http.createServer((_req, res) => {
   res.statusCode = 302;
@@ -10,6 +10,6 @@ const server = http.createServer((_req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`zena-voice redirect dev server listening on http://localhost:${port}`);
+  console.log(`zena-family redirect dev server listening on http://localhost:${port}`);
   console.log(`All requests redirect to ${target}`);
 });

@@ -76,18 +76,6 @@ export default function ZenaChatPanel({
 
     setMessages((prev) => [...prev, localMessage]);
 
-    if (!canPersist || !user) {
-      const fallbackReply: ZenaChatMessage = {
-        id: `${now}-zena`,
-        author: "zena",
-        content:
-          "Je suis là. En mode invité, je t’écoute sans sauvegarder. Si tu veux garder l’historique, connecte-toi.",
-        createdAt: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, fallbackReply]);
-      return;
-    }
-
     setLoading(true);
     try {
       const response = await fetch("/api/zena/chat", {
@@ -96,7 +84,7 @@ export default function ZenaChatPanel({
         body: JSON.stringify({
           message: content,
           sphere,
-          userId: user.id,
+          userId: user?.id ?? null,
           conversationId,
           familyId: familyId ?? null,
           companyId: companyId ?? null,
@@ -129,11 +117,22 @@ export default function ZenaChatPanel({
         });
       }
     } catch (error: any) {
-      toast({
-        title: "Erreur",
-        description: error?.message ?? "ZÉNA est indisponible.",
-        variant: "destructive",
-      });
+      if (!canPersist) {
+        const fallbackReply: ZenaChatMessage = {
+          id: `${now}-zena-fallback`,
+          author: "zena",
+          content:
+            "Je suis là. En mode invité, je t’écoute sans sauvegarder. Si tu veux garder l’historique, connecte-toi.",
+          createdAt: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, fallbackReply]);
+      } else {
+        toast({
+          title: "Erreur",
+          description: error?.message ?? "ZÉNA est indisponible.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
