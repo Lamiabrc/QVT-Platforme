@@ -1,4 +1,4 @@
-// src/pages/Contact.tsx
+﻿// src/pages/Contact.tsx
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -33,6 +33,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { supabase } from "@/integrations/supabase/client";
 
 const CONTACT_EMAIL = "contact@qvtbox.com";
+const FORM_ENDPOINT = `https://formsubmit.co/ajax/${encodeURIComponent(CONTACT_EMAIL)}`;
 
 const ContactPage = () => {
   const { toast } = useToast();
@@ -76,17 +77,22 @@ const ContactPage = () => {
       ]);
 
       // --- Envoi email ---
-      const emailSend = fetch("/api/contact", {
+      const emailPayload = {
+        name: formData.nom,
+        email: formData.email,
+        phone: formData.telephone,
+        company: formData.entreprise,
+        role: formData.role,
+        message: formData.message,
+        _subject: "Nouveau contact QVT Box",
+        _template: "table",
+        _captcha: "false",
+      };
+
+      const emailSend = fetch(FORM_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nom: formData.nom,
-          email: formData.email,
-          telephone: formData.telephone,
-          entreprise: formData.entreprise,
-          role: formData.role,
-          message: formData.message,
-        }),
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(emailPayload),
       });
 
       const [leadRes, emailRes] = await Promise.allSettled([leadInsert, emailSend]);

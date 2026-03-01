@@ -5,14 +5,14 @@ import AuthForm from '@/components/AuthForm';
 import Navigation from '@/components/Navigation';
 
 const AuthPage = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/profil');
+    if (user) {
+      navigate('/dashboard');
     }
-  }, [isAuthenticated, navigate]);
+  }, [user, navigate]);
 
   if (loading) {
     return (
@@ -43,7 +43,7 @@ const AuthPage = () => {
               </p>
             </div>
             
-            <AuthForm onSuccess={() => navigate('/profil')} />
+            <AuthForm onSuccess={() => navigate('/dashboard')} />
           </div>
         </div>
       </div>

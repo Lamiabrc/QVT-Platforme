@@ -1,4 +1,4 @@
-import Navigation from "@/components/Navigation";
+﻿import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SEOHead } from "@/components/SEOHead";
@@ -44,9 +44,9 @@ const MentionsLegalesPage = () => {
                   <CardTitle className="text-2xl font-inter text-primary">Hébergement</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-foreground/80">
-                  <p><strong>Hébergeur :</strong> Vercel Inc.</p>
-                  <p><strong>Adresse :</strong> 440 N Barranca Ave #4133, Covina, CA 91723, USA</p>
-                  <p>Le site est hébergé sur une infrastructure cloud sécurisée.</p>
+                  <p><strong>Hébergeur :</strong> Lovable</p>
+                  <p><strong>Adresse :</strong> Platform hébergée sur l'infrastructure Lovable</p>
+                  <p>Le site est hébergé sur la plateforme Lovable qui utilise une infrastructure cloud sécurisée.</p>
                 </CardContent>
               </Card>
 

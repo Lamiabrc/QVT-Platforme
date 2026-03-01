@@ -1,4 +1,4 @@
-// src/pages/SimulateurPage.tsx
+﻿// src/pages/SimulateurPage.tsx
 import { useState, useMemo } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -46,12 +46,7 @@ const COLORS = {
 // -------------------------------------------------------------
 type ProfileId = "salarie" | "parent" | "ado" | "senior" | "autre";
 
-const profiles: Array<{
-  id: ProfileId;
-  label: string;
-  desc: string;
-  emoji: string;
-}> = [
+const profiles = [
   { id: "salarie", label: "Salarié(e)", emoji: "💼", desc: "Travail, rythme, charge mentale, équipe…" },
   { id: "parent", label: "Parent", emoji: "👨‍👩‍👧", desc: "Organisation familiale, fatigue parentale…" },
   { id: "ado", label: "Adolescent(e)", emoji: "🎒", desc: "Émotions, école, relations, sommeil…" },

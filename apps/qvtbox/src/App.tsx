@@ -49,6 +49,8 @@ const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ManifestPage = lazy(() => import("./pages/ManifestPage"));
 const EngagementsPage = lazy(() => import("./pages/EngagementsPage"));
 
+const ZenaEntreprisePage = lazy(() => import("./pages/ZenaEntreprisePage"));
+const ZenaFamilyPage = lazy(() => import("./pages/ZenaFamilyPage"));
 const ZenaChoicePage = lazy(() => import("./pages/ZenaChoicePage"));
 const EntreprisePage = lazy(() => import("./pages/EntreprisePage"));
 const EntrepriseJoinPage = lazy(() => import("./pages/EntrepriseJoinPage"));
@@ -301,9 +303,9 @@ const App = () => (
             <Route path="/manifeste" element={<ManifestPage />} />
 
             <Route path="/zena" element={<ZenaChoicePage />} />
-            <Route path="/zena-page" element={<Navigate to="/zena" replace />} />
-            <Route path="/zena-family-page" element={<Navigate to="/famille" replace />} />
-            <Route path="/zena-family" element={<Navigate to="/famille" replace />} />
+            <Route path="/zena-page" element={<ZenaEntreprisePage />} />
+            <Route path="/zena-family-page" element={<ZenaFamilyPage />} />
+            <Route path="/zena-family" element={<Navigate to="/zena-family-page" replace />} />
 
             <Route path="/entreprise" element={<EntreprisePage />} />
             <Route path="/entreprise/rejoindre" element={<EntrepriseJoinPage />} />

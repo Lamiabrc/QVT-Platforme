@@ -1,4 +1,4 @@
-// src/pages/AboutPage.tsx
+﻿// src/pages/AboutPage.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
