@@ -20,8 +20,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        inter: ["Inter", "sans-serif"],
+        sans: ["Manrope", "sans-serif"],
+        inter: ["Manrope", "sans-serif"],
+        manrope: ["Manrope", "sans-serif"],
         montserrat: ["Montserrat", "sans-serif"],
         lato: ["Lato", "sans-serif"],
         roboto: ["Roboto", "sans-serif"]
