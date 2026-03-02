@@ -11,8 +11,17 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { registerSW } from "virtual:pwa-register";
 
-registerSW({
+const updateSW = registerSW({
   immediate: true,
+  onNeedRefresh() {
+    updateSW(true);
+  },
+});
+
+// Recover automatically when a lazy-loaded Vite chunk is stale after a new deployment.
+window.addEventListener("vite:preloadError", (event) => {
+  event.preventDefault();
+  window.location.reload();
 });
 
 const queryClient = new QueryClient({
