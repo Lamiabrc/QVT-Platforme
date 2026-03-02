@@ -123,7 +123,7 @@ export default function Index() {
           <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.95fr,1.05fr]">
             <div className="relative overflow-hidden rounded-[28px] border border-[#E8DCC8] bg-white shadow-[0_24px_60px_rgba(27,26,24,0.12)]">
               <img
-                src="/box-lineup-table.webp"
+                src="/box%20t.png"
                 alt="Selection de box QVT Box"
                 className="aspect-[4/3] w-full object-cover"
                 loading="lazy"
