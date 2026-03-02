@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { HeartHandshake, ShieldAlert, Users2 } from "lucide-react";
 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -17,9 +18,7 @@ export default function FamillePage() {
   const [theme, setTheme] = useState<FamilyTheme>("pastel");
 
   const rootClasses = useMemo(() => {
-    if (theme === "night") {
-      return "bg-[#2A272E] text-[#F8F2E8]";
-    }
+    if (theme === "night") return "bg-[#2A272E] text-[#F8F2E8]";
     return "bg-[#FAF6EE] text-[#1B1A18]";
   }, [theme]);
 
@@ -88,11 +87,53 @@ export default function FamillePage() {
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
                     src="/famille-still.jpg"
-                    alt="Bulles de confiance QVT Box"
+                    alt="Bulles famille et proches"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                   />
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-y border-[#E8DCC8] bg-[#FDF9F0] py-16 md:py-20">
+          <div className="mx-auto grid max-w-6xl gap-8 px-6 lg:grid-cols-[0.95fr,1.05fr]">
+            <div className="relative overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-[0_20px_48px_rgba(27,26,24,0.12)]">
+              <video
+                src="/zena-avatar.mp4"
+                className="h-full min-h-[320px] w-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            </div>
+
+            <div className="grid gap-4">
+              {[
+                {
+                  title: "Expression libre et respectueuse",
+                  icon: HeartHandshake,
+                },
+                {
+                  title: "Adulte référent + partage choisi",
+                  icon: Users2,
+                },
+                {
+                  title: "Urgence / signalement",
+                  icon: ShieldAlert,
+                },
+              ].map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm"
+                >
+                  <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-[#F3E0B9]/35 text-[#1B1A18]">
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  <h2 className="text-lg font-semibold text-[#1B1A18]">{item.title}</h2>
+                </article>
+              ))}
             </div>
           </div>
         </section>
