@@ -15,6 +15,8 @@ export default function Index() {
             src="/hero-cicatrices-lumiere.jpg"
             alt="Bulle de confiance QVT Box"
             className="absolute inset-0 h-full w-full object-cover object-center"
+            loading="eager"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#151515]/70 via-[#151515]/35 to-[#151515]/20" />
           <div className="absolute -left-12 top-24 h-72 w-72 rounded-full bg-[#CFECE8]/30 blur-3xl" />
@@ -32,7 +34,12 @@ export default function Index() {
               </h1>
 
               <p className="mt-5 max-w-2xl whitespace-pre-line text-base leading-relaxed text-[#F3EBDD] md:text-lg">
-                {"QVT Box réinvente le réseau social avec des bulles de confiance : tu choisis qui entre (proches, Luciole, ami·e, manager…).\nZÉNA t’aide à mettre des mots, et si tu le veux une Luciole peut t’accompagner.\nPrivé par défaut. Partage choisi. Sécurité d’abord."}
+                QVT Box réinvente le réseau social avec des bulles de confiance : tu choisis qui
+                entre (proches, Luciole, ami·e, manager…).
+                {"\n"}
+                ZÉNA t’aide à mettre des mots, et si tu le veux une Luciole peut t’accompagner.
+                {"\n"}
+                Privé par défaut. Partage choisi. Sécurité d’abord.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -68,7 +75,8 @@ export default function Index() {
               </h2>
               <p className="mt-4 text-base leading-relaxed text-[#665A4B] md:text-lg">
                 Parlez à ZÉNA dans un cadre clair. La voix est en push-to-talk, jamais en écoute
-                passive.
+                passive.{" "}
+                <span className="text-[#665A4B]/90">ZÉNA n’est pas un dispositif médical.</span>
               </p>
 
               <div className="mt-7 flex flex-wrap gap-3">
@@ -90,13 +98,17 @@ export default function Index() {
 
             <div className="relative overflow-hidden rounded-[28px] border border-[#E8DCC8] bg-white shadow-[0_24px_60px_rgba(27,26,24,0.16)]">
               <video
-                src="/images/zena-intro.mp4"
                 className="aspect-video w-full object-cover"
                 autoPlay
                 muted
                 loop
                 playsInline
-              />
+                preload="metadata"
+              >
+                <source src="/images/about-listen-daily.mp4" type="video/mp4" />
+                Votre navigateur ne supporte pas la lecture vidéo.
+              </video>
+
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#151515]/50 via-transparent to-transparent" />
               <p className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
                 <PlayCircle className="h-4 w-4" />
