@@ -23,9 +23,10 @@ export default {
         sans: ["Manrope", "sans-serif"],
         inter: ["Manrope", "sans-serif"],
         manrope: ["Manrope", "sans-serif"],
-        montserrat: ["Montserrat", "sans-serif"],
-        lato: ["Lato", "sans-serif"],
-        roboto: ["Roboto", "sans-serif"]
+        montserrat: ["Manrope", "sans-serif"],
+        lato: ["Source Sans 3", "sans-serif"],
+        roboto: ["Source Sans 3", "sans-serif"],
+        source: ["Source Sans 3", "sans-serif"]
       },
       colors: {
         border: "hsl(var(--border))",

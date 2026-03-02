@@ -1,64 +1,58 @@
-﻿// src/components/Navigation.tsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Menu, X } from "lucide-react";
+
+import LanguageSelector from "@/components/LanguageSelector";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
-import LanguageSelector from "@/components/LanguageSelector";
-import { Menu, X } from "lucide-react";
+
+const navItems = [
+  { label: "Entreprise", path: "/entreprise" },
+  { label: "Vie perso", path: "/famille" },
+  { label: "ZÉNA", path: "/zena" },
+  { label: "Lucioles", path: "/lucioles" },
+  { label: "Sécurité", path: "/securite" },
+  { label: "Box", path: "/box" },
+];
 
 export default function Navigation() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, signOut } = useAuth();
   const { language, setLanguage } = useLanguage();
-
   const [open, setOpen] = useState(false);
+
+  const isActive = (path: string) =>
+    location.pathname === path || (path !== "/" && location.pathname.startsWith(path));
 
   const handleLogout = async () => {
     await signOut();
     navigate("/");
   };
 
-  const navItems = [
-    { label: "Entreprise", path: "/entreprise" },
-    { label: "Famille", path: "/famille" },
-    { label: "ZÉNA", path: "/zena" },
-    { label: "Sécurité", path: "/securite" },
-    { label: "Box", path: "/box" },
-  ];
-
-  const isActive = (path: string) =>
-    location.pathname === path ||
-    (path !== "/" && location.pathname.startsWith(path));
-
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#151515]/95 backdrop-blur-xl border-b border-[#2A2520]">
-      <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-        
-        {/* LOGO + HALO */}
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#2A2520] bg-[#151515]/95 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link to="/" className="relative flex items-center gap-3">
-          <div className="absolute -inset-2 bg-[#F3E0B9]/20 blur-md rounded-full" />
+          <div className="absolute -inset-2 rounded-full bg-[#F3E0B9]/20 blur-md" />
           <img
             src="/logo-qvt.jpeg"
             alt="QVT Box"
-            className="relative w-11 h-11 rounded-full object-cover border border-[#F3E0B9]/40 shadow"
+            className="relative h-11 w-11 rounded-full border border-[#F3E0B9]/40 object-cover shadow"
           />
-          <span className="relative text-lg font-semibold text-[#F3E0B9] tracking-tight">
+          <span className="relative text-lg font-semibold tracking-tight text-[#F3E0B9]">
             QVT Box
           </span>
         </Link>
 
-        {/* DESKTOP NAV */}
-        <ul className="hidden md:flex items-center gap-8 text-sm">
+        <ul className="hidden items-center gap-8 text-sm md:flex">
           {navItems.map((item) => (
             <li key={item.path}>
               <Link
                 to={item.path}
                 className={`transition-colors ${
                   isActive(item.path)
-                    ? "text-[#F3E0B9] font-medium"
-                    : item.secondary
-                    ? "text-[#E5D7BF]/45 hover:text-[#E5D7BF]"
+                    ? "font-medium text-[#F3E0B9]"
                     : "text-[#E5D7BF]/75 hover:text-[#F3E0B9]"
                 }`}
               >
@@ -68,28 +62,21 @@ export default function Navigation() {
           ))}
         </ul>
 
-        {/* RIGHT ACTIONS */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden items-center gap-4 md:flex">
+          <LanguageSelector currentLanguage={language} onLanguageChange={setLanguage} />
 
-          {/* LANGUE */}
-          <LanguageSelector
-            currentLanguage={language}
-            onLanguageChange={setLanguage}
-          />
-
-          {/* COMPTE */}
           {isAuthenticated ? (
             <div className="flex items-center gap-2">
               <Link
                 to="/profil"
-                className="px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-xs font-semibold hover:bg-[#F7E7C5] transition"
+                className="rounded-full bg-[#F3E0B9] px-4 py-2 text-xs font-semibold text-[#151515] transition hover:bg-[#F7E7C5]"
               >
-                Mon compte
+                Compte
               </Link>
               <button
                 type="button"
                 onClick={handleLogout}
-                className="px-4 py-2 rounded-full border border-[#3A332D] text-xs text-[#E5D7BF] hover:border-[#F3E0B9] hover:text-[#F3E0B9] transition"
+                className="rounded-full border border-[#3A332D] px-4 py-2 text-xs text-[#E5D7BF] transition hover:border-[#F3E0B9] hover:text-[#F3E0B9]"
               >
                 Se déconnecter
               </button>
@@ -97,59 +84,49 @@ export default function Navigation() {
           ) : (
             <Link
               to="/auth/login"
-              className="px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-xs font-semibold hover:bg-[#F7E7C5] transition"
+              className="rounded-full bg-[#F3E0B9] px-4 py-2 text-xs font-semibold text-[#151515] transition hover:bg-[#F7E7C5]"
             >
-              Connexion
+              Compte
             </Link>
           )}
-
         </div>
 
-        {/* MOBILE MENU BUTTON */}
-        <button onClick={() => setOpen(!open)} className="md:hidden p-1">
+        <button onClick={() => setOpen((prev) => !prev)} className="p-1 md:hidden">
           {open ? (
-            <X className="w-7 h-7 text-[#E5D7BF]" />
+            <X className="h-7 w-7 text-[#E5D7BF]" />
           ) : (
-            <Menu className="w-7 h-7 text-[#E5D7BF]" />
+            <Menu className="h-7 w-7 text-[#E5D7BF]" />
           )}
         </button>
       </div>
 
-      {/* MOBILE DRAWER */}
       {open && (
-        <div className="md:hidden bg-[#1A1816] border-t border-[#2A2520] px-6 py-6 space-y-4">
+        <div className="space-y-4 border-t border-[#2A2520] bg-[#1A1816] px-6 py-6 md:hidden">
           {navItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               onClick={() => setOpen(false)}
-              className={`block px-3 py-3 rounded-lg text-sm ${
+              className={`block rounded-lg px-3 py-3 text-sm ${
                 isActive(item.path)
                   ? "bg-[#F3E0B9] text-[#151515]"
-                  : item.secondary
-                  ? "text-[#E5D7BF]/50 bg-[#201D19] hover:bg-[#2A2520]"
-                  : "text-[#E5D7BF]/80 bg-[#201D19] hover:bg-[#2A2520]"
+                  : "bg-[#201D19] text-[#E5D7BF]/80 hover:bg-[#2A2520]"
               }`}
             >
               {item.label}
             </Link>
           ))}
 
-          {/* LANGUE */}
-          <LanguageSelector
-            currentLanguage={language}
-            onLanguageChange={setLanguage}
-          />
+          <LanguageSelector currentLanguage={language} onLanguageChange={setLanguage} />
 
-          {/* COMPTE */}
           {isAuthenticated ? (
             <div className="grid gap-2">
               <Link
                 to="/profil"
-                className="block text-center px-4 py-2 rounded-full bg-[#F3E0B9] text-[#151515] text-sm font-medium"
                 onClick={() => setOpen(false)}
+                className="block rounded-full bg-[#F3E0B9] px-4 py-2 text-center text-sm font-medium text-[#151515]"
               >
-                Mon compte
+                Compte
               </Link>
               <button
                 type="button"
@@ -157,7 +134,7 @@ export default function Navigation() {
                   handleLogout();
                   setOpen(false);
                 }}
-                className="block text-center px-4 py-2 rounded-full border border-[#F3E0B9] text-[#F3E0B9] text-sm font-medium"
+                className="block rounded-full border border-[#F3E0B9] px-4 py-2 text-center text-sm font-medium text-[#F3E0B9]"
               >
                 Se déconnecter
               </button>
@@ -165,10 +142,10 @@ export default function Navigation() {
           ) : (
             <Link
               to="/auth/login"
-              className="block text-center px-4 py-2 rounded-full bg-[#151515] border border-[#F3E0B9] text-[#F3E0B9] text-sm font-medium"
               onClick={() => setOpen(false)}
+              className="block rounded-full border border-[#F3E0B9] bg-[#151515] px-4 py-2 text-center text-sm font-medium text-[#F3E0B9]"
             >
-              Connexion
+              Compte
             </Link>
           )}
         </div>

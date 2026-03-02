@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700&family=Lato:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -121,16 +121,21 @@
   body {
     @apply bg-background text-foreground font-sans;
     background: var(--gradient-hero);
+    font-family: "Source Sans 3", "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Manrope", "Segoe UI", sans-serif;
+  }
+
   /* Typographie */
   .font-inter { font-family: 'Manrope', sans-serif; }
   .font-manrope { font-family: 'Manrope', sans-serif; }
-  .font-montserrat { font-family: 'Montserrat', sans-serif; }
-  .font-lato { font-family: 'Lato', sans-serif; }
+  .font-montserrat { font-family: 'Manrope', sans-serif; }
+  .font-lato { font-family: 'Source Sans 3', sans-serif; }
 
   /* Accessibilité focus */
   :focus-visible {

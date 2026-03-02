@@ -1,15 +1,23 @@
 # apps/qvtbox
 
-Application principale du site `https://www.qvtbox.com`.
+Application principale de `https://www.qvtbox.com`.
 
-## Routes principales
+## Routes produit
 
 - `/`
 - `/entreprise`
 - `/famille`
 - `/zena`
+- `/lucioles`
+- `/devenir-luciole`
 - `/securite`
 - `/box`
+
+Routes legacy conservées:
+
+- `/zena-page` -> `/zena`
+- `/zena-family-page` -> `/famille`
+- `/zena-family` -> `/famille`
 
 ## Commandes
 
@@ -22,7 +30,7 @@ npm run typecheck
 
 ## Variables d'environnement (frontend)
 
-Créer `apps/qvtbox/.env.local` :
+Créer `apps/qvtbox/.env.local`:
 
 ```env
 VITE_SUPABASE_URL=https://xxxx.supabase.co
@@ -30,11 +38,11 @@ VITE_SUPABASE_ANON_KEY=xxxx
 VITE_APP_BASE_URL=https://www.qvtbox.com
 ```
 
-Secrets interdits côté client : ne pas utiliser `VITE_*` pour des API keys privées.
+Aucun secret dans `VITE_*`.
 
 ## Variables d'environnement (server-side)
 
-Pour les routes serverless (`/api/*`) :
+Pour les routes serverless `/api/*`:
 
 ```env
 SUPABASE_URL=https://xxxx.supabase.co
@@ -46,3 +54,10 @@ CONTACT_TO_EMAIL=contact@qvtbox.com
 ```
 
 `RESEND_API_KEY` doit rester côté serveur uniquement.
+
+## PWA
+
+- `vite-plugin-pwa` activé
+- manifest installable
+- icônes PWA
+- offline fallback: `/offline.html`

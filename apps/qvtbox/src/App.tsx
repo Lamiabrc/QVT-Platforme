@@ -49,18 +49,17 @@ const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ManifestPage = lazy(() => import("./pages/ManifestPage"));
 const EngagementsPage = lazy(() => import("./pages/EngagementsPage"));
 
-const ZenaEntreprisePage = lazy(() => import("./pages/ZenaEntreprisePage"));
-const ZenaFamilyPage = lazy(() => import("./pages/ZenaFamilyPage"));
 const ZenaChoicePage = lazy(() => import("./pages/ZenaChoicePage"));
 const EntreprisePage = lazy(() => import("./pages/EntreprisePage"));
 const EntrepriseJoinPage = lazy(() => import("./pages/EntrepriseJoinPage"));
 const FamillePage = lazy(() => import("./pages/FamillePage"));
+const LuciolesPage = lazy(() => import("./pages/LuciolesPage"));
+const DevenirLuciolePage = lazy(() => import("./pages/DevenirLuciolePage"));
 const FamilySpacePage = lazy(() => import("./pages/FamilySpacePage"));
 const FamilleCreatePage = lazy(() => import("./pages/FamilleCreatePage"));
 const FamilleInvitePage = lazy(() => import("./pages/FamilleInvitePage"));
 const FamilleJoinPage = lazy(() => import("./pages/FamilleJoinPage"));
 const FamilleDashboardPage = lazy(() => import("./pages/FamilleDashboardPage"));
-const MentorApplyPage = lazy(() => import("./pages/MentorApplyPage"));
 const MentorDashboardPage = lazy(() => import("./pages/MentorDashboardPage"));
 const SupervisionPage = lazy(() => import("./pages/SupervisionPage"));
 const ChoisirSpherePage = lazy(() => import("./pages/ChoisirSpherePage"));
@@ -303,18 +302,20 @@ const App = () => (
             <Route path="/manifeste" element={<ManifestPage />} />
 
             <Route path="/zena" element={<ZenaChoicePage />} />
-            <Route path="/zena-page" element={<ZenaEntreprisePage />} />
-            <Route path="/zena-family-page" element={<ZenaFamilyPage />} />
-            <Route path="/zena-family" element={<Navigate to="/zena-family-page" replace />} />
+            <Route path="/zena-page" element={<Navigate to="/zena" replace />} />
+            <Route path="/zena-family-page" element={<Navigate to="/famille" replace />} />
+            <Route path="/zena-family" element={<Navigate to="/famille" replace />} />
 
             <Route path="/entreprise" element={<EntreprisePage />} />
             <Route path="/entreprise/rejoindre" element={<EntrepriseJoinPage />} />
             <Route path="/famille" element={<FamillePage />} />
+            <Route path="/lucioles" element={<LuciolesPage />} />
+            <Route path="/devenir-luciole" element={<DevenirLuciolePage />} />
             <Route path="/famille/espace" element={<FamilySpacePage />} />
             <Route path="/famille/creer" element={<FamilleCreatePage />} />
             <Route path="/famille/inviter" element={<FamilleInvitePage />} />
             <Route path="/famille/rejoindre" element={<FamilleJoinPage />} />
-            <Route path="/famille/mentor/apply" element={<MentorApplyPage />} />
+            <Route path="/famille/mentor/apply" element={<Navigate to="/devenir-luciole" replace />} />
             <Route path="/securite" element={<SecuritePage />} />
             <Route path="/choisir-sphere" element={<ChoisirSpherePage />} />
             <Route path="/choisir-ma-sphere" element={<ChoisirSpherePage />} />

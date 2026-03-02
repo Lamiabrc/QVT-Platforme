@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QVT Box - Hors ligne</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle at top right, #f3e0b9, transparent 45%),
+          radial-gradient(circle at left, #cfece8, transparent 50%), #faf6ee;
+        color: #1b1a18;
+        font-family: "Manrope", "Segoe UI", sans-serif;
+      }
+      .card {
+        width: min(92vw, 540px);
+        border: 1px solid #e8dcc8;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 18px 48px rgba(27, 26, 24, 0.1);
+        padding: 28px;
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.1rem);
+      }
+      p {
+        margin: 0;
+        color: #6f6454;
+        line-height: 1.55;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Vous êtes hors ligne.</h1>
+      <p>
+        QVT Box reste privée par défaut. Dès que la connexion revient, vous pourrez reprendre votre
+        parcours.
+      </p>
+    </main>
+  </body>
+</html>

@@ -1,19 +1,19 @@
 # QVT Platform
 
-Monorepo QVT Box centré sur un seul site produit :
+Monorepo QVT Box centré sur un seul site produit:
 
-- Site principal : `https://www.qvtbox.com`
-- Parcours : `/entreprise`, `/famille`, `/zena`, `/securite`, `/box`
+- Site principal: `https://www.qvtbox.com`
+- Parcours clés: `/entreprise`, `/famille`, `/zena`, `/lucioles`, `/devenir-luciole`, `/securite`, `/box`
 
-Les anciens projets `zena-family` et `zena-voice` sont conservés uniquement pour rediriger vers `qvtbox.com`.
+Les apps `zena-family` et `zena-voice` sont conservées uniquement en redirect vers `qvtbox.com`.
 
 ## Structure
 
-```
-apps/qvtbox        # app principale
+```txt
+apps/qvtbox        # app principale (unique produit)
 apps/zena-family   # redirect-only -> /famille
 apps/zena-voice    # redirect-only -> /zena
-packages/shared    # liens, types, utilitaires partagés
+packages/shared    # types, ui, config partagés
 ```
 
 ## Installation
@@ -35,7 +35,7 @@ Tous ces scripts ciblent `apps/qvtbox`.
 
 ## Variables d'environnement
 
-Copier `.env.example` en `.env.local` (ou variables Vercel).
+Copier `.env.example` en `.env.local` (ou configurer sur Vercel).
 
 ### Frontend (`VITE_*`)
 
@@ -45,7 +45,7 @@ Copier `.env.example` en `.env.local` (ou variables Vercel).
 - `VITE_GA_ID` (optionnel)
 - `VITE_QVTBOX_URL`, `VITE_ZENA_FAMILY_URL`, `VITE_ZENA_VOICE_URL`, `VITE_CONTACT_EMAIL` (optionnels)
 
-Ne jamais mettre de secret dans `VITE_*`.
+Important: ne jamais mettre de secret dans `VITE_*`.
 
 ### Server-side (API routes / functions)
 
@@ -63,20 +63,42 @@ Ne jamais mettre de secret dans `VITE_*`.
 
 Les clés sensibles restent côté serveur uniquement.
 
+## PWA
+
+`apps/qvtbox` embarque `vite-plugin-pwa`:
+
+- Manifest installable
+- Icônes PWA
+- Page hors-ligne `offline.html`
+- Service worker auto-update
+
+## Supabase (Lucioles MVP)
+
+Migration SQL ajoutée:
+
+- `apps/qvtbox/supabase/migrations/20260301120000_lucioles_mvp.sql`
+
+Elle crée:
+
+- `lucioles`
+- `luciole_applications`
+- `luciole_subscriptions` (stub)
+
+Avec RLS:
+
+- profil Luciole modifiable par la Luciole elle-même
+- annuaire visible uniquement pour les Lucioles `approved`
+
 ## Déploiement Vercel
 
 ### App principale
 
-- Project root : `apps/qvtbox`
-- Build command : `npm run build`
-- Output directory : `dist`
-- SPA rewrite : géré par `apps/qvtbox/vercel.json`
+- Project root: `apps/qvtbox`
+- Build command: `npm run build`
+- Output directory: `dist`
+- SPA rewrite: `apps/qvtbox/vercel.json`
 
 ### Anciens sous-domaines
 
 - `apps/zena-family` redirige vers `https://www.qvtbox.com/famille`
 - `apps/zena-voice` redirige vers `https://www.qvtbox.com/zena`
-
-## Contact
-
-`contact@qvtbox.com`

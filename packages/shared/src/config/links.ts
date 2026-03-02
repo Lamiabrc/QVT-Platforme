@@ -9,8 +9,8 @@ const env = (import.meta.env as LinkEnv | undefined) ?? {};
 
 export const QVTBOX_URL = env.VITE_QVTBOX_URL ?? "https://www.qvtbox.com";
 export const ZENA_FAMILY_URL =
-  env.VITE_ZENA_FAMILY_URL ?? "https://zena-family.qvtbox.com";
-export const ZENA_VOICE_URL = env.VITE_ZENA_VOICE_URL ?? "https://zena.qvtbox.com";
+  env.VITE_ZENA_FAMILY_URL ?? "https://www.qvtbox.com/famille";
+export const ZENA_VOICE_URL = env.VITE_ZENA_VOICE_URL ?? "https://www.qvtbox.com/zena";
 export const CONTACT_EMAIL = env.VITE_CONTACT_EMAIL ?? "contact@qvtbox.com";
 
 export const QVTBOX_ROUTES = {

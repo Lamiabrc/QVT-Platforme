@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Link } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 
 type FamilyTheme = "urbain" | "pastel" | "night" | "nature";
 
@@ -14,7 +14,6 @@ const themeClasses: Record<FamilyTheme, string> = {
 };
 
 export default function FamillePage() {
-  const { isAuthenticated } = useAuth();
   const [theme, setTheme] = useState<FamilyTheme>("pastel");
 
   const rootClasses = useMemo(() => {
@@ -34,30 +33,32 @@ export default function FamillePage() {
         <section className="relative overflow-hidden">
           <div className={`absolute inset-0 bg-gradient-to-b ${themeClasses[theme]}`} />
           <div className="absolute -top-20 right-0 h-64 w-64 rounded-full bg-[#F3E0B9]/30 blur-3xl" />
-          <div className="relative z-10 mx-auto max-w-6xl px-6 pt-32 pb-16">
-            <div className="grid gap-10 lg:grid-cols-[1.05fr,0.95fr] items-center">
+          <div className="absolute bottom-8 left-1/4 h-40 w-40 rounded-full bg-[#CFECE8]/35 blur-3xl" />
+
+          <div className="relative z-10 mx-auto max-w-6xl px-6 pb-16 pt-32 md:pt-40">
+            <div className="grid items-center gap-10 lg:grid-cols-[1.05fr,0.95fr]">
               <div>
-                <p className={`text-xs uppercase tracking-[0.28em] ${mutedText}`}>
-                  Parcours Famille
-                </p>
-                <h1 className="text-3xl md:text-5xl font-semibold mt-4 leading-tight">
-                  Aider un ado à parler… sans le forcer.
+                <p className={`text-xs uppercase tracking-[0.28em] ${mutedText}`}>Vie perso</p>
+                <h1 className="mt-4 text-3xl font-semibold leading-tight md:text-5xl">
+                  Un espace de confiance pour la vie perso.
                 </h1>
-                <p className={`text-base md:text-lg mt-4 max-w-2xl ${mutedText}`}>
-                  Un espace sécurisé pour les ados, des bulles famille/amis, et des
-                  alertes en cas de détresse ou harcèlement.
+                <p className={`mt-4 max-w-2xl text-base md:text-lg ${mutedText}`}>
+                  Bulles famille & proches : parler vrai, se soutenir, et agir.
+                  <br />
+                  Si un mineur est concerné : adulte référent, règles claires, urgence et
+                  signalement.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
                     to="/famille/creer"
-                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] text-[#FAF6EE] px-6 py-3 text-sm font-semibold hover:opacity-90 transition"
+                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90"
                   >
-                    Créer ma bulle famille
+                    Créer ma bulle
                   </Link>
                   <Link
                     to="/zena"
-                    className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] hover:border-[#1B1A18]/40 transition"
+                    className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40"
                   >
                     Découvrir ZÉNA
                   </Link>
@@ -87,62 +88,12 @@ export default function FamillePage() {
                 <div className="relative overflow-hidden rounded-[32px] border border-white/70 shadow-[0_24px_60px_rgba(27,26,24,0.18)]">
                   <img
                     src="/famille-still.jpg"
-                    alt="Bulle famille QVT Box"
+                    alt="Bulles de confiance QVT Box"
                     className="h-[360px] w-full object-cover md:h-[420px]"
                   />
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        <section className="py-16 md:py-20 bg-[#FDF9F0] border-y border-[#E8DCC8]">
-          <div className="mx-auto max-w-6xl px-6 grid gap-6 md:grid-cols-3">
-            {[
-              {
-                title: "Expression libre et respectueuse",
-                text: "L’ado peut dire ce qu’il ressent dans un espace protégé et sans jugement.",
-              },
-              {
-                title: "Adulte référent + partage choisi",
-                text: "Parents et tuteurs voient l’essentiel selon des règles claires définies à l’avance.",
-              },
-              {
-                title: "Urgence / signalement",
-                text: "En cas de détresse, le système peut déclencher un signalement cadré et immédiat.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm"
-              >
-                <h2 className="text-lg font-semibold text-[#1B1A18]">{item.title}</h2>
-                <p className="text-sm text-[#6F6454] mt-2">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="py-16 md:py-20 bg-[#FAF6EE]">
-          <div className="mx-auto max-w-6xl px-6 grid gap-4 md:grid-cols-3">
-            <Link
-              to="/famille/rejoindre"
-              className="rounded-2xl border border-[#E8DCC8] bg-white p-5 shadow-sm text-sm font-semibold text-[#1B1A18]"
-            >
-              Rejoindre une bulle famille
-            </Link>
-            <Link
-              to="/famille/inviter"
-              className="rounded-2xl border border-[#E8DCC8] bg-white p-5 shadow-sm text-sm font-semibold text-[#1B1A18]"
-            >
-              Inviter un proche
-            </Link>
-            <Link
-              to={isAuthenticated ? "/famille/dashboard" : "/auth/login"}
-              className="rounded-2xl border border-[#E8DCC8] bg-white p-5 shadow-sm text-sm font-semibold text-[#1B1A18]"
-            >
-              {isAuthenticated ? "Accéder à mon dashboard" : "Se connecter à mon compte"}
-            </Link>
           </div>
         </section>
       </main>
