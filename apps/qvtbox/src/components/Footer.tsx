@@ -62,6 +62,11 @@ const Footer = () => {
                   Box
                 </Link>
               </li>
+              <li>
+                <Link to="/contact" className="transition hover:text-[#F3E0B9]">
+                  Contact
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>

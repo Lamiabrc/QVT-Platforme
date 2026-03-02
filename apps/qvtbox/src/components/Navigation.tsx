@@ -13,6 +13,7 @@ const navItems = [
   { label: "Lucioles", path: "/lucioles" },
   { label: "Sécurité", path: "/securite" },
   { label: "Box", path: "/box" },
+  { label: "Contact", path: "/contact" },
 ];
 
 export default function Navigation() {

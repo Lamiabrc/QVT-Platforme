@@ -142,6 +142,7 @@ const App = () => (
             <Route path="/boutique/produit/:slug" element={<ProductDetailPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/nous-contacter" element={<Navigate to="/contact" replace />} />
             <Route path="/simulateur" element={<SimulateurPage />} />
             <Route path="/engagements" element={<EngagementsPage />} />
 
