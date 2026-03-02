@@ -65,6 +65,16 @@ export default function LuciolesPage() {
                 Devenir Luciole
               </Link>
             </div>
+
+            <div className="mt-8 max-w-3xl overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-[0_16px_40px_rgba(27,26,24,0.12)]">
+              <img
+                src="/luciole.png"
+                alt="Illustration Luciole"
+                className="h-full w-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </div>
         </section>
 

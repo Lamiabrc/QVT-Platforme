@@ -25,6 +25,16 @@ export default function SecuritePage() {
               Pas de jargon. Des règles simples pour protéger la parole et agir quand il le faut.
             </p>
 
+            <div className="mt-8 overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-[0_16px_40px_rgba(27,26,24,0.12)]">
+              <img
+                src="/technique.png"
+                alt="Illustration des protections techniques"
+                className="h-full w-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
             <div className="mt-10 grid gap-4">
               {points.map((point) => (
                 <article
