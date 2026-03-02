@@ -3,6 +3,7 @@ import { ArrowRight, PlayCircle, Sparkles } from "lucide-react";
 
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import boucheVideo from "@/assets/bouche.mp4";
 
 export default function Index() {
   return (
@@ -105,7 +106,7 @@ export default function Index() {
                 playsInline
                 preload="metadata"
               >
-                <source src="/images/about-listen-daily.mp4" type="video/mp4" />
+                <source src={boucheVideo} type="video/mp4" />
                 Votre navigateur ne supporte pas la lecture vidéo.
               </video>
 
