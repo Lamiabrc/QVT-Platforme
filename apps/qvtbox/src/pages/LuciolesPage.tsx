@@ -68,6 +68,50 @@ export default function LuciolesPage() {
           </div>
         </section>
 
+        <section className="px-6 pb-8">
+          <div className="mx-auto max-w-6xl">
+            <div className="relative overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white">
+              <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#F3E0B9]/35 blur-2xl" />
+              <div className="absolute -bottom-12 left-8 h-36 w-36 rounded-full bg-[#CFECE8]/35 blur-2xl" />
+
+              <div className="relative z-10 grid gap-8 p-6 md:grid-cols-[1.1fr,0.9fr] md:p-8">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-[#9C8D77]">Engagement Bubble</p>
+                  <h2 className="mt-3 text-2xl font-semibold md:text-3xl">
+                    Un cadre humain, clair et responsable.
+                  </h2>
+                  <p className="mt-4 text-sm leading-relaxed text-[#6F6454] md:text-base">
+                    Les Lucioles interviennent avec un cadre d'accompagnement concret: opt-in, limites
+                    explicites, supervision et partage choisi. L'objectif est d'aider sans imposer.
+                  </p>
+                </div>
+
+                <ul className="space-y-2 text-sm text-[#6F6454]">
+                  <li>Engagement 1: consentement actif a chaque etape</li>
+                  <li>Engagement 2: confidentialite par defaut, partage choisi</li>
+                  <li>Engagement 3: signalement et urgence accessibles</li>
+                  <li>Engagement 4: charte et supervision des Lucioles</li>
+                </ul>
+              </div>
+
+              <div className="relative z-10 flex flex-wrap gap-3 px-6 pb-6 md:px-8 md:pb-8">
+                <Link
+                  to="/engagements"
+                  className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] px-5 py-2.5 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90"
+                >
+                  Voir nos engagements
+                </Link>
+                <Link
+                  to="/securite"
+                  className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-[#FFFCF6] px-5 py-2.5 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40"
+                >
+                  Lire les regles de securite
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="border-t border-[#E8DCC8] bg-[#FDF9F0] py-16">
           <div className="mx-auto max-w-6xl px-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

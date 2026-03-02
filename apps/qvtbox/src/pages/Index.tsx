@@ -117,6 +117,48 @@ export default function Index() {
             </div>
           </div>
         </section>
+
+        <section className="border-t border-[#E8DCC8] bg-[#FDF9F0] px-6 py-20">
+          <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.95fr,1.05fr]">
+            <div className="relative overflow-hidden rounded-[28px] border border-[#E8DCC8] bg-white shadow-[0_24px_60px_rgba(27,26,24,0.12)]">
+              <img
+                src="/box-lineup-table.webp"
+                alt="Selection de box QVT Box"
+                className="aspect-[4/3] w-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#151515]/40 via-transparent to-transparent" />
+            </div>
+
+            <div>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#8B7D67]">Bubble Box</p>
+              <h2 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">
+                Une box quand ca compte.
+              </h2>
+              <p className="mt-4 text-base leading-relaxed text-[#665A4B] md:text-lg">
+                La box n'est pas automatique. Elle est proposee au bon moment, selon la tendance
+                observee et les besoins reels de la personne ou de l'equipe.
+              </p>
+
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  to="/box"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90"
+                >
+                  Decouvrir la Box
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  to="/entreprise"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40"
+                >
+                  Voir le parcours entreprise
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />
