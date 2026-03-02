@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { CheckCircle, Gift, Star, Globe, Package } from "lucide-react";
+import { Star, Globe, Package } from "lucide-react";
 
 // ------------------------------------
 // ✅ IMPORTS IMAGES (assure-toi qu'elles existent)
@@ -162,7 +162,7 @@ const BoxCatalog = () => {
     },
   ] as const;
 
-  const customizationOptions = [
+  const _customizationOptions = [
     {
       title: "Personnalisation Complète",
       description: "Logo entreprise, couleurs, message personnalisé.",

@@ -133,7 +133,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
 
       onClose();
       navigate("/dashboard");
-    } catch (err) {
+    } catch {
       toast({
         title: "Erreur",
         description: "Impossible de finaliser votre inscription.",
@@ -153,7 +153,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
           </DialogTitle>
         </DialogHeader>
 
-        {authOpen  (
+        {authOpen ? (
           <div className="max-w-md mx-auto w-full">
             <h3 className="text-center font-kalam text-2xl mb-3">🫧 Créer votre bulle</h3>
             <AuthForm onSuccess={handleAuthSuccess} />
@@ -177,7 +177,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                         key={role.id}
                         className={cn(
                           "p-6 cursor-pointer transition-all duration-300 border-2 hover:shadow-floating",
-                          active  `${tone.border} ${tone.bg}` : "border-border hover:border-primary/30"
+                          active ? `${tone.border} ${tone.bg}` : "border-border hover:border-primary/30"
                         )}
                         onClick={() => handleRoleSelect(role.id)}
                       >
@@ -213,7 +213,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                         key={journey.id}
                         className={cn(
                           "p-6 cursor-pointer transition-all duration-300 border-2 hover:shadow-floating",
-                          active  "border-secondary bg-secondary/5" : "border-border hover:border-secondary/30"
+                          active ? "border-secondary bg-secondary/5" : "border-border hover:border-secondary/30"
                         )}
                         onClick={() => handleJourneySelect(journey.id)}
                       >
@@ -287,7 +287,7 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
                     ← Modifier
                   </Button>
                   <Button onClick={handleCompleteOnboarding} disabled={saving} className="btn-bubble">
-                    {saving  "Configuration…" : "🫧 Finaliser ma bulle"}
+                    {saving ? "Configuration..." : "Finaliser ma bulle"}
                   </Button>
                 </div>
 
@@ -306,4 +306,5 @@ const OnboardingModal = ({ isOpen, onClose }: OnboardingModalProps) => {
 };
 
 export default OnboardingModal;
+
 

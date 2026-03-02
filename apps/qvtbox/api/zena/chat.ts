@@ -183,10 +183,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       conversationId: convoId,
       replyId,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const details = error instanceof Error ? error.message : "Unknown error";
     res.status(500).json({
       error: "ZÉNA is unavailable",
-      details: error?.message,
+      details,
     });
   }
 }

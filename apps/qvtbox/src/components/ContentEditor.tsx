@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useEditableContent, type EditableContentItem } from '@/hooks/useEditableContent';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { 
   Edit, 
   Save, 
@@ -13,15 +12,11 @@ import {
   Plus, 
   Type, 
   Image as ImageIcon, 
-  Code, 
-  Loader2,
-  Upload
+  Code
 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -89,7 +84,7 @@ const ContentEditor = ({ pageName }: ContentEditorProps) => {
     } else if (editingItem.content_type === 'json') {
       try {
         valueToSave = JSON.parse(editValue);
-      } catch (error) {
+      } catch {
         alert('Format JSON invalide');
         return;
       }
@@ -117,7 +112,7 @@ const ContentEditor = ({ pageName }: ContentEditorProps) => {
       try {
         contentValue = typeof contentValue === 'string' ? JSON.parse(contentValue) : contentValue;
         defaultValue = typeof defaultValue === 'string' ? JSON.parse(defaultValue) : defaultValue;
-      } catch (error) {
+      } catch {
         alert('Format JSON invalide');
         return;
       }

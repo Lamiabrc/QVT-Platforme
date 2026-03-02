@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,14 +39,7 @@ const AlertDashboard = () => {
     'humeur_energie': 'Humeur & Énergie'
   };
 
-  useEffect(() => {
-    if (user) {
-      fetchAlerts();
-      fetchRiskScore();
-    }
-  }, [user]);
-
-  const fetchAlerts = async () => {
+  const fetchAlerts = useCallback(async () => {
     if (!user) return;
 
     const { data, error } = await supabase
@@ -62,9 +55,9 @@ const AlertDashboard = () => {
     }
 
     setAlerts(data || []);
-  };
+  }, [user]);
 
-  const fetchRiskScore = async () => {
+  const fetchRiskScore = useCallback(async () => {
     if (!user) return;
 
     const { data, error } = await supabase
@@ -81,7 +74,17 @@ const AlertDashboard = () => {
       setRiskScore(data);
     }
     setLoading(false);
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    void fetchAlerts();
+    void fetchRiskScore();
+  }, [user, fetchAlerts, fetchRiskScore]);
 
   const updateAlertConsent = async (alertId: string, consent: boolean) => {
     const { error } = await supabase
