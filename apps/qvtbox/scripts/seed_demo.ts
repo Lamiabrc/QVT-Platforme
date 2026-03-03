@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type User } from "@supabase/supabase-js";
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -11,7 +11,6 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
-const db = supabase as any;
 
 const idFrom = (value: number) => `10000000-0000-4000-8000-${String(value).padStart(12, "0")}`;
 
@@ -145,8 +144,16 @@ const INVITATIONS = [
   { id: idFrom(504), bubble_id: idFrom(105), token: "QVTDEMOPRO0004", email: null, role: "referent", invited_by: "ismael" },
 ];
 
-async function listAllUsers() {
-  const users: any[] = [];
+function requireUser(usersByKey: Map<string, User>, key: string): User {
+  const user = usersByKey.get(key);
+  if (!user) {
+    throw new Error(`Missing seeded auth user for key: ${key}`);
+  }
+  return user;
+}
+
+async function listAllUsers(): Promise<User[]> {
+  const users: User[] = [];
   let page = 1;
   const perPage = 200;
 
@@ -161,7 +168,7 @@ async function listAllUsers() {
   return users;
 }
 
-async function ensureAuthUser(account: AccountDef, cache: Map<string, any>) {
+async function ensureAuthUser(account: AccountDef, cache: Map<string, User>): Promise<User> {
   if (cache.has(account.email)) return cache.get(account.email);
 
   const existing = (await listAllUsers()).find(
@@ -182,14 +189,17 @@ async function ensureAuthUser(account: AccountDef, cache: Map<string, any>) {
 
   if (error) throw error;
   const created = data.user;
+  if (!created) {
+    throw new Error(`Supabase createUser returned no user for ${account.email}`);
+  }
   cache.set(account.email, created);
   return created;
 }
 
 async function main() {
-  console.log("Seeding QVT Box demo...");
-  const userCache = new Map<string, any>();
-  const usersByKey = new Map<string, any>();
+  console.warn("Seeding QVT Box demo...");
+  const userCache = new Map<string, User>();
+  const usersByKey = new Map<string, User>();
 
   for (const account of ALL_ACCOUNTS) {
     const user = await ensureAuthUser(account, userCache);
@@ -210,7 +220,7 @@ async function main() {
     };
   });
 
-  const { error: profilesError } = await db
+  const { error: profilesError } = await supabase
     .from("profiles")
     .upsert(profilesRows, { onConflict: "id" });
   if (profilesError) throw profilesError;
@@ -222,20 +232,20 @@ async function main() {
     created_by: usersByKey.get(enterprise.ownerKey).id,
   }));
 
-  const { error: enterpriseError } = await db
+  const { error: enterpriseError } = await supabase
     .from("enterprises")
     .upsert(enterpriseRows, { onConflict: "id" });
   if (enterpriseError) throw enterpriseError;
 
   const enterpriseMembers = [
-    { id: idFrom(601), enterprise_id: idFrom(1), user_id: usersByKey.get("alice").id, role: "admin", is_approved: true },
-    { id: idFrom(602), enterprise_id: idFrom(1), user_id: usersByKey.get("bruno").id, role: "employee", is_approved: true },
-    { id: idFrom(603), enterprise_id: idFrom(1), user_id: usersByKey.get("clara").id, role: "manager", is_approved: true },
-    { id: idFrom(604), enterprise_id: idFrom(2), user_id: usersByKey.get("david").id, role: "admin", is_approved: true },
-    { id: idFrom(605), enterprise_id: idFrom(2), user_id: usersByKey.get("emma").id, role: "hr", is_approved: true },
+    { id: idFrom(601), enterprise_id: idFrom(1), user_id: requireUser(usersByKey, "alice").id, role: "admin", is_approved: true },
+    { id: idFrom(602), enterprise_id: idFrom(1), user_id: requireUser(usersByKey, "bruno").id, role: "employee", is_approved: true },
+    { id: idFrom(603), enterprise_id: idFrom(1), user_id: requireUser(usersByKey, "clara").id, role: "manager", is_approved: true },
+    { id: idFrom(604), enterprise_id: idFrom(2), user_id: requireUser(usersByKey, "david").id, role: "admin", is_approved: true },
+    { id: idFrom(605), enterprise_id: idFrom(2), user_id: requireUser(usersByKey, "emma").id, role: "hr", is_approved: true },
   ];
 
-  const { error: enterpriseMembersError } = await db
+  const { error: enterpriseMembersError } = await supabase
     .from("enterprise_members")
     .upsert(enterpriseMembers, { onConflict: "id" });
   if (enterpriseMembersError) throw enterpriseMembersError;
@@ -246,24 +256,24 @@ async function main() {
     bubble_type: bubble.bubble_type,
     enterprise_id: bubble.enterprise,
     has_minor: bubble.has_minor,
-    referent_user_id: bubble.referent ? usersByKey.get(bubble.referent).id : null,
+    referent_user_id: bubble.referent ? requireUser(usersByKey, bubble.referent).id : null,
     cover_path: bubble.cover_path,
-    created_by: usersByKey.get(bubble.createdBy).id,
+    created_by: requireUser(usersByKey, bubble.createdBy).id,
   }));
 
-  const { error: bubblesError } = await db
+  const { error: bubblesError } = await supabase
     .from("bubbles")
     .upsert(bubbleRows, { onConflict: "id" });
   if (bubblesError) throw bubblesError;
 
   const bubbleMembers = BUBBLE_MEMBER_MATRIX.map((member) => ({
     bubble_id: member.bubbleId,
-    user_id: usersByKey.get(member.userKey).id,
+    user_id: requireUser(usersByKey, member.userKey).id,
     role: member.role,
-    invited_by: usersByKey.get(member.userKey).id,
+    invited_by: requireUser(usersByKey, member.userKey).id,
   }));
 
-  const { error: bubbleMembersError } = await db
+  const { error: bubbleMembersError } = await supabase
     .from("bubble_members")
     .upsert(bubbleMembers, { onConflict: "bubble_id,user_id" });
   if (bubbleMembersError) throw bubbleMembersError;
@@ -274,11 +284,11 @@ async function main() {
     token: invitation.token,
     email: invitation.email,
     role: invitation.role,
-    invited_by: usersByKey.get(invitation.invited_by).id,
+    invited_by: requireUser(usersByKey, invitation.invited_by).id,
     status: "pending",
   }));
 
-  const { error: invitationError } = await db
+  const { error: invitationError } = await supabase
     .from("bubble_invitations")
     .upsert(invitationRows, { onConflict: "id" });
   if (invitationError) throw invitationError;
@@ -286,7 +296,7 @@ async function main() {
   const lucioleRows = [
     {
       id: idFrom(701),
-      user_id: usersByKey.get("luciole_a").id,
+      user_id: requireUser(usersByKey, "luciole_a").id,
       display_name: "Aurore Claire",
       city: "Lille",
       bio: "Accompagnement parental et équilibre quotidien.",
@@ -296,7 +306,7 @@ async function main() {
     },
     {
       id: idFrom(702),
-      user_id: usersByKey.get("luciole_b").id,
+      user_id: requireUser(usersByKey, "luciole_b").id,
       display_name: "Bastien Rivet",
       city: "Lyon",
       bio: "Soutien des proches aidants.",
@@ -306,7 +316,7 @@ async function main() {
     },
     {
       id: idFrom(703),
-      user_id: usersByKey.get("luciole_c").id,
+      user_id: requireUser(usersByKey, "luciole_c").id,
       display_name: "Celeste Nova",
       city: "Nantes",
       bio: "Cadre entreprise et prévention RPS.",
@@ -316,7 +326,7 @@ async function main() {
     },
     {
       id: idFrom(704),
-      user_id: usersByKey.get("luciole_d").id,
+      user_id: requireUser(usersByKey, "luciole_d").id,
       display_name: "Diane Solis",
       city: "Bordeaux",
       bio: "Candidate en cours d'évaluation.",
@@ -326,7 +336,7 @@ async function main() {
     },
     {
       id: idFrom(705),
-      user_id: usersByKey.get("luciole_e").id,
+      user_id: requireUser(usersByKey, "luciole_e").id,
       display_name: "Enzo Marin",
       city: "Toulouse",
       bio: "Candidate en cours d'évaluation.",
@@ -336,7 +346,7 @@ async function main() {
     },
   ];
 
-  const { error: lucioleError } = await db
+  const { error: lucioleError } = await supabase
     .from("lucioles")
     .upsert(lucioleRows, { onConflict: "id" });
   if (lucioleError) throw lucioleError;
@@ -344,7 +354,7 @@ async function main() {
   const lucioleApplications = [
     {
       id: idFrom(706),
-      user_id: usersByKey.get("luciole_d").id,
+      user_id: requireUser(usersByKey, "luciole_d").id,
       full_name: "Diane Solis",
       city: "Bordeaux",
       motivation: "Accompagner les familles en difficulté.",
@@ -355,7 +365,7 @@ async function main() {
     },
     {
       id: idFrom(707),
-      user_id: usersByKey.get("luciole_e").id,
+      user_id: requireUser(usersByKey, "luciole_e").id,
       full_name: "Enzo Marin",
       city: "Toulouse",
       motivation: "Créer des espaces de parole sécurisés.",
@@ -366,18 +376,18 @@ async function main() {
     },
   ];
 
-  const { error: applicationsError } = await db
+  const { error: applicationsError } = await supabase
     .from("luciole_applications")
     .upsert(lucioleApplications, { onConflict: "id" });
   if (applicationsError) throw applicationsError;
 
   const bubbleLucioles = [
-    { bubble_id: idFrom(104), luciole_id: idFrom(701), assigned_by: usersByKey.get("fanny").id, status: "active" },
-    { bubble_id: idFrom(105), luciole_id: idFrom(702), assigned_by: usersByKey.get("ismael").id, status: "active" },
-    { bubble_id: idFrom(103), luciole_id: idFrom(703), assigned_by: usersByKey.get("david").id, status: "active" },
+    { bubble_id: idFrom(104), luciole_id: idFrom(701), assigned_by: requireUser(usersByKey, "fanny").id, status: "active" },
+    { bubble_id: idFrom(105), luciole_id: idFrom(702), assigned_by: requireUser(usersByKey, "ismael").id, status: "active" },
+    { bubble_id: idFrom(103), luciole_id: idFrom(703), assigned_by: requireUser(usersByKey, "david").id, status: "active" },
   ];
 
-  const { error: bubbleLuciolesError } = await db
+  const { error: bubbleLuciolesError } = await supabase
     .from("bubble_lucioles")
     .upsert(bubbleLucioles, { onConflict: "bubble_id,luciole_id" });
   if (bubbleLuciolesError) throw bubbleLuciolesError;
@@ -389,7 +399,7 @@ async function main() {
     is_active: true,
   }));
 
-  const { error: boxError } = await db
+  const { error: boxError } = await supabase
     .from("boxes")
     .upsert(boxRows, { onConflict: "id" });
   if (boxError) throw boxError;
@@ -399,10 +409,10 @@ async function main() {
     bubble_id: item.bubble_id,
     box_id: item.box_id,
     reason: item.reason,
-    created_by: usersByKey.get(item.by).id,
+    created_by: requireUser(usersByKey, item.by).id,
   }));
 
-  const { error: recommendationError } = await db
+  const { error: recommendationError } = await supabase
     .from("box_recommendations")
     .upsert(recommendationRows, { onConflict: "id" });
   if (recommendationError) throw recommendationError;
@@ -434,7 +444,7 @@ async function main() {
     };
   });
 
-  const { error: postError } = await db
+  const { error: postError } = await supabase
     .from("posts")
     .upsert(postRows, { onConflict: "id" });
   if (postError) throw postError;
@@ -460,7 +470,7 @@ async function main() {
     };
   });
 
-  const { error: commentError } = await db
+  const { error: commentError } = await supabase
     .from("comments")
     .upsert(commentRows, { onConflict: "id" });
   if (commentError) throw commentError;
@@ -469,7 +479,7 @@ async function main() {
     {
       id: idFrom(970),
       bubble_id: idFrom(104),
-      reporter_id: usersByKey.get("gauthier").id,
+      reporter_id: requireUser(usersByKey, "gauthier").id,
       target_type: "post",
       target_id: postRows[3].id,
       reason: "Message anxiogène, besoin de modération.",
@@ -478,7 +488,7 @@ async function main() {
     {
       id: idFrom(971),
       bubble_id: idFrom(103),
-      reporter_id: usersByKey.get("emma").id,
+      reporter_id: requireUser(usersByKey, "emma").id,
       target_type: "comment",
       target_id: commentRows[10].id,
       reason: "Ton inadapté pour une bulle professionnelle.",
@@ -486,7 +496,7 @@ async function main() {
     },
   ];
 
-  const { error: reportError } = await db
+  const { error: reportError } = await supabase
     .from("reports")
     .upsert(reportRows, { onConflict: "id" });
   if (reportError) throw reportError;
@@ -496,8 +506,8 @@ async function main() {
     const actor = CORE_ACCOUNTS[(index + 1) % CORE_ACCOUNTS.length];
     return {
       id: idFrom(980 + index),
-      user_id: usersByKey.get(target.key).id,
-      actor_id: usersByKey.get(actor.key).id,
+      user_id: requireUser(usersByKey, target.key).id,
+      actor_id: requireUser(usersByKey, actor.key).id,
       bubble_id: BUBBLES[index % BUBBLES.length].id,
       type: ["invitation", "new_post", "reply", "help_request"][index % 4],
       payload: { demo: true, index: index + 1 },
@@ -505,20 +515,20 @@ async function main() {
     };
   });
 
-  const { error: notificationError } = await db
+  const { error: notificationError } = await supabase
     .from("notifications")
     .upsert(notificationRows, { onConflict: "id" });
   if (notificationError) throw notificationError;
 
-  console.log("Seed complete.");
-  console.log(`Demo password: ${DEMO_PASSWORD}`);
-  console.log("Core profiles:");
+  console.warn("Seed complete.");
+  console.warn(`Demo password: ${DEMO_PASSWORD}`);
+  console.warn("Core profiles:");
   for (const account of CORE_ACCOUNTS) {
-    console.log(`- ${account.email}`);
+    console.warn(`- ${account.email}`);
   }
-  console.log("Lucioles:");
+  console.warn("Lucioles:");
   for (const account of LUCIOLE_ACCOUNTS) {
-    console.log(`- ${account.email}`);
+    console.warn(`- ${account.email}`);
   }
 }
 
