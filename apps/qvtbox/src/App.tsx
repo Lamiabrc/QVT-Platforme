@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import { Toaster } from "@/components/ui/toaster";
@@ -72,7 +72,7 @@ const SecuritePage = lazy(() => import("./pages/SecuritePage"));
 
 function Fallback() {
   return (
-    <div className="min-h-[40vh] flex items-center justify-center text-sm text-foreground/60">
+    <div className="flex min-h-[40vh] items-center justify-center text-sm text-foreground/60">
       Chargement...
     </div>
   );
@@ -88,7 +88,23 @@ const RequireAuth = ({ children }: { children: React.ReactElement }) => {
   if (isLoading) return <Fallback />;
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth/login" replace state={{ from: location.pathname }} />;
+    // On conserve toute la location (pas seulement pathname) pour revenir correctement après login
+    return <Navigate to="/auth/login" replace state={{ from: location }} />;
+  }
+
+  return children;
+};
+
+const RequireGuest = ({ children }: { children: React.ReactElement }) => {
+  const auth = useAuth() as any;
+  const isAuthenticated = Boolean(auth?.isAuthenticated);
+  const isLoading = Boolean(auth?.isLoading ?? auth?.loading);
+
+  if (isLoading) return <Fallback />;
+
+  // Si déjà connecté, on ne montre jamais la page login : retour au hub
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -104,7 +120,7 @@ const RequireAdmin = ({ children }: { children: React.ReactElement }) => {
   if (isLoading) return <Fallback />;
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth/login" replace state={{ from: location.pathname }} />;
+    return <Navigate to="/auth/login" replace state={{ from: location }} />;
   }
 
   const email = String(auth?.user?.email ?? "").toLowerCase();
@@ -154,12 +170,21 @@ const App = () => (
             <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
             <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
 
+            {/* Auth */}
             <Route path="/auth" element={<Navigate to="/auth/login" replace />} />
-            <Route path="/auth/login" element={<LoginPage />} />
+            <Route
+              path="/auth/login"
+              element={
+                <RequireGuest>
+                  <LoginPage />
+                </RequireGuest>
+              }
+            />
             <Route path="/auth/callback" element={<AuthCallbackPage />} />
             <Route path="/auth/logout" element={<LogoutPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
 
+            {/* Hub */}
             <Route
               path="/dashboard"
               element={
@@ -168,14 +193,10 @@ const App = () => (
                 </RequireAuth>
               }
             />
-            <Route
-              path="/entreprise/dashboard"
-              element={
-                <RequireAuth>
-                  <DashboardPage />
-                </RequireAuth>
-              }
-            />
+
+            {/* Un seul hub: on évite la confusion */}
+            <Route path="/entreprise/dashboard" element={<Navigate to="/dashboard" replace />} />
+
             <Route
               path="/mood"
               element={
@@ -201,6 +222,7 @@ const App = () => (
               }
             />
 
+            {/* Admin */}
             <Route
               path="/admin"
               element={
@@ -301,11 +323,13 @@ const App = () => (
               }
             />
 
+            {/* Legal */}
             <Route path="/mentions-legales" element={<MentionsLegalesPage />} />
             <Route path="/politique-confidentialite" element={<PolitiqueConfidentialitePage />} />
             <Route path="/cgv" element={<CGVPage />} />
             <Route path="/manifeste" element={<ManifestPage />} />
 
+            {/* Product routes */}
             <Route path="/zena" element={<ZenaChoicePage />} />
             <Route path="/zena-page" element={<Navigate to="/zena" replace />} />
             <Route path="/zena-family-page" element={<Navigate to="/famille" replace />} />
@@ -317,6 +341,7 @@ const App = () => (
             <Route path="/ado" element={<AdoPage />} />
             <Route path="/lucioles" element={<LuciolesPage />} />
             <Route path="/devenir-luciole" element={<DevenirLuciolePage />} />
+
             <Route
               path="/bulles"
               element={
@@ -333,10 +358,10 @@ const App = () => (
                 </RequireAuth>
               }
             />
-            <Route
-              path="/invitation/:token"
-              element={<InvitationPage />}
-            />
+
+            {/* Invitation: accessible même non connecté (souvent besoin d’ouvrir le lien) */}
+            <Route path="/invitation/:token" element={<InvitationPage />} />
+
             <Route
               path="/notifications"
               element={
@@ -345,12 +370,26 @@ const App = () => (
                 </RequireAuth>
               }
             />
+
+            {/* Famille */}
             <Route path="/famille/espace" element={<FamilySpacePage />} />
             <Route path="/famille/creer" element={<FamilleCreatePage />} />
             <Route path="/famille/inviter" element={<FamilleInvitePage />} />
             <Route path="/famille/rejoindre" element={<FamilleJoinPage />} />
             <Route path="/famille/mentor/apply" element={<Navigate to="/devenir-luciole" replace />} />
+            <Route
+              path="/famille/dashboard"
+              element={
+                <RequireAuth>
+                  <FamilleDashboardPage />
+                </RequireAuth>
+              }
+            />
+
+            {/* Sécurité */}
             <Route path="/securite" element={<SecuritePage />} />
+
+            {/* Autres */}
             <Route path="/choisir-sphere" element={<ChoisirSpherePage />} />
             <Route path="/choisir-ma-sphere" element={<ChoisirSpherePage />} />
 
@@ -367,14 +406,6 @@ const App = () => (
               element={
                 <RequireAuth>
                   <SupervisionPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/famille/dashboard"
-              element={
-                <RequireAuth>
-                  <FamilleDashboardPage />
                 </RequireAuth>
               }
             />
