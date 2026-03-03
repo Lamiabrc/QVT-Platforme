@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Menu, X } from "lucide-react";
 import LanguageSelector from "@/components/LanguageSelector";
 import NotificationBell from "@/components/social/NotificationBell";
@@ -9,9 +9,9 @@ import { useLanguage } from "@/hooks/useLanguage";
 const BASE_NAV_ITEMS = [
   { label: "Entreprise", path: "/entreprise" },
   { label: "Vie perso", path: "/famille" },
-  { label: "ZENA", path: "/zena" },
+  { label: "ZÉNA", path: "/zena" },
   { label: "Lucioles", path: "/lucioles" },
-  { label: "Securite", path: "/securite" },
+  { label: "Sécurité", path: "/securite" },
   { label: "Box", path: "/box" },
 ];
 
@@ -22,9 +22,21 @@ export default function Navigation() {
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
 
-  const navItems = isAuthenticated
-    ? [...BASE_NAV_ITEMS, { label: "Tableau de bord", path: "/dashboard" }, { label: "Mes bulles", path: "/bulles" }]
-    : BASE_NAV_ITEMS;
+  // Ferme le menu mobile quand on change de page
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
+  const navItems = useMemo(() => {
+    if (!isAuthenticated) return BASE_NAV_ITEMS;
+
+    // Priorité après login : retour dashboard + bulles
+    return [
+      { label: "Tableau de bord", path: "/dashboard" },
+      { label: "Mes bulles", path: "/bulles" },
+      ...BASE_NAV_ITEMS,
+    ];
+  }, [isAuthenticated]);
 
   const isActive = (path: string) =>
     location.pathname === path || (path !== "/" && location.pathname.startsWith(path));
@@ -34,10 +46,12 @@ export default function Navigation() {
     navigate("/");
   };
 
+  const homeTarget = isAuthenticated ? "/dashboard" : "/";
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#2A2520] bg-[#151515]/95 backdrop-blur-xl">
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-[#2A2520] bg-[#151515]/95 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link to="/" className="relative flex items-center gap-3">
+        <Link to={homeTarget} className="relative flex items-center gap-3">
           <div className="absolute -inset-2 rounded-full bg-[#F3E0B9]/20 blur-md" />
           <img
             src="/logo-qvt.jpeg"
@@ -68,24 +82,27 @@ export default function Navigation() {
 
         <div className="hidden items-center gap-3 md:flex">
           <LanguageSelector currentLanguage={language} onLanguageChange={setLanguage} />
-          <NotificationBell className="px-3 py-2 text-xs" />
 
           {isAuthenticated ? (
-            <div className="flex items-center gap-2">
-              <Link
-                to="/profil"
-                className="rounded-full bg-[#F3E0B9] px-4 py-2 text-xs font-semibold text-[#151515] transition hover:bg-[#F7E7C5]"
-              >
-                Compte
-              </Link>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="rounded-full border border-[#3A332D] px-4 py-2 text-xs text-[#E5D7BF] transition hover:border-[#F3E0B9] hover:text-[#F3E0B9]"
-              >
-                Se deconnecter
-              </button>
-            </div>
+            <>
+              <NotificationBell className="px-3 py-2 text-xs" />
+
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/profil"
+                  className="rounded-full bg-[#F3E0B9] px-4 py-2 text-xs font-semibold text-[#151515] transition hover:bg-[#F7E7C5]"
+                >
+                  Compte
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-full border border-[#3A332D] px-4 py-2 text-xs text-[#E5D7BF] transition hover:border-[#F3E0B9] hover:text-[#F3E0B9]"
+                >
+                  Se déconnecter
+                </button>
+              </div>
+            </>
           ) : (
             <Link
               to="/auth/login"
@@ -96,7 +113,12 @@ export default function Navigation() {
           )}
         </div>
 
-        <button onClick={() => setOpen((prev) => !prev)} className="p-1 md:hidden">
+        <button
+          type="button"
+          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+          onClick={() => setOpen((prev) => !prev)}
+          className="p-1 md:hidden"
+        >
           {open ? (
             <X className="h-7 w-7 text-[#E5D7BF]" />
           ) : (
@@ -111,7 +133,6 @@ export default function Navigation() {
             <Link
               key={item.path}
               to={item.path}
-              onClick={() => setOpen(false)}
               className={`block rounded-lg px-3 py-3 text-sm ${
                 isActive(item.path)
                   ? "bg-[#F3E0B9] text-[#151515]"
@@ -122,17 +143,18 @@ export default function Navigation() {
             </Link>
           ))}
 
-          <Link
-            to="/notifications"
-            onClick={() => setOpen(false)}
-            className={`block rounded-lg px-3 py-3 text-sm ${
-              isActive("/notifications")
-                ? "bg-[#F3E0B9] text-[#151515]"
-                : "bg-[#201D19] text-[#E5D7BF]/80 hover:bg-[#2A2520]"
-            }`}
-          >
-            Notifications
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/notifications"
+              className={`block rounded-lg px-3 py-3 text-sm ${
+                isActive("/notifications")
+                  ? "bg-[#F3E0B9] text-[#151515]"
+                  : "bg-[#201D19] text-[#E5D7BF]/80 hover:bg-[#2A2520]"
+              }`}
+            >
+              Notifications
+            </Link>
+          ) : null}
 
           <LanguageSelector currentLanguage={language} onLanguageChange={setLanguage} />
 
@@ -140,26 +162,24 @@ export default function Navigation() {
             <div className="grid gap-2">
               <Link
                 to="/profil"
-                onClick={() => setOpen(false)}
                 className="block rounded-full bg-[#F3E0B9] px-4 py-2 text-center text-sm font-medium text-[#151515]"
               >
                 Compte
               </Link>
               <button
                 type="button"
-                onClick={() => {
-                  handleLogout();
+                onClick={async () => {
+                  await handleLogout();
                   setOpen(false);
                 }}
                 className="block rounded-full border border-[#F3E0B9] px-4 py-2 text-center text-sm font-medium text-[#F3E0B9]"
               >
-                Se deconnecter
+                Se déconnecter
               </button>
             </div>
           ) : (
             <Link
               to="/auth/login"
-              onClick={() => setOpen(false)}
               className="block rounded-full border border-[#F3E0B9] bg-[#151515] px-4 py-2 text-center text-sm font-medium text-[#F3E0B9]"
             >
               Compte
