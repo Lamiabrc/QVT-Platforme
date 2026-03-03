@@ -5,6 +5,13 @@ import { CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+const getSafeReturnUrl = (value: string | null) => {
+  if (!value || !value.startsWith("/")) {
+    return "/dashboard";
+  }
+  return value;
+};
+
 const AuthCallbackPage = () => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const navigate = useNavigate();
@@ -12,9 +19,10 @@ const AuthCallbackPage = () => {
 
   useEffect(() => {
     const handleAuthCallback = async () => {
+      const url = new URL(window.location.href);
+      const returnUrl = getSafeReturnUrl(url.searchParams.get("returnUrl"));
+
       try {
-        // Clean URL from sensitive params first
-        const url = new URL(window.location.href);
         let hasAuthParams = false;
 
         // Check if we have auth-related parameters
@@ -52,7 +60,7 @@ const AuthCallbackPage = () => {
 
         // Redirect after a short delay to show success state
         setTimeout(() => {
-          navigate('/dashboard');
+          navigate(returnUrl);
         }, 1500);
 
       } catch (error: any) {
@@ -71,7 +79,7 @@ const AuthCallbackPage = () => {
 
         // Redirect to login after delay
         setTimeout(() => {
-          navigate('/auth/login');
+          navigate(`/auth/login?returnUrl=${encodeURIComponent(returnUrl)}`);
         }, 3000);
       }
     };

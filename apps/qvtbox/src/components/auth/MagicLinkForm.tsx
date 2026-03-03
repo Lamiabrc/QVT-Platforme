@@ -5,7 +5,11 @@ import { Mail, Loader2, Clock, CheckCircle, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-const MagicLinkForm = () => {
+interface MagicLinkFormProps {
+  redirectTo?: string;
+}
+
+const MagicLinkForm = ({ redirectTo }: MagicLinkFormProps) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [armingCount, setArmingCount] = useState(0);
@@ -59,7 +63,7 @@ const MagicLinkForm = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: redirectTo ?? `${window.location.origin}/auth/callback`,
         },
       });
 
