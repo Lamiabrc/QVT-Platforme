@@ -1,8 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-
 import LanguageSelector from "@/components/LanguageSelector";
+import NotificationBell from "@/components/social/NotificationBell";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -13,7 +13,7 @@ const navItems = [
   { label: "Lucioles", path: "/lucioles" },
   { label: "Sécurité", path: "/securite" },
   { label: "Box", path: "/box" },
-  { label: "Contact", path: "/contact" },
+  { label: "Mes bulles", path: "/bulles" },
 ];
 
 export default function Navigation() {
@@ -63,8 +63,9 @@ export default function Navigation() {
           ))}
         </ul>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           <LanguageSelector currentLanguage={language} onLanguageChange={setLanguage} />
+          <NotificationBell className="px-3 py-2 text-xs" />
 
           {isAuthenticated ? (
             <div className="flex items-center gap-2">
@@ -101,7 +102,7 @@ export default function Navigation() {
         </button>
       </div>
 
-      {open && (
+      {open ? (
         <div className="space-y-4 border-t border-[#2A2520] bg-[#1A1816] px-6 py-6 md:hidden">
           {navItems.map((item) => (
             <Link
@@ -117,6 +118,18 @@ export default function Navigation() {
               {item.label}
             </Link>
           ))}
+
+          <Link
+            to="/notifications"
+            onClick={() => setOpen(false)}
+            className={`block rounded-lg px-3 py-3 text-sm ${
+              isActive("/notifications")
+                ? "bg-[#F3E0B9] text-[#151515]"
+                : "bg-[#201D19] text-[#E5D7BF]/80 hover:bg-[#2A2520]"
+            }`}
+          >
+            🔔 Notifications
+          </Link>
 
           <LanguageSelector currentLanguage={language} onLanguageChange={setLanguage} />
 
@@ -150,7 +163,7 @@ export default function Navigation() {
             </Link>
           )}
         </div>
-      )}
+      ) : null}
     </nav>
   );
 }

@@ -55,6 +55,10 @@ const EntrepriseJoinPage = lazy(() => import("./pages/EntrepriseJoinPage"));
 const FamillePage = lazy(() => import("./pages/FamillePage"));
 const LuciolesPage = lazy(() => import("./pages/LuciolesPage"));
 const DevenirLuciolePage = lazy(() => import("./pages/DevenirLuciolePage"));
+const BullesPage = lazy(() => import("./pages/BullesPage"));
+const BubbleDetailPage = lazy(() => import("./pages/BubbleDetailPage"));
+const InvitationPage = lazy(() => import("./pages/InvitationPage"));
+const NotificationsPage = lazy(() => import("./pages/NotificationsPage"));
 const FamilySpacePage = lazy(() => import("./pages/FamilySpacePage"));
 const FamilleCreatePage = lazy(() => import("./pages/FamilleCreatePage"));
 const FamilleInvitePage = lazy(() => import("./pages/FamilleInvitePage"));
@@ -312,6 +316,34 @@ const App = () => (
             <Route path="/famille" element={<FamillePage />} />
             <Route path="/lucioles" element={<LuciolesPage />} />
             <Route path="/devenir-luciole" element={<DevenirLuciolePage />} />
+            <Route
+              path="/bulles"
+              element={
+                <RequireAuth>
+                  <BullesPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/bulle/:id"
+              element={
+                <RequireAuth>
+                  <BubbleDetailPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/invitation/:token"
+              element={<InvitationPage />}
+            />
+            <Route
+              path="/notifications"
+              element={
+                <RequireAuth>
+                  <NotificationsPage />
+                </RequireAuth>
+              }
+            />
             <Route path="/famille/espace" element={<FamilySpacePage />} />
             <Route path="/famille/creer" element={<FamilleCreatePage />} />
             <Route path="/famille/inviter" element={<FamilleInvitePage />} />

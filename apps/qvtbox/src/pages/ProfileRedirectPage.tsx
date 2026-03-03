@@ -18,6 +18,40 @@ export default function ProfileRedirectPage() {
         return;
       }
 
+      const { data: bubbleMembership } = await (supabase as any)
+        .from("bubble_members")
+        .select("bubble_id")
+        .eq("user_id", user.id)
+        .limit(1)
+        .maybeSingle();
+
+      if (bubbleMembership?.bubble_id) {
+        navigate("/bulles");
+        return;
+      }
+
+      const { data: myLuciole } = await (supabase as any)
+        .from("lucioles")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("status", "approved")
+        .maybeSingle();
+
+      if (myLuciole?.id) {
+        const { data: lucioleAssignment } = await (supabase as any)
+          .from("bubble_lucioles")
+          .select("bubble_id")
+          .eq("luciole_id", myLuciole.id)
+          .eq("status", "active")
+          .limit(1)
+          .maybeSingle();
+
+        if (lucioleAssignment?.bubble_id) {
+          navigate("/bulles");
+          return;
+        }
+      }
+
       const { data: familyMembership } = await supabase
         .from("family_members")
         .select("family_id")

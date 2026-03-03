@@ -1,16 +1,71 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-
+import { useEffect, useState } from "react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { fetchBoxes } from "@/lib/social";
+import type { BoxItem } from "@/lib/social";
+
+const fallbackBoxes: BoxItem[] = [
+  {
+    id: "fallback-1",
+    slug: "box-salarie",
+    title: "Box Salarié",
+    description: "Cohésion et attention dans la durée.",
+    image_path: "/images/box-salarie.jpg",
+    price_cents: 4900,
+    cadence: "one_shot",
+    is_active: true,
+  },
+  {
+    id: "fallback-2",
+    slug: "box-parent",
+    title: "Box Parent",
+    description: "Soutien parental et respiration.",
+    image_path: "/images/box-parent.jpg",
+    price_cents: 5900,
+    cadence: "one_shot",
+    is_active: true,
+  },
+  {
+    id: "fallback-3",
+    slug: "box-proches",
+    title: "Box Proches",
+    description: "Présence concrète dans les moments clés.",
+    image_path: "/images/box-ado.jpg",
+    price_cents: 4200,
+    cadence: "one_shot",
+    is_active: true,
+  },
+  {
+    id: "fallback-4",
+    slug: "box-senior",
+    title: "Box Senior",
+    description: "Lien, sécurité et réconfort.",
+    image_path: "/images/box-senior.jpg",
+    price_cents: 5600,
+    cadence: "monthly",
+    is_active: true,
+  },
+];
 
 export default function BoxPage() {
-  const boxes = [
-    { title: "Box Salarié", image: "/images/box-salarie.jpg" },
-    { title: "Box Parent", image: "/images/box-parent.jpg" },
-    { title: "Box Proches", image: "/images/box-ado.jpg" },
-    { title: "Box Senior", image: "/images/box-senior.jpg" },
-  ];
+  const [boxes, setBoxes] = useState<BoxItem[]>(fallbackBoxes);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const rows = await fetchBoxes();
+        if (rows.length) setBoxes(rows);
+      } catch {
+        setBoxes(fallbackBoxes);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#FAF6EE] text-[#1B1A18]">
@@ -41,15 +96,29 @@ export default function BoxPage() {
 
         <section className="bg-[#FAF6EE] px-6 py-16 md:py-20">
           <div className="mx-auto max-w-6xl">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {loading ? (
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-5 text-sm text-[#6F6454]">
+                Chargement du catalogue...
+              </div>
+            ) : null}
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {boxes.map((box) => (
                 <article
-                  key={box.title}
+                  key={box.id}
                   className="overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-sm"
                 >
-                  <img src={box.image} alt={box.title} className="h-48 w-full object-cover" />
+                  <img
+                    src={box.image_path || "/images/box-parent.jpg"}
+                    alt={box.title}
+                    className="h-48 w-full object-cover"
+                  />
                   <div className="p-5">
                     <h2 className="text-lg font-semibold">{box.title}</h2>
+                    {box.description ? <p className="mt-2 text-sm text-[#6F6454]">{box.description}</p> : null}
+                    <p className="mt-3 text-sm font-semibold">
+                      {Math.round(box.price_cents / 100)} € • {box.cadence === "one_shot" ? "ponctuelle" : box.cadence}
+                    </p>
                   </div>
                 </article>
               ))}
@@ -57,10 +126,10 @@ export default function BoxPage() {
 
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
-                to="/contact"
+                to="/bulles"
                 className="inline-flex items-center gap-2 rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90"
               >
-                Demander une box
+                Voir mes recommandations
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link

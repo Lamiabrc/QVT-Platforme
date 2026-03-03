@@ -20,6 +20,7 @@ node_modules/
 dist/
 dist-ssr/
 build/
+scripts/.build/
 *.local
 
 # Vite / caches

@@ -14,6 +14,7 @@
     "lint": "npm --workspace apps/qvtbox run lint",
     "typecheck": "npm --workspace apps/qvtbox run typecheck",
     "dev:qvtbox": "npm run dev",
-    "build:qvtbox": "npm run build"
+    "build:qvtbox": "npm run build",
+    "seed:demo": "npm --workspace apps/qvtbox run seed:demo"
   }
 }

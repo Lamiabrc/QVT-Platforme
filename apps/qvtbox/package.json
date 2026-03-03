@@ -14,6 +14,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "seed:demo": "tsc scripts/seed_demo.ts --outDir scripts/.build --target ES2022 --module NodeNext --moduleResolution NodeNext --esModuleInterop --skipLibCheck && node scripts/.build/seed_demo.js",
     "clean": "rimraf dist 2>/dev/null || true",
     "cap:copy": "npm run build && npx cap copy",
     "cap:sync": "npm run build && npx cap sync",
