@@ -6,14 +6,13 @@ import NotificationBell from "@/components/social/NotificationBell";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 
-const navItems = [
+const BASE_NAV_ITEMS = [
   { label: "Entreprise", path: "/entreprise" },
   { label: "Vie perso", path: "/famille" },
-  { label: "ZÉNA", path: "/zena" },
+  { label: "ZENA", path: "/zena" },
   { label: "Lucioles", path: "/lucioles" },
-  { label: "Sécurité", path: "/securite" },
+  { label: "Securite", path: "/securite" },
   { label: "Box", path: "/box" },
-  { label: "Mes bulles", path: "/bulles" },
 ];
 
 export default function Navigation() {
@@ -22,6 +21,10 @@ export default function Navigation() {
   const { isAuthenticated, signOut } = useAuth();
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
+
+  const navItems = isAuthenticated
+    ? [...BASE_NAV_ITEMS, { label: "Tableau de bord", path: "/dashboard" }, { label: "Mes bulles", path: "/bulles" }]
+    : BASE_NAV_ITEMS;
 
   const isActive = (path: string) =>
     location.pathname === path || (path !== "/" && location.pathname.startsWith(path));
@@ -80,7 +83,7 @@ export default function Navigation() {
                 onClick={handleLogout}
                 className="rounded-full border border-[#3A332D] px-4 py-2 text-xs text-[#E5D7BF] transition hover:border-[#F3E0B9] hover:text-[#F3E0B9]"
               >
-                Se déconnecter
+                Se deconnecter
               </button>
             </div>
           ) : (
@@ -128,7 +131,7 @@ export default function Navigation() {
                 : "bg-[#201D19] text-[#E5D7BF]/80 hover:bg-[#2A2520]"
             }`}
           >
-            🔔 Notifications
+            Notifications
           </Link>
 
           <LanguageSelector currentLanguage={language} onLanguageChange={setLanguage} />
@@ -150,7 +153,7 @@ export default function Navigation() {
                 }}
                 className="block rounded-full border border-[#F3E0B9] px-4 py-2 text-center text-sm font-medium text-[#F3E0B9]"
               >
-                Se déconnecter
+                Se deconnecter
               </button>
             </div>
           ) : (

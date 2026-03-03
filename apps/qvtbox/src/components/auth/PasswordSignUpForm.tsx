@@ -8,7 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
-interface PasswordLoginFormProps {
+interface PasswordSignUpFormProps {
+  redirectTo?: string;
   onSuccess?: () => void;
 }
 
@@ -16,40 +17,55 @@ const getErrorMessage = (error: unknown) => {
   if (error instanceof Error && error.message) {
     return error.message;
   }
-  return "Impossible de se connecter pour le moment.";
+  return "Impossible de creer le compte pour le moment.";
 };
 
-const PasswordLoginForm = ({ onSuccess }: PasswordLoginFormProps) => {
+const PasswordSignUpForm = ({ redirectTo, onSuccess }: PasswordSignUpFormProps) => {
   const { confirmAuth } = useAuth();
   const { toast } = useToast();
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (event: React.FormEvent) => {
+  const handleSignUp = async (event: React.FormEvent) => {
     event.preventDefault();
     if (loading) return;
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: redirectTo ?? `${window.location.origin}/auth/callback`,
+          data: {
+            full_name: fullName.trim() || undefined,
+          },
+        },
       });
 
       if (error) {
         throw error;
       }
 
-      await confirmAuth();
+      if (data.session) {
+        await confirmAuth();
+        toast({
+          title: "Compte cree",
+          description: "Bienvenue dans votre espace QVT Box.",
+        });
+        onSuccess?.();
+        return;
+      }
+
       toast({
-        title: "Connexion réussie",
-        description: "Bienvenue dans votre espace QVT Box.",
+        title: "Verification email requise",
+        description: "Votre compte est cree. Verifiez votre boite mail pour activer la connexion.",
       });
-      onSuccess?.();
     } catch (error: unknown) {
       toast({
-        title: "Connexion impossible",
+        title: "Inscription impossible",
         description: getErrorMessage(error),
         variant: "destructive",
       });
@@ -59,13 +75,29 @@ const PasswordLoginForm = ({ onSuccess }: PasswordLoginFormProps) => {
   };
 
   return (
-    <form onSubmit={handleLogin} className="space-y-4">
+    <form onSubmit={handleSignUp} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="login-email" className="text-[#5E5447]">
+        <Label htmlFor="signup-fullname" className="text-[#5E5447]">
+          Nom complet
+        </Label>
+        <Input
+          id="signup-fullname"
+          type="text"
+          autoComplete="name"
+          value={fullName}
+          onChange={(event) => setFullName(event.target.value)}
+          disabled={loading}
+          placeholder="Votre nom"
+          className="h-11 rounded-2xl border-[#E8DCC8] bg-white"
+        />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="signup-email" className="text-[#5E5447]">
           Adresse email
         </Label>
         <Input
-          id="login-email"
+          id="signup-email"
           type="email"
           autoComplete="email"
           required
@@ -78,18 +110,18 @@ const PasswordLoginForm = ({ onSuccess }: PasswordLoginFormProps) => {
       </div>
 
       <div className="space-y-1.5">
-        <Label htmlFor="login-password" className="text-[#5E5447]">
+        <Label htmlFor="signup-password" className="text-[#5E5447]">
           Mot de passe
         </Label>
         <Input
-          id="login-password"
+          id="signup-password"
           type="password"
-          autoComplete="current-password"
+          autoComplete="new-password"
           required
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           disabled={loading}
-          placeholder="••••••••"
+          placeholder="Minimum 8 caracteres"
           className="h-11 rounded-2xl border-[#E8DCC8] bg-white"
         />
       </div>
@@ -102,23 +134,20 @@ const PasswordLoginForm = ({ onSuccess }: PasswordLoginFormProps) => {
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Connexion...
+            Creation...
           </>
         ) : (
-          "Se connecter"
+          "Creer mon compte"
         )}
       </Button>
 
-      <div className="flex items-center justify-between text-xs text-[#6F6454]">
-        <Link to="/reset-password" className="hover:text-[#1B1A18] underline-offset-2 hover:underline">
-          Mot de passe oublié ?
-        </Link>
-        <Link to="/auth/login?mode=signup" className="hover:text-[#1B1A18] underline-offset-2 hover:underline">
-          Créer un compte
+      <div className="flex justify-end text-xs text-[#6F6454]">
+        <Link to="/auth/login" className="hover:text-[#1B1A18] underline-offset-2 hover:underline">
+          Deja un compte ?
         </Link>
       </div>
     </form>
   );
 };
 
-export default PasswordLoginForm;
+export default PasswordSignUpForm;

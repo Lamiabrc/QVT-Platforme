@@ -32,11 +32,11 @@ const SettingsPage = lazy(() => import("./pages/cms/SettingsPage"));
 const CMSPartnersPage = lazy(() => import("./pages/cms/PartnersPage"));
 const MediaPage = lazy(() => import("./pages/cms/MediaPage"));
 
-const AuthPage = lazy(() => import("./pages/AuthPage"));
 const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
 const AuthCallbackPage = lazy(() => import("./pages/auth/AuthCallbackPage"));
 const ResetPasswordPage = lazy(() => import("./pages/auth/ResetPasswordPage"));
 const LogoutPage = lazy(() => import("./pages/auth/LogoutPage"));
+const AdoPage = lazy(() => import("./pages/AdoPage"));
 
 const SimulateurPage = lazy(() => import("./pages/SimulateurPage"));
 const UserDashboard = lazy(() => import("./pages/UserDashboard"));
@@ -154,7 +154,7 @@ const App = () => (
             <Route path="/checkout/success" element={<CheckoutSuccessPage />} />
             <Route path="/checkout/cancel" element={<CheckoutCancelPage />} />
 
-            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/auth" element={<Navigate to="/auth/login" replace />} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/callback" element={<AuthCallbackPage />} />
             <Route path="/auth/logout" element={<LogoutPage />} />
@@ -314,6 +314,7 @@ const App = () => (
             <Route path="/entreprise" element={<EntreprisePage />} />
             <Route path="/entreprise/rejoindre" element={<EntrepriseJoinPage />} />
             <Route path="/famille" element={<FamillePage />} />
+            <Route path="/ado" element={<AdoPage />} />
             <Route path="/lucioles" element={<LuciolesPage />} />
             <Route path="/devenir-luciole" element={<DevenirLuciolePage />} />
             <Route
