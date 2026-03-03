@@ -235,16 +235,28 @@ export type LucioleMessage = {
   };
 };
 
+const safeRandomHex = (len: number) => {
+  // fallback simple si crypto indisponible (très rare)
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let out = "";
+  for (let i = 0; i < len; i += 1) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+};
+
+const safeUUID = () => {
+  const c: any = (globalThis as any).crypto;
+  if (c?.randomUUID) return c.randomUUID();
+  // fallback pseudo-uuid
+  return `${safeRandomHex(8)}-${safeRandomHex(4)}-${safeRandomHex(4)}-${safeRandomHex(4)}-${safeRandomHex(12)}`;
+};
+
 const normalizeToken = () =>
-  `${crypto.randomUUID().replace(/-/g, "")}${Math.random().toString(36).slice(2, 8)}`;
+  `${safeUUID().replace(/-/g, "")}${Math.random().toString(36).slice(2, 8)}`;
 
 const mapProfiles = async (userIds: string[]) => {
   if (!userIds.length) return new Map<string, { full_name: string | null; email: string | null }>();
 
-  const { data } = await db
-    .from("profiles")
-    .select("id, full_name, email")
-    .in("id", userIds);
+  const { data } = await db.from("profiles").select("id, full_name, email").in("id", userIds);
 
   const mapped = new Map<string, { full_name: string | null; email: string | null }>();
   for (const item of data ?? []) {
@@ -311,10 +323,13 @@ export const createBubble = async (payload: {
   bubbleType: BubbleType;
   hasMinor: boolean;
 }) => {
+  const name = payload.name.trim();
+  if (!name) throw new Error("Le nom de la bulle est obligatoire.");
+
   const { data: bubble, error } = await db
     .from("bubbles")
     .insert({
-      name: payload.name.trim(),
+      name,
       bubble_type: payload.bubbleType,
       has_minor: payload.hasMinor,
       referent_user_id: payload.hasMinor ? payload.userId : null,
@@ -438,16 +453,27 @@ export const createInvitation = async (payload: {
 
   if (error) throw error;
 
+  // Envoi email via API (best-effort)
   if (payload.email) {
-    const link = `${payload.origin.replace(/\/$/, "")}/invitation/${token}`;
+    const origin = payload.origin?.replace(/\/$/, "") || "";
+    const link = `${origin}/invitation/${token}`;
+
     await fetch("/api/contact", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        // format “historique” (si ton API attend nom/email/role/message)
         nom: "QVT Box",
         email: "contact@qvtbox.com",
         role: "Invitation bulle",
-        message: `Invitation pour rejoindre une bulle: ${link}`,
+        message: `Invitation pour rejoindre une bulle : ${link}`,
+
+        // format “standard” (si ton API attend name/from/to/subject/body)
+        name: "QVT Box",
+        from: "contact@qvtbox.com",
+        to: payload.email,
+        subject: "Invitation QVT Box",
+        body: `Bonjour,\n\nVous avez reçu une invitation pour rejoindre une bulle QVT Box.\n\nLien : ${link}\n\nÀ bientôt,\nQVT Box`,
       }),
     }).catch(() => undefined);
   }
@@ -507,12 +533,15 @@ export const createPost = async (
   shareLevel: ShareLevel = "bubble",
   targetBubbleId?: string
 ) => {
+  const cleaned = content.trim();
+  if (!cleaned) throw new Error("Le message ne peut pas être vide.");
+
   const { data, error } = await db
     .from("posts")
     .insert({
       bubble_id: bubbleId,
       author_id: authorId,
-      content: content.trim(),
+      content: cleaned,
       share_level: shareLevel,
       target_bubble_id: targetBubbleId ?? null,
     })
@@ -530,13 +559,16 @@ export const createComment = async (
   content: string,
   shareLevel: ShareLevel = "bubble"
 ) => {
+  const cleaned = content.trim();
+  if (!cleaned) throw new Error("Le commentaire ne peut pas être vide.");
+
   const { data, error } = await db
     .from("comments")
     .insert({
       post_id: postId,
       bubble_id: bubbleId,
       author_id: authorId,
-      content: content.trim(),
+      content: cleaned,
       share_level: shareLevel,
     })
     .select("id, post_id, bubble_id, author_id, content, share_level, created_at, updated_at")
@@ -553,12 +585,15 @@ export const createReport = async (payload: {
   targetId: string;
   reason: string;
 }) => {
+  const reason = payload.reason.trim();
+  if (!reason) throw new Error("Merci d'indiquer une raison.");
+
   const { error } = await db.from("reports").insert({
     bubble_id: payload.bubbleId,
     reporter_id: payload.reporterId,
     target_type: payload.targetType,
     target_id: payload.targetId,
-    reason: payload.reason.trim(),
+    reason,
     status: "pending",
   });
 
@@ -582,20 +617,19 @@ export const updateReportStatus = async (reportId: string, status: ReportStatus)
 };
 
 export const blockUser = async (blockerId: string, blockedId: string) => {
-  const { error } = await db
-    .from("blocks")
-    .insert({ blocker_id: blockerId, blocked_id: blockedId });
-  if (error && !String(error.message ?? "").toLowerCase().includes("duplicate")) {
+  const { error } = await db.from("blocks").insert({ blocker_id: blockerId, blocked_id: blockedId });
+
+  // On ignore le duplicate proprement (si contrainte unique)
+  const code = (error as any)?.code;
+  const msg = String((error as any)?.message ?? "").toLowerCase();
+
+  if (error && code !== "23505" && !msg.includes("duplicate")) {
     throw error;
   }
 };
 
 export const setReferent = async (bubbleId: string, referentUserId: string | null) => {
-  const { error } = await db
-    .from("bubbles")
-    .update({ referent_user_id: referentUserId })
-    .eq("id", bubbleId);
-
+  const { error } = await db.from("bubbles").update({ referent_user_id: referentUserId }).eq("id", bubbleId);
   if (error) throw error;
 };
 
@@ -782,13 +816,17 @@ export const toggleReaction = async (payload: {
   emoji?: string;
 }) => {
   const { bubbleId, postId, commentId, userId, emoji = "❤️" } = payload;
-  const query = db
-    .from("reactions")
-    .select("id")
-    .eq("bubble_id", bubbleId)
-    .eq("user_id", userId);
 
-  const scopedQuery = postId ? query.eq("post_id", postId).is("comment_id", null) : query.eq("comment_id", commentId).is("post_id", null);
+  if (!postId && !commentId) {
+    throw new Error("toggleReaction: postId ou commentId est requis.");
+  }
+
+  const query = db.from("reactions").select("id").eq("bubble_id", bubbleId).eq("user_id", userId);
+
+  const scopedQuery = postId
+    ? query.eq("post_id", postId).is("comment_id", null)
+    : query.eq("comment_id", commentId).is("post_id", null);
+
   const { data: existing, error: checkError } = await scopedQuery.maybeSingle();
   if (checkError) throw checkError;
 
@@ -805,6 +843,7 @@ export const toggleReaction = async (payload: {
     user_id: userId,
     emoji,
   });
+
   if (error) throw error;
   return { active: true };
 };
@@ -840,7 +879,11 @@ export const createBubbleConnection = async (payload: {
   return data as BubbleConnection;
 };
 
-export const respondBubbleConnection = async (connectionId: string, status: Exclude<BubbleConnectionStatus, "pending">, userId: string) => {
+export const respondBubbleConnection = async (
+  connectionId: string,
+  status: Exclude<BubbleConnectionStatus, "pending">,
+  userId: string
+) => {
   const { data, error } = await db
     .from("bubble_connections")
     .update({ status, responded_by: userId, responded_at: new Date().toISOString() })
@@ -853,12 +896,7 @@ export const respondBubbleConnection = async (connectionId: string, status: Excl
 };
 
 const ensureCalendar = async (bubbleId: string, userId: string) => {
-  const { data: existing, error: selectError } = await db
-    .from("calendars")
-    .select("id")
-    .eq("bubble_id", bubbleId)
-    .maybeSingle();
-
+  const { data: existing, error: selectError } = await db.from("calendars").select("id").eq("bubble_id", bubbleId).maybeSingle();
   if (selectError) throw selectError;
   if (existing?.id) return existing.id as string;
 
@@ -899,6 +937,10 @@ export const createCalendarEvent = async (payload: {
   isQuickActivity?: boolean;
   description?: string;
 }) => {
+  const title = payload.title.trim();
+  if (!title) throw new Error("Le titre de l’activité est obligatoire.");
+  if (!payload.startsAt) throw new Error("La date de début est obligatoire.");
+
   const calendarId = await ensureCalendar(payload.bubbleId, payload.userId);
 
   const { data, error } = await db
@@ -907,7 +949,7 @@ export const createCalendarEvent = async (payload: {
       calendar_id: calendarId,
       bubble_id: payload.bubbleId,
       created_by: payload.userId,
-      title: payload.title.trim(),
+      title,
       starts_at: payload.startsAt,
       ends_at: payload.endsAt ?? null,
       tags: payload.tags ?? [],
@@ -1007,9 +1049,11 @@ export const fetchLucioleMessages = async (bubbleId: string) => {
     .order("created_at", { ascending: true });
 
   if (error) throw error;
+
   const messages = (rows ?? []) as LucioleMessage[];
   const authorIds = [...new Set(messages.map((item) => item.author_id))];
   const profileMap = await mapProfiles(authorIds);
+
   return messages.map((item) => ({ ...item, author: profileMap.get(item.author_id) }));
 };
 
@@ -1020,12 +1064,15 @@ export const createLucioleMessage = async (payload: {
   shareLevel?: ShareLevel;
   subscriptionId?: string;
 }) => {
+  const cleaned = payload.content.trim();
+  if (!cleaned) throw new Error("Le message ne peut pas être vide.");
+
   const { data, error } = await db
     .from("luciole_messages")
     .insert({
       bubble_id: payload.bubbleId,
       author_id: payload.authorId,
-      content: payload.content.trim(),
+      content: cleaned,
       share_level: payload.shareLevel ?? "referent",
       subscription_id: payload.subscriptionId ?? null,
     })
