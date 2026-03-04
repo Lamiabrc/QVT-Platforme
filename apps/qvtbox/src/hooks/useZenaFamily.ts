@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { supabaseUnsafe } from "@/integrations/supabase/unsafe";
 import { useAuth } from "@/hooks/useAuth";
 
 export const useZenaFamily = () => {
@@ -77,34 +78,34 @@ export const useZenaFamily = () => {
 
   const fetchSessions = useCallback(async () => {
     if (!userId) return [];
-    const { data, error } = await supabase
+    const { data, error } = await supabaseUnsafe
       .from("support_sessions")
       .select("*")
       .or(`requester_id.eq.${userId},mentor_id.eq.${userId}`)
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as any[];
   }, [userId]);
 
   const fetchMessages = useCallback(async (sessionId: string) => {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseUnsafe
       .from("session_messages")
       .select("*")
       .eq("session_id", sessionId)
       .order("created_at", { ascending: true });
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as any[];
   }, []);
 
   const fetchSupportRequests = useCallback(async () => {
     if (!userId) return [];
-    const { data, error } = await supabase
+    const { data, error } = await supabaseUnsafe
       .from("support_requests")
       .select("*")
       .eq("requester_id", userId)
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as any[];
   }, [userId]);
 
   const applyMentor = useCallback(
@@ -117,7 +118,7 @@ export const useZenaFamily = () => {
       availability?: string | null;
     }) => {
       if (!userId) throw new Error("Not authenticated");
-      const { data, error } = await supabase.from("mentor_applications").insert({
+      const { data, error } = await supabaseUnsafe.from("mentor_applications").insert({
         user_id: userId,
         full_name: payload.full_name,
         age: payload.age ?? null,
@@ -128,31 +129,31 @@ export const useZenaFamily = () => {
       });
 
       if (error) throw error;
-      return data;
+      return data as any;
     },
     [userId]
   );
 
   const fetchMentorProfile = useCallback(async () => {
     if (!userId) return null;
-    const { data, error } = await supabase
+    const { data, error } = await supabaseUnsafe
       .from("mentor_profiles")
       .select("*")
       .eq("user_id", userId)
       .maybeSingle();
     if (error) throw error;
-    return data;
+    return data as any;
   }, [userId]);
 
   const fetchMentorRequests = useCallback(async () => {
     if (!userId) return [];
-    const { data, error } = await supabase
+    const { data, error } = await supabaseUnsafe
       .from("support_requests")
       .select("*")
       .eq("assigned_mentor_id", userId)
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as any[];
   }, [userId]);
 
   const fetchAlerts = useCallback(async () => {
@@ -166,18 +167,18 @@ export const useZenaFamily = () => {
   }, []);
 
   const fetchRiskFlags = useCallback(async () => {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseUnsafe
       .from("risk_flags")
       .select("*")
       .order("created_at", { ascending: false })
       .limit(50);
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as any[];
   }, []);
 
   const isAppAdmin = useCallback(async () => {
     if (!userId) return false;
-    const { data, error } = await supabase
+    const { data, error } = await supabaseUnsafe
       .from("app_admins")
       .select("id")
       .eq("user_id", userId)

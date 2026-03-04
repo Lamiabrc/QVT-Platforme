@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { useZenaFamily } from "@/hooks/useZenaFamily";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabaseUnsafe } from "@/integrations/supabase/unsafe";
 
 export default function SupervisionPage() {
   const { user, isAuthenticated } = useAuth();
@@ -33,7 +33,7 @@ export default function SupervisionPage() {
 
   const handleResolveRiskFlag = async (flagId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await supabaseUnsafe
         .from("risk_flags")
         .update({
           status: "resolved",
@@ -56,7 +56,7 @@ export default function SupervisionPage() {
 
   const handleResolveAlert = async (alertId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await supabaseUnsafe
         .from("alerts")
         .update({ status: "resolved", resolved_at: new Date().toISOString() })
         .eq("id", alertId);

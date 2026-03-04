@@ -7,6 +7,14 @@ import { useZenaFamily } from "@/hooks/useZenaFamily";
 import FamillePage from "./FamillePage";
 
 type TabKey = "bulle" | "agir" | "messages" | "calendrier" | "soutien";
+type SupportSession = { id: string; status?: string };
+type SupportMessage = {
+  id: string;
+  sender_role?: string;
+  created_at?: string;
+  content?: string;
+};
+type SupportRequest = { id: string; status?: string; note?: string };
 
 const tabs: { key: TabKey; label: string }[] = [
   { key: "bulle", label: "Ma bulle" },
@@ -37,12 +45,12 @@ export default function FamilySpacePage() {
   const [aiResult, setAiResult] = useState<any>(null);
   const [loadingCheckin, setLoadingCheckin] = useState(false);
 
-  const [sessions, setSessions] = useState<any[]>([]);
+  const [sessions, setSessions] = useState<SupportSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<SupportMessage[]>([]);
   const [messageDraft, setMessageDraft] = useState("");
 
-  const [supportRequests, setSupportRequests] = useState<any[]>([]);
+  const [supportRequests, setSupportRequests] = useState<SupportRequest[]>([]);
   const [supportLoading, setSupportLoading] = useState(false);
 
   const latestRequest = supportRequests[0];
@@ -53,10 +61,12 @@ export default function FamilySpacePage() {
       try {
         const famId = await getFamilyId();
         setFamilyId(famId);
-        const [sessionsData, requestsData] = await Promise.all([
+        const [sessionsDataRaw, requestsDataRaw] = await Promise.all([
           fetchSessions(),
           fetchSupportRequests(),
         ]);
+        const sessionsData = (sessionsDataRaw ?? []) as SupportSession[];
+        const requestsData = (requestsDataRaw ?? []) as SupportRequest[];
         setSessions(sessionsData);
         setSupportRequests(requestsData);
         if (sessionsData?.[0]?.id) {
@@ -76,7 +86,7 @@ export default function FamilySpacePage() {
     }
     const load = async () => {
       try {
-        const data = await fetchMessages(activeSessionId);
+        const data = ((await fetchMessages(activeSessionId)) ?? []) as SupportMessage[];
         setMessages(data);
       } catch (error) {
         console.error(error);
@@ -139,9 +149,9 @@ export default function FamilySpacePage() {
           ? "Une Luciole va te rejoindre dans l'espace messages."
           : "Nous te mettons en relation des que possible.",
       });
-      const requestsData = await fetchSupportRequests();
+      const requestsData = ((await fetchSupportRequests()) ?? []) as SupportRequest[];
       setSupportRequests(requestsData);
-      const sessionsData = await fetchSessions();
+      const sessionsData = ((await fetchSessions()) ?? []) as SupportSession[];
       setSessions(sessionsData);
       if (result?.session_id) {
         setActiveSessionId(result.session_id);
@@ -175,7 +185,7 @@ export default function FamilySpacePage() {
         return;
       }
       setMessageDraft("");
-      const refreshed = await fetchMessages(activeSessionId);
+      const refreshed = ((await fetchMessages(activeSessionId)) ?? []) as SupportMessage[];
       setMessages(refreshed);
     } catch (error: any) {
       toast({

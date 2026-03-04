@@ -54,6 +54,8 @@ const profiles = [
   { id: "autre", label: "Autre", emoji: "🌈", desc: "Situation particulière, besoin d’écoute…" },
 ];
 
+const asProfileId = (value: string) => value as ProfileId;
+
 // -------------------------------------------------------------
 // ❓ Questions simplifiées, premium et adaptées
 // -------------------------------------------------------------
@@ -293,7 +295,7 @@ export default function SimulateurPage() {
             {profiles.map((p) => (
               <button
                 key={p.id}
-                onClick={() => setProfile(p.id)}
+                onClick={() => setProfile(asProfileId(p.id))}
                 className={`${COLORS.bubble} p-4 rounded-2xl flex gap-3 hover:shadow-xl transition`}
               >
                 <div className="text-2xl">{p.emoji}</div>
