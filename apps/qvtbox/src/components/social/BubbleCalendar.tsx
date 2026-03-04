@@ -60,7 +60,6 @@ export default function BubbleCalendar({ bubbleId, userId, isAdmin = false, memb
       const evts = await fetchCalendarEvents(bubbleId);
       setEvents(evts);
 
-      // participants (small MVP: per event)
       const entries = await Promise.all(
         evts.map(async (e) => {
           const parts = await fetchEventParticipants(e.id).catch(() => []);
@@ -87,7 +86,6 @@ export default function BubbleCalendar({ bubbleId, userId, isAdmin = false, memb
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bubbleId]);
 
-  // Realtime: new/updated events in bubble
   useEffect(() => {
     const channel = supabase
       .channel(`calendar-events-${bubbleId}`)
@@ -174,7 +172,7 @@ export default function BubbleCalendar({ bubbleId, userId, isAdmin = false, memb
   const rsvp = async (eventId: string, status: EventParticipationStatus) => {
     try {
       await upsertEventParticipant({ eventId, userId, status });
-      toast({ title: "Réponse enregistrée", description: "Merci !", });
+      toast({ title: "Réponse enregistrée", description: "Merci !" });
       await load();
     } catch (error: any) {
       toast({
@@ -219,7 +217,6 @@ export default function BubbleCalendar({ bubbleId, userId, isAdmin = false, memb
 
   return (
     <div className="space-y-4">
-      {/* Create */}
       <div className="rounded-3xl border border-[#E8DCC8] bg-white p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -337,7 +334,6 @@ export default function BubbleCalendar({ bubbleId, userId, isAdmin = false, memb
         </form>
       </div>
 
-      {/* Events list */}
       <div className="rounded-3xl border border-[#E8DCC8] bg-white p-5">
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-xl font-semibold flex items-center gap-2">
@@ -393,7 +389,6 @@ export default function BubbleCalendar({ bubbleId, userId, isAdmin = false, memb
             {events.map((ev) => {
               const my = myStatusFor(ev.id);
               const parts = participantsByEvent[ev.id] ?? [];
-
               const count = (s: EventParticipationStatus) => parts.filter((p) => p.status === s).length;
 
               return (
@@ -425,9 +420,7 @@ export default function BubbleCalendar({ bubbleId, userId, isAdmin = false, memb
                       <div>✅ {count("going")}</div>
                       <div>🤔 {count("maybe")}</div>
                       <div>❌ {count("declined")}</div>
-                      <div className="mt-2 text-[11px] text-[#8B7D67]">
-                        Mon statut : {my ?? "—"}
-                      </div>
+                      <div className="mt-2 text-[11px] text-[#8B7D67]">Mon statut : {my ?? "—"}</div>
                     </div>
                   </div>
 
