@@ -41,14 +41,14 @@ import type {
 } from "@/lib/social";
 import { supabase } from "@/integrations/supabase/client";
 
-type TabKey = "feed" | "members" | "referent" | "box";
+type TabKey = "feed" | "members" | "referent" | "calendar" | "box";
 
 const roleLabel = (role?: string | null) => {
-  if (role === "owner") return "Owner";
-  if (role === "admin") return "Admin";
-  if (role === "referent") return "Referent";
+  if (role === "owner") return "Propriétaire";
+  if (role === "admin") return "Administrateur";
+  if (role === "referent") return "Référent";
   if (role === "luciole") return "Luciole";
-  return "Member";
+  return "Membre";
 };
 
 const formatDate = (value?: string | null) => {
@@ -57,6 +57,9 @@ const formatDate = (value?: string | null) => {
   if (Number.isNaN(date.getTime())) return "—";
   return date.toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" });
 };
+
+const makeInviteLink = (token: string) =>
+  `${window.location.origin.replace(/\/$/, "")}/invitation/${token}`;
 
 export default function BubbleDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -116,6 +119,7 @@ export default function BubbleDetailPage() {
         ]);
 
       const nextRole = roleData ?? (bubbleData ? "luciole" : null);
+
       setBubble(bubbleData);
       setRole(nextRole);
       setMembers(membersData);
@@ -160,15 +164,27 @@ export default function BubbleDetailPage() {
 
   useEffect(() => {
     if (!id) return;
-    const refreshFeed = () => fetchFeed(id).then((data) => {
-      setPosts(data.posts);
-      setComments(data.comments);
-    }).catch(() => undefined);
+
+    const refreshFeed = () =>
+      fetchFeed(id)
+        .then((data) => {
+          setPosts(data.posts);
+          setComments(data.comments);
+        })
+        .catch(() => undefined);
 
     const channel = supabase
       .channel(`bubble-feed-${id}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "posts", filter: `bubble_id=eq.${id}` }, refreshFeed)
-      .on("postgres_changes", { event: "*", schema: "public", table: "comments", filter: `bubble_id=eq.${id}` }, refreshFeed)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "posts", filter: `bubble_id=eq.${id}` },
+        refreshFeed
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "comments", filter: `bubble_id=eq.${id}` },
+        refreshFeed
+      )
       .subscribe();
 
     return () => {
@@ -182,12 +198,31 @@ export default function BubbleDetailPage() {
     try {
       await createPost(id, user.id, postText);
       setPostText("");
-      const data = await fetchFeed(id);
-      setPosts(data.posts);
-      setComments(data.comments);
     } catch (error: any) {
       toast({
         title: "Publication impossible",
+        description: error?.message ?? "Réessayez dans quelques instants.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleHelpRequest = async () => {
+    if (!id || !user?.id) return;
+    try {
+      await createPost(
+        id,
+        user.id,
+        "🆘 Je demande de l’aide. J’ai besoin qu’on m’écoute / qu’on me conseille.",
+        "referent"
+      );
+      toast({
+        title: "Demande d’aide envoyée",
+        description: "Le message est partagé au niveau référent (cadre de confiance).",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Impossible d’envoyer la demande",
         description: error?.message ?? "Réessayez dans quelques instants.",
         variant: "destructive",
       });
@@ -201,9 +236,6 @@ export default function BubbleDetailPage() {
     try {
       await createComment(postId, id, user.id, draft);
       setCommentDrafts((prev) => ({ ...prev, [postId]: "" }));
-      const data = await fetchFeed(id);
-      setPosts(data.posts);
-      setComments(data.comments);
     } catch (error: any) {
       toast({
         title: "Commentaire impossible",
@@ -229,7 +261,7 @@ export default function BubbleDetailPage() {
       setInvitations(await fetchBubbleInvitations(id));
       toast({
         title: "Invitation créée",
-        description: "Lien prêt. Vous pouvez l'envoyer directement.",
+        description: "Lien prêt. Vous pouvez le partager.",
       });
     } catch (error: any) {
       toast({
@@ -237,6 +269,15 @@ export default function BubbleDetailPage() {
         description: error?.message ?? "Vérifiez vos permissions.",
         variant: "destructive",
       });
+    }
+  };
+
+  const handleCopy = async (value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast({ title: "Copié", description: "Lien copié dans le presse-papiers." });
+    } catch {
+      toast({ title: "Copie impossible", description: "Copiez manuellement le lien.", variant: "destructive" });
     }
   };
 
@@ -255,7 +296,7 @@ export default function BubbleDetailPage() {
       });
       toast({
         title: "Signalement envoyé",
-        description: "Merci. Les admins de la bulle sont notifiés.",
+        description: "Merci. Les admins de la bulle peuvent traiter le signalement.",
       });
       if (canModerate) {
         setReports(await fetchReports(id));
@@ -293,7 +334,7 @@ export default function BubbleDetailPage() {
       setBubble((prev) => (prev ? { ...prev, referent_user_id: selectedReferent || null } : prev));
       toast({
         title: "Référent mis à jour",
-        description: "Le cadre mineur est à jour.",
+        description: "Le cadre de la bulle est à jour.",
       });
     } catch (error: any) {
       toast({
@@ -337,7 +378,7 @@ export default function BubbleDetailPage() {
       });
       toast({
         title: kind === "gift" ? "Offre enregistrée" : "Abonnement enregistré",
-        description: "Commande créée en statut pending (sans paiement pour ce MVP).",
+        description: "Commande créée en statut pending (MVP sans paiement).",
       });
     } catch (error: any) {
       toast({
@@ -368,7 +409,10 @@ export default function BubbleDetailPage() {
         <main className="px-6 pb-20 pt-32">
           <div className="mx-auto max-w-6xl rounded-3xl border border-[#E8DCC8] bg-white p-6">
             <h1 className="text-xl font-semibold">Bulle introuvable</h1>
-            <Link to="/bulles" className="mt-4 inline-flex rounded-full bg-[#1B1A18] px-5 py-2 text-sm font-semibold text-[#FAF6EE]">
+            <Link
+              to="/bulles"
+              className="mt-4 inline-flex rounded-full bg-[#1B1A18] px-5 py-2 text-sm font-semibold text-[#FAF6EE]"
+            >
               Retour à mes bulles
             </Link>
           </div>
@@ -386,13 +430,20 @@ export default function BubbleDetailPage() {
       <main className="px-6 pb-20 pt-32 md:pt-36">
         <div className="mx-auto max-w-6xl">
           <BubbleCover title={bubble.name} src={bubble.cover_path || "/covers/cover-1.svg"} />
+
           <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-[#9C8D77]">{bubble.bubble_type === "enterprise" ? "Entreprise" : "Vie perso"}</p>
+              <p className="text-xs uppercase tracking-[0.25em] text-[#9C8D77]">
+                {bubble.bubble_type === "enterprise" ? "Entreprise" : "Vie perso"}
+              </p>
               <h1 className="mt-2 text-3xl font-semibold">{bubble.name}</h1>
-              <p className="mt-1 text-sm text-[#6F6454]">Votre rôle: {roleLabel(role)}</p>
+              <p className="mt-1 text-sm text-[#6F6454]">Votre rôle : {roleLabel(role)}</p>
             </div>
-            <Link to="/bulles" className="rounded-full border border-[#1B1A18]/20 px-4 py-2 text-sm font-semibold text-[#1B1A18]">
+
+            <Link
+              to="/bulles"
+              className="rounded-full border border-[#1B1A18]/20 px-4 py-2 text-sm font-semibold text-[#1B1A18]"
+            >
               Retour
             </Link>
           </div>
@@ -401,7 +452,8 @@ export default function BubbleDetailPage() {
             {[
               { key: "feed", label: "Fil" },
               { key: "members", label: "Membres" },
-              { key: "referent", label: "Référent" },
+              { key: "referent", label: "Référent & Lucioles" },
+              { key: "calendar", label: "Calendrier" },
               { key: "box", label: "Box" },
             ].map((item) => (
               <button
@@ -410,7 +462,9 @@ export default function BubbleDetailPage() {
                 onClick={() => setTab(item.key as TabKey)}
                 className={[
                   "rounded-full px-4 py-2 text-sm font-semibold transition",
-                  tab === item.key ? "bg-[#1B1A18] text-[#FAF6EE]" : "border border-[#E8DCC8] bg-white text-[#6F6454]",
+                  tab === item.key
+                    ? "bg-[#1B1A18] text-[#FAF6EE]"
+                    : "border border-[#E8DCC8] bg-white text-[#6F6454]",
                 ].join(" ")}
               >
                 {item.label}
@@ -418,6 +472,7 @@ export default function BubbleDetailPage() {
             ))}
           </div>
 
+          {/* FEED */}
           {tab === "feed" ? (
             <section className="mt-6 space-y-4">
               {canPost ? (
@@ -429,18 +484,18 @@ export default function BubbleDetailPage() {
                     className="min-h-24 w-full rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
                   />
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <button type="submit" className="rounded-full bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]">
+                    <button
+                      type="submit"
+                      className="rounded-full bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]"
+                    >
                       Publier
                     </button>
                     <button
                       type="button"
-                      disabled={!user?.id}
-                      onClick={() => {
-                        if (user?.id) handleReport("user", user.id);
-                      }}
-                      className="rounded-full border border-[#E8DCC8] px-4 py-2 text-sm disabled:opacity-50"
+                      onClick={handleHelpRequest}
+                      className="rounded-full border border-[#E8DCC8] px-4 py-2 text-sm"
                     >
-                      Demande d’aide
+                      Demander de l’aide (référent)
                     </button>
                   </div>
                 </form>
@@ -452,30 +507,43 @@ export default function BubbleDetailPage() {
 
               {posts.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-[#DCCEB7] bg-white p-6 text-sm text-[#6F6454]">
-                  Aucun post pour le moment.
+                  Aucun message pour le moment.
                 </div>
               ) : (
                 posts.map((post) => (
                   <article key={post.id} className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <Avatar name={post.author?.full_name || post.author?.email || post.author_id} src={`/avatars/avatar-${(post.author_id.charCodeAt(0) % 12) + 1}.svg`} size={36} />
+                        <Avatar
+                          name={post.author?.full_name || post.author?.email || post.author_id}
+                          src={`/avatars/avatar-${(post.author_id.charCodeAt(0) % 12) + 1}.svg`}
+                          size={36}
+                        />
                         <div>
-                          <div className="text-sm font-semibold">{post.author?.full_name || post.author?.email || post.author_id.slice(0, 8)}</div>
+                          <div className="text-sm font-semibold">
+                            {post.author?.full_name || post.author?.email || post.author_id.slice(0, 8)}
+                          </div>
                           <div className="text-xs text-[#9C8D77]">{formatDate(post.created_at)}</div>
                         </div>
                       </div>
-                      <button type="button" onClick={() => handleReport("post", post.id)} className="text-xs text-[#9C8D77] hover:text-[#1B1A18]">
+                      <button
+                        type="button"
+                        onClick={() => handleReport("post", post.id)}
+                        className="text-xs text-[#9C8D77] hover:text-[#1B1A18]"
+                      >
                         Signaler
                       </button>
                     </div>
+
                     <p className="mt-3 whitespace-pre-wrap text-sm text-[#2E2923]">{post.content}</p>
 
                     <div className="mt-4 space-y-2">
                       {(groupedComments.get(post.id) ?? []).map((comment) => (
                         <div key={comment.id} className="rounded-2xl bg-[#FAF6EE] px-3 py-2 text-sm">
                           <div className="flex items-center justify-between gap-3 text-xs text-[#9C8D77]">
-                            <span>{comment.author?.full_name || comment.author?.email || comment.author_id.slice(0, 8)}</span>
+                            <span>
+                              {comment.author?.full_name || comment.author?.email || comment.author_id.slice(0, 8)}
+                            </span>
                             <button type="button" onClick={() => handleReport("comment", comment.id)}>
                               Signaler
                             </button>
@@ -489,11 +557,17 @@ export default function BubbleDetailPage() {
                       <div className="mt-3 flex gap-2">
                         <input
                           value={commentDrafts[post.id] ?? ""}
-                          onChange={(event) => setCommentDrafts((prev) => ({ ...prev, [post.id]: event.target.value }))}
+                          onChange={(event) =>
+                            setCommentDrafts((prev) => ({ ...prev, [post.id]: event.target.value }))
+                          }
                           placeholder="Ajouter un commentaire..."
                           className="flex-1 rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
                         />
-                        <button type="button" onClick={() => handleComment(post.id)} className="rounded-2xl bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]">
+                        <button
+                          type="button"
+                          onClick={() => handleComment(post.id)}
+                          className="rounded-2xl bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]"
+                        >
                           Envoyer
                         </button>
                       </div>
@@ -504,22 +578,37 @@ export default function BubbleDetailPage() {
             </section>
           ) : null}
 
+          {/* MEMBERS */}
           {tab === "members" ? (
             <section className="mt-6 grid gap-4 lg:grid-cols-[1.2fr,0.8fr]">
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
                 <h2 className="text-lg font-semibold">Membres</h2>
                 <div className="mt-3 space-y-2">
                   {members.map((member) => (
-                    <div key={`${member.bubble_id}-${member.user_id}`} className="flex items-center justify-between gap-3 rounded-2xl bg-[#FAF6EE] px-3 py-2">
+                    <div
+                      key={`${member.bubble_id}-${member.user_id}`}
+                      className="flex items-center justify-between gap-3 rounded-2xl bg-[#FAF6EE] px-3 py-2"
+                    >
                       <div className="flex items-center gap-3">
-                        <Avatar name={member.profile?.full_name || member.profile?.email || member.user_id} src={`/avatars/avatar-${(member.user_id.charCodeAt(0) % 12) + 1}.svg`} size={34} />
+                        <Avatar
+                          name={member.profile?.full_name || member.profile?.email || member.user_id}
+                          src={`/avatars/avatar-${(member.user_id.charCodeAt(0) % 12) + 1}.svg`}
+                          size={34}
+                        />
                         <div>
-                          <div className="text-sm font-semibold">{member.profile?.full_name || member.profile?.email || member.user_id.slice(0, 8)}</div>
+                          <div className="text-sm font-semibold">
+                            {member.profile?.full_name || member.profile?.email || member.user_id.slice(0, 8)}
+                          </div>
                           <div className="text-xs text-[#9C8D77]">{roleLabel(member.role)}</div>
                         </div>
                       </div>
+
                       {member.user_id !== user?.id ? (
-                        <button type="button" onClick={() => handleBlock(member.user_id)} className="text-xs text-[#9C8D77] hover:text-[#1B1A18]">
+                        <button
+                          type="button"
+                          onClick={() => handleBlock(member.user_id)}
+                          className="text-xs text-[#9C8D77] hover:text-[#1B1A18]"
+                        >
                           Bloquer
                         </button>
                       ) : null}
@@ -543,12 +632,15 @@ export default function BubbleDetailPage() {
                       onChange={(event) => setInviteRole(event.target.value as BubbleRole)}
                       className="mt-2 w-full rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
                     >
-                      <option value="member">Member</option>
-                      <option value="admin">Admin</option>
-                      <option value="referent">Referent</option>
+                      <option value="member">Membre</option>
+                      <option value="admin">Administrateur</option>
+                      <option value="referent">Référent</option>
                     </select>
-                    <button type="submit" className="mt-3 rounded-full bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]">
-                      Créer invitation
+                    <button
+                      type="submit"
+                      className="mt-3 rounded-full bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]"
+                    >
+                      Créer l’invitation
                     </button>
                   </form>
                 ) : null}
@@ -559,17 +651,32 @@ export default function BubbleDetailPage() {
                     {invitations.length === 0 ? (
                       <p className="text-sm text-[#6F6454]">Aucune invitation active.</p>
                     ) : (
-                      invitations.map((invite) => (
-                        <div key={invite.id} className="rounded-2xl bg-[#FAF6EE] px-3 py-2 text-sm">
-                          <p className="font-mono text-xs">{invite.token}</p>
-                          <p className="mt-1 text-xs text-[#6F6454]">
-                            {invite.email || "Lien public"} • {invite.status}
-                          </p>
-                          <Link to={`/invitation/${invite.token}`} className="text-[11px] text-[#1B1A18] underline">
-                            /invitation/{invite.token}
-                          </Link>
-                        </div>
-                      ))
+                      invitations.map((invite) => {
+                        const link = makeInviteLink(invite.token);
+                        return (
+                          <div key={invite.id} className="rounded-2xl bg-[#FAF6EE] px-3 py-2 text-sm">
+                            <p className="text-xs text-[#6F6454]">
+                              {invite.email || "Lien public"} • {roleLabel(invite.role)} • {invite.status}
+                            </p>
+
+                            <div className="mt-2 flex flex-wrap items-center gap-2">
+                              <a
+                                href={link}
+                                className="text-[12px] font-mono text-[#1B1A18] underline break-all"
+                              >
+                                {link}
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => handleCopy(link)}
+                                className="rounded-full border border-[#E8DCC8] px-3 py-1 text-xs"
+                              >
+                                Copier
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })
                     )}
                   </div>
                 </div>
@@ -586,11 +693,19 @@ export default function BubbleDetailPage() {
                             <p className="font-semibold">{report.target_type}</p>
                             <p className="mt-1 text-[#6F6454]">{report.reason}</p>
                             <div className="mt-2 flex gap-2">
-                              <button type="button" onClick={() => updateReportStatus(report.id, "reviewed").then(load)} className="rounded-full border border-[#E8DCC8] px-2 py-1">
-                                reviewed
+                              <button
+                                type="button"
+                                onClick={() => updateReportStatus(report.id, "reviewed").then(load)}
+                                className="rounded-full border border-[#E8DCC8] px-2 py-1"
+                              >
+                                Traiter
                               </button>
-                              <button type="button" onClick={() => updateReportStatus(report.id, "closed").then(load)} className="rounded-full border border-[#E8DCC8] px-2 py-1">
-                                closed
+                              <button
+                                type="button"
+                                onClick={() => updateReportStatus(report.id, "closed").then(load)}
+                                className="rounded-full border border-[#E8DCC8] px-2 py-1"
+                              >
+                                Clôturer
                               </button>
                             </div>
                           </div>
@@ -603,18 +718,22 @@ export default function BubbleDetailPage() {
             </section>
           ) : null}
 
+          {/* REFERENT & LUCIOLES */}
           {tab === "referent" ? (
             <section className="mt-6 grid gap-4 lg:grid-cols-2">
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
                 <h2 className="text-lg font-semibold">Référent</h2>
                 <p className="mt-2 text-sm text-[#6F6454]">
                   {referent
-                    ? `Référent actuel: ${referent.profile?.full_name || referent.profile?.email || referent.user_id.slice(0, 8)}`
+                    ? `Référent actuel : ${
+                        referent.profile?.full_name || referent.profile?.email || referent.user_id.slice(0, 8)
+                      }`
                     : "Aucun référent défini."}
                 </p>
+
                 {bubble.has_minor && !bubble.referent_user_id ? (
                   <p className="mt-3 rounded-xl bg-[#FFF4E7] px-3 py-2 text-xs text-[#7E5B2E]">
-                    Mineur concerné: référent obligatoire.
+                    Mineur concerné : référent obligatoire.
                   </p>
                 ) : null}
 
@@ -625,14 +744,19 @@ export default function BubbleDetailPage() {
                       onChange={(event) => setSelectedReferent(event.target.value)}
                       className="flex-1 rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
                     >
-                      <option value="">-- Aucun --</option>
+                      <option value="">— Aucun —</option>
                       {members.map((member) => (
                         <option key={member.user_id} value={member.user_id}>
-                          {member.profile?.full_name || member.profile?.email || member.user_id.slice(0, 8)} ({roleLabel(member.role)})
+                          {member.profile?.full_name || member.profile?.email || member.user_id.slice(0, 8)} (
+                          {roleLabel(member.role)})
                         </option>
                       ))}
                     </select>
-                    <button type="button" onClick={handleSetReferent} className="rounded-2xl bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]">
+                    <button
+                      type="button"
+                      onClick={handleSetReferent}
+                      className="rounded-2xl bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]"
+                    >
                       Valider
                     </button>
                   </div>
@@ -640,13 +764,21 @@ export default function BubbleDetailPage() {
               </div>
 
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
-                <h2 className="text-lg font-semibold">Lucioles assignées</h2>
+                <h2 className="text-lg font-semibold">Lucioles</h2>
+                <p className="mt-2 text-sm text-[#6F6454]">
+                  Recruter une Luciole est un soutien <strong>payant</strong> (abonnement). Elle ne voit que ce qui est
+                  partagé dans cette bulle.
+                </p>
+
                 <div className="mt-3 space-y-2">
                   {assignedLucioles.length === 0 ? (
                     <p className="text-sm text-[#6F6454]">Aucune Luciole assignée.</p>
                   ) : (
                     assignedLucioles.map((item: any) => (
-                      <div key={`${item.bubble_id}-${item.luciole_id}`} className="rounded-2xl bg-[#FAF6EE] px-3 py-2 text-sm">
+                      <div
+                        key={`${item.bubble_id}-${item.luciole_id}`}
+                        className="rounded-2xl bg-[#FAF6EE] px-3 py-2 text-sm"
+                      >
                         {item.luciole?.display_name || item.luciole_id}
                       </div>
                     ))
@@ -660,14 +792,18 @@ export default function BubbleDetailPage() {
                       onChange={(event) => setSelectedLuciole(event.target.value)}
                       className="flex-1 rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
                     >
-                      <option value="">Ajouter une Luciole approved</option>
+                      <option value="">Ajouter une Luciole (approved)</option>
                       {approvedLucioles.map((luciole: any) => (
                         <option key={luciole.id} value={luciole.id}>
                           {luciole.display_name} {luciole.city ? `(${luciole.city})` : ""}
                         </option>
                       ))}
                     </select>
-                    <button type="button" onClick={handleAssignLuciole} className="rounded-2xl bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]">
+                    <button
+                      type="button"
+                      onClick={handleAssignLuciole}
+                      className="rounded-2xl bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]"
+                    >
                       Ajouter
                     </button>
                   </div>
@@ -676,6 +812,20 @@ export default function BubbleDetailPage() {
             </section>
           ) : null}
 
+          {/* CALENDAR (teaser now; we implement next file) */}
+          {tab === "calendar" ? (
+            <section className="mt-6 rounded-3xl border border-[#E8DCC8] bg-white p-6">
+              <h2 className="text-lg font-semibold">Calendrier de bulle</h2>
+              <p className="mt-2 text-sm text-[#6F6454]">
+                Activités communes, invitations, rappels… (module en cours d’intégration).
+              </p>
+              <p className="mt-4 text-sm text-[#6F6454]">
+                Prochaine étape : ajout des événements + participants directement ici.
+              </p>
+            </section>
+          ) : null}
+
+          {/* BOX */}
           {tab === "box" ? (
             <section className="mt-6 space-y-4">
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
@@ -703,11 +853,19 @@ export default function BubbleDetailPage() {
                       <p className="mt-1 text-xs text-[#6F6454]">{box.description || "Une box quand ça compte."}</p>
                       <p className="mt-2 text-sm font-semibold">{Math.round(box.price_cents / 100)} €</p>
                       <div className="mt-3 flex gap-2">
-                        <button type="button" onClick={() => handleOrder(box, "gift")} className="rounded-full border border-[#E8DCC8] px-3 py-1 text-xs font-semibold">
+                        <button
+                          type="button"
+                          onClick={() => handleOrder(box, "gift")}
+                          className="rounded-full border border-[#E8DCC8] px-3 py-1 text-xs font-semibold"
+                        >
                           Offrir
                         </button>
-                        <button type="button" onClick={() => handleOrder(box, "subscription")} className="rounded-full bg-[#1B1A18] px-3 py-1 text-xs font-semibold text-[#FAF6EE]">
-                          S'abonner
+                        <button
+                          type="button"
+                          onClick={() => handleOrder(box, "subscription")}
+                          className="rounded-full bg-[#1B1A18] px-3 py-1 text-xs font-semibold text-[#FAF6EE]"
+                        >
+                          S’abonner
                         </button>
                       </div>
                     </article>
