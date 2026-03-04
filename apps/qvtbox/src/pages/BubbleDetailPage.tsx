@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import Avatar from "@/components/social/Avatar";
 import BubbleCover from "@/components/social/BubbleCover";
+import BubbleCalendar from "@/components/social/BubbleCalendar";
 import {
   assignLuciole,
   blockUser,
@@ -277,7 +278,11 @@ export default function BubbleDetailPage() {
       await navigator.clipboard.writeText(value);
       toast({ title: "Copié", description: "Lien copié dans le presse-papiers." });
     } catch {
-      toast({ title: "Copie impossible", description: "Copiez manuellement le lien.", variant: "destructive" });
+      toast({
+        title: "Copie impossible",
+        description: "Copiez manuellement le lien.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -812,16 +817,18 @@ export default function BubbleDetailPage() {
             </section>
           ) : null}
 
-          {/* CALENDAR (teaser now; we implement next file) */}
+          {/* CALENDAR (NOW LIVE) */}
           {tab === "calendar" ? (
-            <section className="mt-6 rounded-3xl border border-[#E8DCC8] bg-white p-6">
-              <h2 className="text-lg font-semibold">Calendrier de bulle</h2>
-              <p className="mt-2 text-sm text-[#6F6454]">
-                Activités communes, invitations, rappels… (module en cours d’intégration).
-              </p>
-              <p className="mt-4 text-sm text-[#6F6454]">
-                Prochaine étape : ajout des événements + participants directement ici.
-              </p>
+            <section className="mt-6">
+              <BubbleCalendar
+                bubbleId={bubble.id}
+                userId={user?.id as string}
+                isAdmin={canManageMembers}
+                members={members.map((m) => ({
+                  user_id: m.user_id,
+                  label: m.profile?.full_name || m.profile?.email || m.user_id.slice(0, 8),
+                }))}
+              />
             </section>
           ) : null}
 
