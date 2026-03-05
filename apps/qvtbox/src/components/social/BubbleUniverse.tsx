@@ -1,12 +1,10 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, WheelEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import Bubble from "@/components/social/Bubble";
 import type { BubbleData } from "@/data/bubbles";
 import { bubbles as defaultBubbles } from "@/data/bubbles";
-
-type ViewMode = "universe" | "inside";
 
 type Props = {
   bubbles?: BubbleData[];
@@ -17,6 +15,12 @@ type BubbleMeta = {
   description: string;
   actionLabel: string;
   path: string;
+};
+
+type CameraState = {
+  x: number;
+  y: number;
+  zoom: number;
 };
 
 type Firefly = {
@@ -110,10 +114,15 @@ const fireflies: Firefly[] = Array.from({ length: 24 }, (_, index) => {
 
 export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
   const navigate = useNavigate();
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const navigationTimerRef = useRef<number | null>(null);
+
   const [selected, setSelected] = useState<BubbleData | null>(null);
-  const [mode, setMode] = useState<ViewMode>("universe");
-  const [manualZoom, setManualZoom] = useState(1);
+  const [isEntering, setIsEntering] = useState(false);
+  const [camera, setCamera] = useState<CameraState>({ x: 0, y: 0, zoom: 1 });
+  const [wheelZoom, setWheelZoom] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
 
   const centerBubble = useMemo(
     () => bubbles.find((bubble) => bubble.id === "mon-univers") ?? bubbles[0] ?? null,
@@ -125,39 +134,80 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
     [selected],
   );
 
-  const camera = useMemo(() => {
-    if (!selected) return { scale: 1, x: 0, y: 0 };
+  const effectiveZoom = clamp(camera.zoom * wheelZoom, 0.6, 2.8);
+  const canZoomOut =
+    selected !== null ||
+    Math.abs(wheelZoom - 1) > 0.02 ||
+    Math.abs(camera.x) > 0.5 ||
+    Math.abs(camera.y) > 0.5 ||
+    Math.abs(camera.zoom - 1) > 0.02;
 
-    const dx = 50 - selected.x;
-    const dy = 50 - selected.y;
-    const targetScale = clamp(2.08 + (145 - selected.size) / 160, 1.8, 3.05);
+  const clearNavigationTimer = () => {
+    if (navigationTimerRef.current !== null) {
+      window.clearTimeout(navigationTimerRef.current);
+      navigationTimerRef.current = null;
+    }
+  };
 
-    return { scale: targetScale, x: dx, y: dy };
-  }, [selected]);
+  useEffect(() => {
+    const updateSize = () => {
+      const node = stageRef.current;
+      if (!node) return;
+      const rect = node.getBoundingClientRect();
+      setStageSize({ width: rect.width, height: rect.height });
+    };
 
-  const finalScale = clamp(camera.scale * manualZoom, 0.62, 4.2);
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
 
-  const handleWheelZoom = (event: WheelEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    const step = event.deltaY < 0 ? 0.09 : -0.09;
-    setManualZoom((currentZoom) => clamp(Number((currentZoom + step).toFixed(2)), 0.7, 2.2));
+  useEffect(() => {
+    return () => clearNavigationTimer();
+  }, []);
+
+  const resetCamera = () => {
+    clearNavigationTimer();
+    setIsEntering(false);
+    setSelected(null);
+    setCamera({ x: 0, y: 0, zoom: 1 });
+    setWheelZoom(1);
+  };
+
+  const resolveBubblePath = (bubble: BubbleData) => {
+    return bubbleMetaById[bubble.id]?.path ?? `/bulle/${bubble.id}`;
   };
 
   const enterBubble = (bubble: BubbleData) => {
-    setMode("universe");
+    const width = stageSize.width || stageRef.current?.clientWidth || window.innerWidth;
+    const height = stageSize.height || stageRef.current?.clientHeight || window.innerHeight;
+
+    const bubbleX = (bubble.x / 100) * width;
+    const bubbleY = (bubble.y / 100) * height;
+
+    const translateX = width / 2 - bubbleX;
+    const translateY = height / 2 - bubbleY;
+
+    clearNavigationTimer();
     setSelected(bubble);
+    setIsEntering(true);
+    setCamera({ x: translateX, y: translateY, zoom: 2.2 });
+
+    navigationTimerRef.current = window.setTimeout(() => {
+      navigate(resolveBubblePath(bubble));
+    }, 450);
   };
 
-  const exitBubble = () => {
-    setMode("universe");
-    setSelected(null);
+  const handleWheelZoom = (event: WheelEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const delta = -event.deltaY;
+    setWheelZoom((currentZoom) => clamp(currentZoom * (1 + delta * 0.001), 0.6, 2.8));
   };
 
-  const openSelectedBubble = () => {
-    if (!selected) return;
-    const destination = bubbleMetaById[selected.id]?.path ?? `/bulle/${selected.id}`;
-    navigate(destination);
-  };
+  const starParallaxTransform = `translate3d(${camera.x * 0.08}px, ${camera.y * 0.08}px, 0) scale(${1 +
+    (effectiveZoom - 1) * 0.07})`;
+  const fireflyParallaxTransform = `translate3d(${camera.x * -0.12}px, ${camera.y * -0.12}px, 0) scale(${1 +
+    (effectiveZoom - 1) * 0.04})`;
 
   return (
     <section
@@ -173,15 +223,21 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         }}
       />
 
-      <div
+      <motion.div
         className="absolute inset-0 opacity-90"
+        animate={{ transform: starParallaxTransform }}
+        transition={{ type: "spring", stiffness: 30, damping: 22 }}
         style={{
           backgroundImage:
             "radial-gradient(1px 1px at 10% 16%, rgba(255,255,255,0.40), transparent), radial-gradient(1.2px 1.2px at 27% 70%, rgba(255,255,255,0.42), transparent), radial-gradient(1.4px 1.4px at 84% 26%, rgba(255,255,255,0.38), transparent), radial-gradient(1.1px 1.1px at 72% 80%, rgba(255,255,255,0.35), transparent), radial-gradient(1.2px 1.2px at 58% 14%, rgba(255,255,255,0.33), transparent), radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.32), transparent)",
         }}
       />
 
-      <div className="absolute inset-0">
+      <motion.div
+        className="absolute inset-0"
+        animate={{ transform: fireflyParallaxTransform }}
+        transition={{ type: "spring", stiffness: 24, damping: 20 }}
+      >
         {fireflies.map((firefly) => (
           <motion.span
             key={firefly.id}
@@ -209,11 +265,21 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
             }}
           />
         ))}
-      </div>
+      </motion.div>
 
       <div className="pointer-events-none absolute left-4 top-4 z-20 rounded-full border border-[#3C5D97]/65 bg-[#061533]/55 px-4 py-2 text-xs text-[#C9D8F6] backdrop-blur-md md:left-8 md:top-8">
-        Molette: zoom/dezoom
+        Molette: zoom/dezoom camera
       </div>
+
+      {canZoomOut ? (
+        <button
+          type="button"
+          onClick={resetCamera}
+          className="absolute left-4 top-16 z-30 rounded-full border border-[#6D89C4] bg-[#0C1C3D]/80 px-4 py-2 text-xs font-semibold text-[#EAF2FF] backdrop-blur-md transition hover:bg-[#122B5D] md:left-8 md:top-20"
+        >
+          Retour / zoom out
+        </button>
+      ) : null}
 
       <div className="absolute right-4 top-4 z-30 md:right-8 md:top-8">
         <motion.button
@@ -252,16 +318,13 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         </AnimatePresence>
       </div>
 
-      <div className="relative h-screen w-full" style={{ perspective: "1200px" }}>
+      <div ref={stageRef} className="relative h-screen w-full" style={{ perspective: "1200px" }}>
         <motion.div
           className="absolute inset-0"
-          animate={{ transform: `translate(${camera.x}%, ${camera.y}%) scale(${finalScale})` }}
-          transition={{ type: "spring", stiffness: 118, damping: 20 }}
-          onAnimationComplete={() => {
-            if (selected && mode !== "inside") {
-              setMode("inside");
-            }
+          animate={{
+            transform: `translate3d(${camera.x}px, ${camera.y}px, 0) scale(${effectiveZoom})`,
           }}
+          transition={{ type: "spring", stiffness: 118, damping: 20 }}
         >
           <div className="absolute inset-0">
             {centerBubble
@@ -289,32 +352,36 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         </motion.div>
 
         <AnimatePresence>
-          {mode === "inside" && selected && selectedMeta ? (
+          {isEntering && selected && selectedMeta ? (
             <motion.div
-              className="absolute inset-x-4 bottom-4 z-20 rounded-3xl border border-[#3E61A0] bg-[#08132B]/78 p-5 backdrop-blur-xl md:inset-x-8 md:max-w-xl"
+              className="absolute inset-x-4 bottom-4 z-20 rounded-3xl border border-[#3E61A0] bg-[#08132B]/78 p-5 backdrop-blur-xl md:left-8 md:right-auto md:w-[460px]"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 20, opacity: 0 }}
-              transition={{ duration: 0.24 }}
+              transition={{ duration: 0.2 }}
             >
-              <p className="text-xs uppercase tracking-[0.24em] text-[#98B5EB]/90">page de bulle</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#98B5EB]/90">entree dans la bulle</p>
               <h3 className="mt-1 text-xl font-semibold text-[#EAF2FF]">{selectedMeta.title}</h3>
               <p className="mt-2 text-sm text-[#C6D7F5]">{selectedMeta.description}</p>
+              <p className="mt-3 text-xs text-[#C6D7F5]">Ouverture automatique...</p>
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   type="button"
-                  onClick={openSelectedBubble}
-                  className="rounded-full bg-[#EAF2FF] px-4 py-2 text-sm font-semibold text-[#0A1A3B] transition hover:bg-white"
+                  onClick={() => {
+                    clearNavigationTimer();
+                    setIsEntering(false);
+                  }}
+                  className="rounded-full border border-[#6D89C4] px-4 py-2 text-xs font-semibold text-[#EAF2FF] transition hover:bg-[#112753]"
                 >
-                  {selectedMeta.actionLabel}
+                  Annuler l'ouverture
                 </button>
                 <button
                   type="button"
-                  onClick={exitBubble}
-                  className="rounded-full border border-[#6D89C4] px-4 py-2 text-sm font-semibold text-[#EAF2FF] transition hover:bg-[#112753]"
+                  onClick={() => navigate(resolveBubblePath(selected))}
+                  className="rounded-full bg-[#EAF2FF] px-4 py-2 text-xs font-semibold text-[#0A1A3B] transition hover:bg-white"
                 >
-                  Retour univers
+                  {selectedMeta.actionLabel}
                 </button>
               </div>
             </motion.div>

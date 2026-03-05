@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { useZenaFamily } from "@/hooks/useZenaFamily";
 import { useToast } from "@/hooks/use-toast";
-import { supabaseUnsafe } from "@/integrations/supabase/unsafe";
+import { zenaSupabase } from "@/integrations/supabase/zenaClient";
 import { Link } from "react-router-dom";
 
 const ROUTES = {
@@ -43,7 +43,7 @@ export default function MentorDashboardPage() {
 
   const handleCloseSession = async (sessionId: string) => {
     try {
-      const { error } = await supabaseUnsafe
+      const { error } = await zenaSupabase
         .from("support_sessions")
         .update({ status: "closed", ended_at: new Date().toISOString() })
         .eq("id", sessionId);
