@@ -25,8 +25,10 @@ import {
   fetchBubbleRecommendations,
   fetchBubbleRole,
   fetchFeed,
+  fetchReactions,
   fetchReports,
   setReferent,
+  toggleReaction,
   updateReportStatus,
 } from "@/lib/social";
 import type {
@@ -39,10 +41,27 @@ import type {
   BubblePost,
   BubbleReport,
   BubbleRole,
+  ReactionItem,
+  ShareLevel,
 } from "@/lib/social";
 import { supabase } from "@/integrations/supabase/client";
 
-type TabKey = "feed" | "members" | "referent" | "calendar" | "box";
+type TabKey = "feed" | "discussions" | "members" | "help" | "events" | "resources";
+type PostKind = "text" | "photo" | "video" | "poll" | "emotion";
+
+type StructuredPostPayload = {
+  kind: PostKind;
+  text: string;
+  mediaUrl?: string;
+  pollQuestion?: string;
+  pollOptions?: string[];
+  emotion?: string;
+  isHelp?: boolean;
+  isDiscussion?: boolean;
+};
+
+const STRUCTURED_PREFIX = "ZENA_POST::";
+const REACTION_EMOJIS = ["👍", "❤️", "🤝", "🙏"];
 
 const roleLabel = (role?: string | null) => {
   if (role === "owner") return "Propriétaire";
@@ -62,6 +81,39 @@ const formatDate = (value?: string | null) => {
 const makeInviteLink = (token: string) =>
   `${window.location.origin.replace(/\/$/, "")}/invitation/${token}`;
 
+const encodeStructuredPost = (payload: StructuredPostPayload) =>
+  `${STRUCTURED_PREFIX}${JSON.stringify(payload)}`;
+
+const decodeStructuredPost = (content: string): StructuredPostPayload => {
+  if (content.startsWith(STRUCTURED_PREFIX)) {
+    try {
+      const parsed = JSON.parse(content.slice(STRUCTURED_PREFIX.length)) as StructuredPostPayload;
+      return {
+        kind: parsed.kind ?? "text",
+        text: parsed.text ?? "",
+        mediaUrl: parsed.mediaUrl,
+        pollQuestion: parsed.pollQuestion,
+        pollOptions: parsed.pollOptions ?? [],
+        emotion: parsed.emotion,
+        isHelp: Boolean(parsed.isHelp),
+        isDiscussion: Boolean(parsed.isDiscussion),
+      };
+    } catch {
+      return { kind: "text", text: content };
+    }
+  }
+
+  return { kind: "text", text: content };
+};
+
+const postTypeLabel = (kind: PostKind) => {
+  if (kind === "photo") return "Photo";
+  if (kind === "video") return "Video";
+  if (kind === "poll") return "Sondage";
+  if (kind === "emotion") return "Emotion";
+  return "Texte";
+};
+
 export default function BubbleDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
@@ -76,13 +128,22 @@ export default function BubbleDetailPage() {
   const [invitations, setInvitations] = useState<BubbleInvitation[]>([]);
   const [posts, setPosts] = useState<BubblePost[]>([]);
   const [comments, setComments] = useState<BubbleComment[]>([]);
+  const [reactions, setReactions] = useState<ReactionItem[]>([]);
   const [reports, setReports] = useState<BubbleReport[]>([]);
   const [approvedLucioles, setApprovedLucioles] = useState<any[]>([]);
   const [assignedLucioles, setAssignedLucioles] = useState<any[]>([]);
   const [boxes, setBoxes] = useState<BoxItem[]>([]);
   const [recommendations, setRecommendations] = useState<BoxRecommendation[]>([]);
 
+  const [postKind, setPostKind] = useState<PostKind>("text");
+  const [shareLevel, setShareLevel] = useState<ShareLevel>("bubble");
   const [postText, setPostText] = useState("");
+  const [mediaUrl, setMediaUrl] = useState("");
+  const [pollQuestion, setPollQuestion] = useState("");
+  const [pollOptions, setPollOptions] = useState("Option 1\nOption 2");
+  const [emotionValue, setEmotionValue] = useState("🙂");
+  const [discussionDraft, setDiscussionDraft] = useState("");
+  const [helpDraft, setHelpDraft] = useState("Je me sens depasse aujourd'hui.");
   const [commentDrafts, setCommentDrafts] = useState<Record<string, string>>({});
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState<BubbleRole>("member");
@@ -92,7 +153,7 @@ export default function BubbleDetailPage() {
   const canManageMembers = role === "owner" || role === "admin";
   const canSetReferent = canManageMembers || role === "referent";
   const canPost = role !== null && role !== "luciole";
-  const canModerate = canManageMembers;
+  const canModerate = canManageMembers || role === "referent";
 
   const groupedComments = useMemo(() => {
     const map = new Map<string, BubbleComment[]>();
@@ -104,16 +165,51 @@ export default function BubbleDetailPage() {
     return map;
   }, [comments]);
 
+  const parsedPosts = useMemo(
+    () =>
+      posts.map((post) => ({
+        post,
+        parsed: decodeStructuredPost(post.content),
+      })),
+    [posts]
+  );
+
+  const helpPosts = useMemo(
+    () =>
+      parsedPosts.filter(
+        ({ post, parsed }) => parsed.isHelp || post.share_level === "referent"
+      ),
+    [parsedPosts]
+  );
+
+  const discussionPosts = useMemo(() => {
+    const explicit = parsedPosts.filter(({ parsed }) => parsed.isDiscussion);
+    if (explicit.length > 0) return explicit;
+    return parsedPosts.filter(({ post }) => (groupedComments.get(post.id) ?? []).length > 0);
+  }, [groupedComments, parsedPosts]);
+
+  const reactionsByPost = useMemo(() => {
+    const map = new Map<string, ReactionItem[]>();
+    for (const reaction of reactions) {
+      if (!reaction.post_id) continue;
+      const bucket = map.get(reaction.post_id) ?? [];
+      bucket.push(reaction);
+      map.set(reaction.post_id, bucket);
+    }
+    return map;
+  }, [reactions]);
+
   const load = async () => {
     if (!id || !user?.id) return;
     setLoading(true);
     try {
-      const [bubbleData, roleData, membersData, feedData, boxesData, recData, lucioleData] =
+      const [bubbleData, roleData, membersData, feedData, reactionData, boxesData, recData, lucioleData] =
         await Promise.all([
           fetchBubble(id),
           fetchBubbleRole(id, user.id),
           fetchBubbleMembers(id),
           fetchFeed(id),
+          fetchReactions(id).catch(() => []),
           fetchBoxes().catch(() => []),
           fetchBubbleRecommendations(id).catch(() => []),
           fetchBubbleLucioles(id).catch(() => []),
@@ -126,6 +222,7 @@ export default function BubbleDetailPage() {
       setMembers(membersData);
       setPosts(feedData.posts);
       setComments(feedData.comments);
+      setReactions(reactionData);
       setBoxes(boxesData);
       setRecommendations(recData);
       setAssignedLucioles(lucioleData);
@@ -167,10 +264,11 @@ export default function BubbleDetailPage() {
     if (!id) return;
 
     const refreshFeed = () =>
-      fetchFeed(id)
-        .then((data) => {
+      Promise.all([fetchFeed(id), fetchReactions(id).catch(() => [])])
+        .then(([data, reactionData]) => {
           setPosts(data.posts);
           setComments(data.comments);
+          setReactions(reactionData);
         })
         .catch(() => undefined);
 
@@ -186,6 +284,11 @@ export default function BubbleDetailPage() {
         { event: "*", schema: "public", table: "comments", filter: `bubble_id=eq.${id}` },
         refreshFeed
       )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "reactions", filter: `bubble_id=eq.${id}` },
+        refreshFeed
+      )
       .subscribe();
 
     return () => {
@@ -195,10 +298,55 @@ export default function BubbleDetailPage() {
 
   const handlePost = async (event: FormEvent) => {
     event.preventDefault();
-    if (!id || !user?.id || !postText.trim()) return;
+    if (!id || !user?.id || !canPost) return;
+
+    const buildContent = () => {
+      if (postKind === "photo") {
+        if (!mediaUrl.trim()) throw new Error("Ajoutez l'URL de la photo.");
+        return encodeStructuredPost({ kind: "photo", text: postText.trim(), mediaUrl: mediaUrl.trim() });
+      }
+
+      if (postKind === "video") {
+        if (!mediaUrl.trim()) throw new Error("Ajoutez l'URL de la video.");
+        return encodeStructuredPost({ kind: "video", text: postText.trim(), mediaUrl: mediaUrl.trim() });
+      }
+
+      if (postKind === "poll") {
+        const options = pollOptions
+          .split("\n")
+          .map((item) => item.trim())
+          .filter(Boolean);
+        if (!pollQuestion.trim()) throw new Error("Ajoutez la question du sondage.");
+        if (options.length < 2) throw new Error("Ajoutez au moins 2 options.");
+        return encodeStructuredPost({
+          kind: "poll",
+          text: postText.trim(),
+          pollQuestion: pollQuestion.trim(),
+          pollOptions: options,
+        });
+      }
+
+      if (postKind === "emotion") {
+        return encodeStructuredPost({
+          kind: "emotion",
+          text: postText.trim(),
+          emotion: emotionValue.trim() || "🙂",
+        });
+      }
+
+      if (!postText.trim()) throw new Error("Le message ne peut pas etre vide.");
+      return encodeStructuredPost({ kind: "text", text: postText.trim() });
+    };
+
     try {
-      await createPost(id, user.id, postText);
+      await createPost(id, user.id, buildContent(), shareLevel);
       setPostText("");
+      setMediaUrl("");
+      setPollQuestion("");
+      setPollOptions("Option 1\nOption 2");
+      setEmotionValue("🙂");
+      setPostKind("text");
+      setShareLevel("bubble");
     } catch (error: any) {
       toast({
         title: "Publication impossible",
@@ -209,14 +357,16 @@ export default function BubbleDetailPage() {
   };
 
   const handleHelpRequest = async () => {
-    if (!id || !user?.id) return;
+    if (!id || !user?.id || !canPost) return;
+    const draft = helpDraft.trim() || "Je me sens depasse aujourd'hui et j'ai besoin d'aide.";
     try {
       await createPost(
         id,
         user.id,
-        "🆘 Je demande de l’aide. J’ai besoin qu’on m’écoute / qu’on me conseille.",
+        encodeStructuredPost({ kind: "text", text: draft, isHelp: true }),
         "referent"
       );
+      setHelpDraft("Je me sens depasse aujourd'hui.");
       toast({
         title: "Demande d’aide envoyée",
         description: "Le message est partagé au niveau référent (cadre de confiance).",
@@ -225,6 +375,45 @@ export default function BubbleDetailPage() {
       toast({
         title: "Impossible d’envoyer la demande",
         description: error?.message ?? "Réessayez dans quelques instants.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDiscussion = async () => {
+    if (!id || !user?.id || !canPost) return;
+    const draft = discussionDraft.trim();
+    if (!draft) return;
+    try {
+      await createPost(
+        id,
+        user.id,
+        encodeStructuredPost({ kind: "text", text: draft, isDiscussion: true }),
+        "bubble"
+      );
+      setDiscussionDraft("");
+      toast({
+        title: "Discussion lancee",
+        description: "Le message est ajoute au fil de discussion.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Discussion impossible",
+        description: error?.message ?? "Reessayez dans quelques instants.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleReaction = async (postId: string, emoji: string) => {
+    if (!id || !user?.id) return;
+    try {
+      await toggleReaction({ bubbleId: id, postId, userId: user.id, emoji });
+      setReactions(await fetchReactions(id).catch(() => []));
+    } catch {
+      toast({
+        title: "Reaction impossible",
+        description: "Reessayez dans quelques instants.",
         variant: "destructive",
       });
     }
@@ -453,13 +642,15 @@ export default function BubbleDetailPage() {
             </Link>
           </div>
 
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-6 grid gap-6 lg:grid-cols-[240px,1fr]">
+            <aside className="space-y-2">
             {[
-              { key: "feed", label: "Fil" },
+              { key: "feed", label: "Fil d'actualite" },
+              { key: "discussions", label: "Discussions" },
+              { key: "events", label: "Evenements" },
+              { key: "resources", label: "Ressources" },
+              { key: "help", label: "Demandes d'aide" },
               { key: "members", label: "Membres" },
-              { key: "referent", label: "Référent & Lucioles" },
-              { key: "calendar", label: "Calendrier" },
-              { key: "box", label: "Box" },
             ].map((item) => (
               <button
                 key={item.key}
@@ -475,18 +666,78 @@ export default function BubbleDetailPage() {
                 {item.label}
               </button>
             ))}
-          </div>
+            </aside>
+
+            <div>
 
           {/* FEED */}
           {tab === "feed" ? (
             <section className="mt-6 space-y-4">
               {canPost ? (
                 <form onSubmit={handlePost} className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    <select
+                      value={postKind}
+                      onChange={(event) => setPostKind(event.target.value as PostKind)}
+                      className="rounded-2xl border border-[#E8DCC8] bg-white px-3 py-2 text-sm"
+                    >
+                      <option value="text">Texte</option>
+                      <option value="photo">Photo</option>
+                      <option value="video">Video</option>
+                      <option value="poll">Sondage</option>
+                      <option value="emotion">Emotion</option>
+                    </select>
+                    <select
+                      value={shareLevel}
+                      onChange={(event) => setShareLevel(event.target.value as ShareLevel)}
+                      className="rounded-2xl border border-[#E8DCC8] bg-white px-3 py-2 text-sm"
+                    >
+                      <option value="private">Prive</option>
+                      <option value="referent">Referent</option>
+                      <option value="bubble">Bulle</option>
+                    </select>
+                  </div>
+
+                  {(postKind === "photo" || postKind === "video") ? (
+                    <input
+                      value={mediaUrl}
+                      onChange={(event) => setMediaUrl(event.target.value)}
+                      placeholder={postKind === "photo" ? "URL photo" : "URL video"}
+                      className="mt-2 w-full rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
+                    />
+                  ) : null}
+
+                  {postKind === "poll" ? (
+                    <div className="mt-2 grid gap-2">
+                      <input
+                        value={pollQuestion}
+                        onChange={(event) => setPollQuestion(event.target.value)}
+                        placeholder="Question du sondage"
+                        className="rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
+                      />
+                      <textarea
+                        value={pollOptions}
+                        onChange={(event) => setPollOptions(event.target.value)}
+                        placeholder={"Option 1\nOption 2\nOption 3"}
+                        className="min-h-20 w-full rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
+                      />
+                    </div>
+                  ) : null}
+
+                  {postKind === "emotion" ? (
+                    <input
+                      value={emotionValue}
+                      onChange={(event) => setEmotionValue(event.target.value)}
+                      placeholder="Emoji / emotion"
+                      className="mt-2 w-full rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
+                    />
+                  ) : null}
+
                   <textarea
                     value={postText}
                     onChange={(event) => setPostText(event.target.value)}
                     placeholder="Partager un message dans la bulle..."
-                    className="min-h-24 w-full rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
+                    className="mt-2 min-h-24 w-full rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
                   />
                   <div className="mt-3 flex flex-wrap gap-2">
                     <button
@@ -500,7 +751,7 @@ export default function BubbleDetailPage() {
                       onClick={handleHelpRequest}
                       className="rounded-full border border-[#E8DCC8] px-4 py-2 text-sm"
                     >
-                      Demander de l’aide (référent)
+                      J'ai besoin d'aide
                     </button>
                   </div>
                 </form>
@@ -510,12 +761,18 @@ export default function BubbleDetailPage() {
                 </div>
               )}
 
-              {posts.length === 0 ? (
+              {parsedPosts.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-[#DCCEB7] bg-white p-6 text-sm text-[#6F6454]">
                   Aucun message pour le moment.
                 </div>
               ) : (
-                posts.map((post) => (
+                parsedPosts.map(({ post, parsed }) => {
+                  const postReactions = reactionsByPost.get(post.id) ?? [];
+                  const reactionCounts = postReactions.reduce<Record<string, number>>((acc, reaction) => {
+                    acc[reaction.emoji] = (acc[reaction.emoji] ?? 0) + 1;
+                    return acc;
+                  }, {});
+                  return (
                   <article key={post.id} className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
@@ -540,7 +797,93 @@ export default function BubbleDetailPage() {
                       </button>
                     </div>
 
-                    <p className="mt-3 whitespace-pre-wrap text-sm text-[#2E2923]">{post.content}</p>
+                    <div className="mt-3 space-y-2">
+                      {parsed.isHelp || post.share_level === "referent" ? (
+                        <span className="inline-flex rounded-full bg-[#FFF4E7] px-2 py-1 text-[11px] font-semibold text-[#7A4B25]">
+                          Demande d'aide
+                        </span>
+                      ) : null}
+                      {parsed.isDiscussion ? (
+                        <span className="ml-2 inline-flex rounded-full bg-[#EEF4FF] px-2 py-1 text-[11px] font-semibold text-[#2D4D84]">
+                          Discussion
+                        </span>
+                      ) : null}
+                      <span className="inline-flex rounded-full border border-[#E8DCC8] bg-[#FDF9F0] px-2 py-1 text-[11px] text-[#6F6454]">
+                        Type: {postTypeLabel(parsed.kind)}
+                      </span>
+
+                      {parsed.kind === "photo" ? (
+                        <div className="space-y-2">
+                          {parsed.mediaUrl ? (
+                            <img
+                              src={parsed.mediaUrl}
+                              alt="Post photo"
+                              className="max-h-96 w-full rounded-2xl border border-[#E8DCC8] object-cover"
+                            />
+                          ) : null}
+                          {parsed.text ? (
+                            <p className="whitespace-pre-wrap text-sm text-[#2E2923]">{parsed.text}</p>
+                          ) : null}
+                        </div>
+                      ) : parsed.kind === "video" ? (
+                        <div className="space-y-2">
+                          {parsed.mediaUrl ? (
+                            <video
+                              controls
+                              src={parsed.mediaUrl}
+                              className="max-h-96 w-full rounded-2xl border border-[#E8DCC8] bg-black"
+                            />
+                          ) : null}
+                          {parsed.text ? (
+                            <p className="whitespace-pre-wrap text-sm text-[#2E2923]">{parsed.text}</p>
+                          ) : null}
+                        </div>
+                      ) : parsed.kind === "poll" ? (
+                        <div className="space-y-2 rounded-2xl border border-[#E8DCC8] bg-[#FDF9F0] p-3">
+                          <p className="text-sm font-semibold">{parsed.pollQuestion || "Sondage"}</p>
+                          {(parsed.pollOptions ?? []).map((option) => (
+                            <button
+                              key={`${post.id}-${option}`}
+                              type="button"
+                              className="w-full rounded-xl border border-[#E8DCC8] bg-white px-3 py-2 text-left text-xs"
+                            >
+                              {option}
+                            </button>
+                          ))}
+                          {parsed.text ? <p className="text-xs text-[#6F6454]">{parsed.text}</p> : null}
+                        </div>
+                      ) : parsed.kind === "emotion" ? (
+                        <div className="rounded-2xl border border-[#E8DCC8] bg-[#FDF9F0] p-3">
+                          <p className="text-2xl">{parsed.emotion || "🙂"}</p>
+                          <p className="mt-1 whitespace-pre-wrap text-sm text-[#2E2923]">{parsed.text}</p>
+                        </div>
+                      ) : (
+                        <p className="whitespace-pre-wrap text-sm text-[#2E2923]">{parsed.text}</p>
+                      )}
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {REACTION_EMOJIS.map((emoji) => {
+                        const active = postReactions.some(
+                          (reaction) => reaction.user_id === user?.id && reaction.emoji === emoji
+                        );
+                        return (
+                          <button
+                            key={`${post.id}-${emoji}`}
+                            type="button"
+                            onClick={() => handleToggleReaction(post.id, emoji)}
+                            className={[
+                              "rounded-full border px-2 py-1 text-xs",
+                              active
+                                ? "border-[#9DB7E5] bg-[#EEF4FF] text-[#2D4D84]"
+                                : "border-[#E8DCC8] bg-white text-[#6F6454]",
+                            ].join(" ")}
+                          >
+                            {emoji} {reactionCounts[emoji] ?? 0}
+                          </button>
+                        );
+                      })}
+                    </div>
 
                     <div className="mt-4 space-y-2">
                       {(groupedComments.get(post.id) ?? []).map((comment) => (
@@ -578,12 +921,62 @@ export default function BubbleDetailPage() {
                       </div>
                     ) : null}
                   </article>
-                ))
+                  );
+                })
               )}
             </section>
           ) : null}
 
           {/* MEMBERS */}
+          {tab === "discussions" ? (
+            <section className="mt-6 space-y-4">
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
+                <h2 className="text-lg font-semibold">Discussions</h2>
+                <p className="mt-1 text-sm text-[#6F6454]">
+                  Espace conversation pour les messages collectifs de la bulle.
+                </p>
+                {canPost ? (
+                  <div className="mt-3 flex gap-2">
+                    <input
+                      value={discussionDraft}
+                      onChange={(event) => setDiscussionDraft(event.target.value)}
+                      placeholder="Lancer une discussion..."
+                      className="flex-1 rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleDiscussion}
+                      className="rounded-2xl bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]"
+                    >
+                      Publier
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+
+              {discussionPosts.length === 0 ? (
+                <div className="rounded-3xl border border-dashed border-[#DCCEB7] bg-white p-6 text-sm text-[#6F6454]">
+                  Aucune discussion ouverte.
+                </div>
+              ) : (
+                discussionPosts.map(({ post, parsed }) => (
+                  <article key={post.id} className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-semibold">
+                        {post.author?.full_name || post.author?.email || post.author_id.slice(0, 8)}
+                      </p>
+                      <p className="text-xs text-[#9C8D77]">{formatDate(post.created_at)}</p>
+                    </div>
+                    <p className="mt-2 text-sm text-[#2E2923]">{parsed.text}</p>
+                    <p className="mt-2 text-xs text-[#9C8D77]">
+                      {(groupedComments.get(post.id) ?? []).length} commentaire(s)
+                    </p>
+                  </article>
+                ))
+              )}
+            </section>
+          ) : null}
+
           {tab === "members" ? (
             <section className="mt-6 grid gap-4 lg:grid-cols-[1.2fr,0.8fr]">
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
@@ -724,8 +1117,46 @@ export default function BubbleDetailPage() {
           ) : null}
 
           {/* REFERENT & LUCIOLES */}
-          {tab === "referent" ? (
-            <section className="mt-6 grid gap-4 lg:grid-cols-2">
+          {tab === "help" ? (
+            <section className="mt-6 space-y-4">
+              <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
+                <h2 className="text-lg font-semibold">J'ai besoin d'aide</h2>
+                <p className="mt-2 text-sm text-[#6F6454]">
+                  Les lucioles et referents repondent aux demandes sensibles dans un cadre bienveillant.
+                </p>
+                {canPost ? (
+                  <div className="mt-3 flex gap-2">
+                    <input
+                      value={helpDraft}
+                      onChange={(event) => setHelpDraft(event.target.value)}
+                      placeholder="Ex: Je me sens depasse par mon travail aujourd'hui."
+                      className="flex-1 rounded-2xl border border-[#E8DCC8] px-3 py-2 text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleHelpRequest}
+                      className="rounded-2xl bg-[#1B1A18] px-4 py-2 text-sm font-semibold text-[#FAF6EE]"
+                    >
+                      Envoyer
+                    </button>
+                  </div>
+                ) : null}
+
+                <div className="mt-3 space-y-2">
+                  {helpPosts.length === 0 ? (
+                    <p className="text-sm text-[#6F6454]">Aucune demande active.</p>
+                  ) : (
+                    helpPosts.slice(0, 4).map(({ post, parsed }) => (
+                      <div key={post.id} className="rounded-2xl bg-[#FAF6EE] px-3 py-2 text-sm">
+                        <p className="text-xs text-[#9C8D77]">{formatDate(post.created_at)}</p>
+                        <p className="mt-1 text-[#2E2923]">{parsed.text}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-2">
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
                 <h2 className="text-lg font-semibold">Référent</h2>
                 <p className="mt-2 text-sm text-[#6F6454]">
@@ -814,11 +1245,12 @@ export default function BubbleDetailPage() {
                   </div>
                 ) : null}
               </div>
+              </div>
             </section>
           ) : null}
 
           {/* CALENDAR (NOW LIVE) */}
-          {tab === "calendar" ? (
+          {tab === "events" ? (
             <section className="mt-6">
               <BubbleCalendar
                 bubbleId={bubble.id}
@@ -833,8 +1265,21 @@ export default function BubbleDetailPage() {
           ) : null}
 
           {/* BOX */}
-          {tab === "box" ? (
+          {tab === "resources" ? (
             <section className="mt-6 space-y-4">
+              <div className="grid gap-3 md:grid-cols-3">
+                {[
+                  { title: "Pause respiration", description: "Routine guidee de 5 minutes contre la surcharge." },
+                  { title: "Communication apaisee", description: "Mini guide pour parler sans escalade." },
+                  { title: "Defi bien-etre", description: "Action collective simple a lancer cette semaine." },
+                ].map((resource) => (
+                  <article key={resource.title} className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
+                    <h3 className="text-sm font-semibold">{resource.title}</h3>
+                    <p className="mt-2 text-xs text-[#6F6454]">{resource.description}</p>
+                  </article>
+                ))}
+              </div>
+
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-4">
                 <h2 className="text-lg font-semibold">Box recommandées</h2>
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
@@ -881,6 +1326,8 @@ export default function BubbleDetailPage() {
               </div>
             </section>
           ) : null}
+            </div>
+          </div>
         </div>
       </main>
 
@@ -888,3 +1335,4 @@ export default function BubbleDetailPage() {
     </div>
   );
 }
+
