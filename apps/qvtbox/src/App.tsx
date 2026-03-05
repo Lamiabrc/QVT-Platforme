@@ -154,7 +154,8 @@ const App = () => (
       <BrowserRouter>
         <Suspense fallback={<Fallback />}>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<BullesPage />} />
+            <Route path="/home" element={<Index />} />
             <Route path="/box" element={<BoxPage />} />
             <Route path="/saas" element={<ProfessionalSaasPage />} />
             <Route path="/boutique" element={<BoutiquePage />} />

@@ -24,7 +24,7 @@ const bubbleMetaById: Record<string, BubbleMeta> = {
     title: "Bulle Accueil",
     description: "Retour vers la porte d'entree de QVT Box et les points de depart principaux.",
     actionLabel: "Aller a l'accueil",
-    path: "/",
+    path: "/home",
   },
   zena: {
     title: "Bulle ZENA",
