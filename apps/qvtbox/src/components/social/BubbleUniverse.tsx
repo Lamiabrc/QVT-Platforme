@@ -36,6 +36,19 @@ type Firefly = {
   opacity: number;
 };
 
+type AmbientBubble = {
+  id: string;
+  x: number;
+  y: number;
+  size: number;
+  driftX: number;
+  driftY: number;
+  duration: number;
+  delay: number;
+  opacity: number;
+  image: string;
+};
+
 const ZOOM_TO_ENTER_BUBBLE = 2.05;
 
 const bubbleMetaById: Record<string, BubbleMeta> = {
@@ -111,6 +124,43 @@ const fireflies: Firefly[] = Array.from({ length: 24 }, (_, index) => {
     delay,
     blur,
     opacity,
+  };
+});
+
+const ambientBubbleImages = [
+  "/images/box-salarie.jpg",
+  "/images/box-parent.jpg",
+  "/images/box-ado.jpg",
+  "/images/box-senior.jpg",
+  "/images/boutique/huile-lavande.jpg",
+  "/images/boutique/tisane-energisante.jpg",
+  "/images/boutique/coussin-lombaire.jpg",
+  "/images/hero-boxes.jpg",
+  "/engagements-social-thread.jpg",
+];
+
+const ambientBubbles: AmbientBubble[] = Array.from({ length: 18 }, (_, index) => {
+  const x = 4 + ((index * 11) % 92);
+  const y = 6 + ((index * 17) % 86);
+  const size = 68 + (index % 7) * 18 + ((index % 3) * 6);
+  const driftX = -20 + (index % 5) * 10;
+  const driftY = -24 + (index % 6) * 9;
+  const duration = 10 + (index % 7) * 1.5;
+  const delay = (index % 10) * 0.5;
+  const opacity = 0.18 + (index % 4) * 0.08;
+  const image = ambientBubbleImages[index % ambientBubbleImages.length];
+
+  return {
+    id: `ambient-bubble-${index}`,
+    x,
+    y,
+    size,
+    driftX,
+    driftY,
+    duration,
+    delay,
+    opacity,
+    image,
   };
 });
 
@@ -246,6 +296,8 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
     (effectiveZoom - 1) * 0.08})`;
   const stardustParallaxTransform = `translate3d(${camera.x * 0.12}px, ${camera.y * 0.12}px, 0) scale(${1 +
     (effectiveZoom - 1) * 0.11})`;
+  const ambientParallaxTransform = `translate3d(${camera.x * -0.05}px, ${camera.y * -0.05}px, 0) scale(${1 +
+    (effectiveZoom - 1) * 0.03})`;
   const fireflyParallaxTransform = `translate3d(${camera.x * -0.12}px, ${camera.y * -0.12}px, 0) scale(${1 +
     (effectiveZoom - 1) * 0.04})`;
   const stageTransform = `translate3d(${camera.x}px, ${camera.y}px, 0) scale(${effectiveZoom}) rotateX(${camera.y *
@@ -295,6 +347,69 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
             "radial-gradient(1px 1px at 10% 16%, rgba(255,255,255,0.35), transparent), radial-gradient(1.2px 1.2px at 27% 70%, rgba(255,255,255,0.34), transparent), radial-gradient(1.4px 1.4px at 84% 26%, rgba(255,255,255,0.31), transparent), radial-gradient(1.1px 1.1px at 72% 80%, rgba(255,255,255,0.28), transparent), radial-gradient(1.2px 1.2px at 58% 14%, rgba(255,255,255,0.27), transparent), radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.24), transparent)",
         }}
       />
+
+      <motion.div
+        className="pointer-events-none absolute inset-0"
+        animate={{ transform: ambientParallaxTransform }}
+        transition={{ type: "spring", stiffness: 24, damping: 24 }}
+        aria-hidden="true"
+      >
+        {ambientBubbles.map((ambient) => (
+          <motion.div
+            key={ambient.id}
+            className="absolute overflow-hidden rounded-full"
+            style={{
+              left: `${ambient.x}%`,
+              top: `${ambient.y}%`,
+              width: ambient.size,
+              height: ambient.size,
+              transform: "translate(-50%, -50%)",
+              opacity: ambient.opacity,
+              border: "1px solid rgba(255,255,255,0.26)",
+              boxShadow:
+                "0 14px 34px rgba(2,6,16,0.42), 0 0 30px rgba(186,210,255,0.12), inset 0 8px 20px rgba(255,255,255,0.18), inset 0 -10px 18px rgba(0,0,0,0.22)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+            animate={{
+              x: [0, ambient.driftX, -ambient.driftX * 0.5, 0],
+              y: [0, ambient.driftY, -ambient.driftY * 0.4, 0],
+              scale: [0.95, 1.06, 0.98, 1.03],
+              opacity: [ambient.opacity * 0.75, ambient.opacity, ambient.opacity * 0.85, ambient.opacity],
+            }}
+            transition={{
+              duration: ambient.duration,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: ambient.delay,
+            }}
+          >
+            <div
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `radial-gradient(circle at 30% 28%, rgba(255,255,255,0.58), rgba(255,255,255,0.10) 38%, rgba(7,12,24,0.52) 100%), url('${ambient.image}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "conic-gradient(from 210deg at 52% 50%, transparent 0deg, rgba(255,255,255,0.09) 90deg, transparent 180deg, rgba(255,255,255,0.06) 250deg, transparent 360deg)",
+                mixBlendMode: "screen",
+              }}
+            />
+            <div
+              className="absolute inset-[8%] rounded-full"
+              style={{
+                border: "1px solid rgba(255,255,255,0.22)",
+                boxShadow: "inset 0 0 16px rgba(255,255,255,0.14)",
+              }}
+            />
+          </motion.div>
+        ))}
+      </motion.div>
 
       <motion.div
         className="absolute inset-0"
