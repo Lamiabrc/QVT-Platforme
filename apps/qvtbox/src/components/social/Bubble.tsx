@@ -7,22 +7,25 @@ interface BubbleProps {
   onClick: (bubble: BubbleData) => void;
   index: number;
   isCenter?: boolean;
+  zoomFactor?: number;
 }
 
 const imageByBubbleId: Record<string, string> = {
-  accueil: "/images/bubbles/accueil.jpg",
-  zena: "/images/bubbles/zena.jpg",
-  "mon-univers": "/images/bubbles/univers.jpg",
-  boutique: "/images/bubbles/boutique.jpg",
+  accueil: "/images/hero-boxes.jpg",
+  zena: "/images/zena-portrait.jpg",
+  "mon-univers": "/engagements-social-thread.jpg",
+  boutique: "/images/boutique/repose-pieds.jpg",
 };
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
-const Bubble = ({ bubble, onClick, index, isCenter }: BubbleProps) => {
+const Bubble = ({ bubble, onClick, index, isCenter, zoomFactor = 1 }: BubbleProps) => {
   const delay = index * 0.08;
   const floatDuration = 6 + (index % 4) * 1.25;
-  const baseSize = clamp(bubble.size, 180, 240);
-  const size = isCenter ? Math.max(300, baseSize + 70) : baseSize;
+  const baseSize = clamp(bubble.size, 220, 300);
+  const baseRenderedSize = isCenter ? Math.max(360, baseSize + 96) : baseSize;
+  const scrollGrowth = clamp(1 + (zoomFactor - 1) * 0.18, 1, 1.26);
+  const size = baseRenderedSize * scrollGrowth;
   const glowSize = isCenter ? size * 1.38 : size * 1.28;
   const bubbleImage = imageByBubbleId[bubble.id];
   const bubbleSurface = bubbleImage
@@ -92,12 +95,13 @@ const Bubble = ({ bubble, onClick, index, isCenter }: BubbleProps) => {
             width: size,
             height: size,
             border: "1px solid rgba(255,255,255,0.35)",
-            boxShadow: `
-              0 30px 80px rgba(0,0,0,0.35),
-              0 18px 42px rgba(5,10,24,0.24),
-              inset 0 18px 30px rgba(255,255,255,0.25),
-              inset 0 -22px 36px rgba(0,0,0,0.26)
-            `,
+              boxShadow: `
+                0 30px 80px rgba(0,0,0,0.35),
+                0 18px 42px rgba(5,10,24,0.24),
+                0 0 64px rgba(210,229,255,0.15),
+                inset 0 18px 30px rgba(255,255,255,0.25),
+                inset 0 -22px 36px rgba(0,0,0,0.26)
+              `,
             backgroundImage: bubbleSurface,
             backgroundPosition: "center",
             backgroundSize: "cover",
@@ -123,6 +127,16 @@ const Bubble = ({ bubble, onClick, index, isCenter }: BubbleProps) => {
               boxShadow: "inset 0 0 0 2px rgba(255,255,255,0.22)",
               maskImage: "radial-gradient(circle, transparent 56%, black 70%, transparent 77%)",
               WebkitMaskImage: "radial-gradient(circle, transparent 56%, black 70%, transparent 77%)",
+            }}
+          />
+
+          <div
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              background:
+                "conic-gradient(from 240deg at 50% 50%, transparent 0deg, rgba(255,255,255,0.10) 80deg, transparent 170deg, rgba(255,255,255,0.07) 238deg, transparent 360deg)",
+              mixBlendMode: "screen",
+              opacity: 0.7,
             }}
           />
 
@@ -166,7 +180,8 @@ const Bubble = ({ bubble, onClick, index, isCenter }: BubbleProps) => {
             className="absolute inset-[6.5%] rounded-full pointer-events-none"
             style={{
               border: "1px solid rgba(255,255,255,0.28)",
-              boxShadow: "inset 0 0 24px rgba(255,255,255,0.16), inset 0 -12px 24px rgba(4,8,18,0.35)",
+              boxShadow:
+                "inset 0 0 24px rgba(255,255,255,0.16), inset 0 -12px 24px rgba(4,8,18,0.35), 0 0 26px rgba(176,204,246,0.18)",
             }}
           />
 

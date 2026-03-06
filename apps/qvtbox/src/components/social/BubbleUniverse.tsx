@@ -36,6 +36,8 @@ type Firefly = {
   opacity: number;
 };
 
+const ZOOM_TO_ENTER_BUBBLE = 2.05;
+
 const bubbleMetaById: Record<string, BubbleMeta> = {
   accueil: {
     title: "Bulle Accueil",
@@ -183,6 +185,16 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
     return () => clearNavigationTimer();
   }, []);
 
+  useEffect(() => {
+    if (!selected || isEntering || effectiveZoom < ZOOM_TO_ENTER_BUBBLE) return;
+
+    setIsEntering(true);
+    clearNavigationTimer();
+    navigationTimerRef.current = window.setTimeout(() => {
+      navigate(resolveBubblePath(selected));
+    }, 420);
+  }, [selected, isEntering, effectiveZoom, navigate]);
+
   const resetCamera = () => {
     clearNavigationTimer();
     setIsEntering(false);
@@ -207,12 +219,9 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
 
     clearNavigationTimer();
     setSelected(bubble);
-    setIsEntering(true);
-    setCamera({ x: translateX, y: translateY, zoom: 2.2 });
-
-    navigationTimerRef.current = window.setTimeout(() => {
-      navigate(resolveBubblePath(bubble));
-    }, 450);
+    setIsEntering(false);
+    setCamera({ x: translateX, y: translateY, zoom: 1.42 });
+    setWheelZoom((currentZoom) => clamp(currentZoom, 1, 2.8));
   };
 
   const handleWheelZoom = (event: WheelEvent<HTMLDivElement>) => {
@@ -222,8 +231,9 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
 
     const width = stageSize.width || stageRef.current?.clientWidth || window.innerWidth;
     const height = stageSize.height || stageRef.current?.clientHeight || window.innerHeight;
-    const xOffset = (event.clientX / width - 0.5) * delta * 0.06;
-    const yOffset = (event.clientY / height - 0.5) * delta * 0.06;
+    const cameraDrift = selected ? 0.2 : 1;
+    const xOffset = (event.clientX / width - 0.5) * delta * 0.06 * cameraDrift;
+    const yOffset = (event.clientY / height - 0.5) * delta * 0.06 * cameraDrift;
 
     setCamera((current) => ({
       ...current,
@@ -250,7 +260,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
       <div
         className="absolute inset-0 bg-[#020611]"
         style={{
-          backgroundImage: "url('/images/bubbles/starfield-4k.jpg')",
+          backgroundImage: "url('/engagements-dark-halo.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -261,7 +271,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         animate={{ transform: starfieldParallaxTransform }}
         transition={{ type: "spring", stiffness: 26, damping: 24 }}
         style={{
-          backgroundImage: "url('/images/bubbles/starfield-4k.jpg')",
+          backgroundImage: "url('/engagements-dark-halo.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           mixBlendMode: "screen",
@@ -301,7 +311,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
               width: firefly.size * 5.2,
               height: firefly.size * 5.2,
               backgroundColor: "rgba(246,231,174,0.72)",
-              backgroundImage: "url('/images/bubbles/luciole.png')",
+              backgroundImage: "url('/luciole.png')",
               backgroundSize: "contain",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
@@ -326,7 +336,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
       </motion.div>
 
       <div className="pointer-events-none absolute left-4 top-4 z-20 rounded-full border border-[#3C5D97]/65 bg-[#061533]/55 px-4 py-2 text-xs text-[#C9D8F6] backdrop-blur-md md:left-8 md:top-8">
-        Molette: zoom/dezoom camera
+        Scroll: agrandir les bulles et zoom camera
       </div>
 
       {canZoomOut ? (
@@ -402,6 +412,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
                 key={bubble.id}
                 bubble={bubble}
                 index={index}
+                zoomFactor={effectiveZoom}
                 isCenter={selected ? selected.id === bubble.id : centerBubble?.id === bubble.id}
                 onClick={enterBubble}
               />
@@ -410,7 +421,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         </motion.div>
 
         <AnimatePresence>
-          {isEntering && selected && selectedMeta ? (
+          {selected && selectedMeta ? (
             <motion.div
               className="absolute inset-x-4 bottom-4 z-20 rounded-3xl border border-[#3E61A0] bg-[#08132B]/78 p-5 backdrop-blur-xl md:left-8 md:right-auto md:w-[460px]"
               initial={{ y: 20, opacity: 0 }}
@@ -421,7 +432,13 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
               <p className="text-xs uppercase tracking-[0.24em] text-[#98B5EB]/90">entree dans la bulle</p>
               <h3 className="mt-1 text-xl font-semibold text-[#EAF2FF]">{selectedMeta.title}</h3>
               <p className="mt-2 text-sm text-[#C6D7F5]">{selectedMeta.description}</p>
-              <p className="mt-3 text-xs text-[#C6D7F5]">Ouverture automatique...</p>
+              <p className="mt-3 text-xs text-[#C6D7F5]">
+                {isEntering
+                  ? "Ouverture automatique..."
+                  : `Continue a zoomer (${effectiveZoom.toFixed(2)} / ${ZOOM_TO_ENTER_BUBBLE.toFixed(
+                      2,
+                    )}) pour ouvrir la page`}
+              </p>
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
