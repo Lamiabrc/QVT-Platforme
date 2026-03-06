@@ -124,9 +124,26 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
 
+  const spacedBubbles = useMemo(() => {
+    const anchorX = 50;
+    const anchorY = 54;
+
+    return bubbles.map((bubble) => {
+      if (bubble.id === "mon-univers") {
+        return { ...bubble, x: anchorX, y: anchorY };
+      }
+
+      return {
+        ...bubble,
+        x: clamp(anchorX + (bubble.x - anchorX) * 1.22, 8, 92),
+        y: clamp(anchorY + (bubble.y - anchorY) * 1.18, 10, 92),
+      };
+    });
+  }, [bubbles]);
+
   const centerBubble = useMemo(
-    () => bubbles.find((bubble) => bubble.id === "mon-univers") ?? bubbles[0] ?? null,
-    [bubbles],
+    () => spacedBubbles.find((bubble) => bubble.id === "mon-univers") ?? spacedBubbles[0] ?? null,
+    [spacedBubbles],
   );
 
   const selectedMeta = useMemo(
@@ -202,12 +219,27 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
     event.preventDefault();
     const delta = -event.deltaY;
     setWheelZoom((currentZoom) => clamp(currentZoom * (1 + delta * 0.001), 0.6, 2.8));
+
+    const width = stageSize.width || stageRef.current?.clientWidth || window.innerWidth;
+    const height = stageSize.height || stageRef.current?.clientHeight || window.innerHeight;
+    const xOffset = (event.clientX / width - 0.5) * delta * 0.06;
+    const yOffset = (event.clientY / height - 0.5) * delta * 0.06;
+
+    setCamera((current) => ({
+      ...current,
+      x: clamp(current.x + xOffset, -220, 220),
+      y: clamp(current.y + yOffset, -220, 220),
+    }));
   };
 
-  const starParallaxTransform = `translate3d(${camera.x * 0.08}px, ${camera.y * 0.08}px, 0) scale(${1 +
-    (effectiveZoom - 1) * 0.07})`;
+  const starfieldParallaxTransform = `translate3d(${camera.x * 0.06}px, ${camera.y * 0.06}px, 0) scale(${1 +
+    (effectiveZoom - 1) * 0.08})`;
+  const stardustParallaxTransform = `translate3d(${camera.x * 0.12}px, ${camera.y * 0.12}px, 0) scale(${1 +
+    (effectiveZoom - 1) * 0.11})`;
   const fireflyParallaxTransform = `translate3d(${camera.x * -0.12}px, ${camera.y * -0.12}px, 0) scale(${1 +
     (effectiveZoom - 1) * 0.04})`;
+  const stageTransform = `translate3d(${camera.x}px, ${camera.y}px, 0) scale(${effectiveZoom}) rotateX(${camera.y *
+    -0.008}deg) rotateY(${camera.x * 0.008}deg)`;
 
   return (
     <section
@@ -216,20 +248,41 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
       aria-label="Univers des bulles"
     >
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 bg-[#020611]"
         style={{
-          background:
-            "radial-gradient(1500px 820px at 20% 12%, rgba(40,86,182,0.36), transparent 62%), radial-gradient(1180px 760px at 83% 16%, rgba(130,62,205,0.28), transparent 62%), radial-gradient(980px 680px at 60% 82%, rgba(49,190,170,0.20), transparent 64%), linear-gradient(180deg, #060D23 0%, #020710 62%, #01040D 100%)",
+          backgroundImage: "url('/images/bubbles/starfield-4k.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       />
 
       <motion.div
-        className="absolute inset-0 opacity-90"
-        animate={{ transform: starParallaxTransform }}
+        className="absolute inset-0 opacity-80"
+        animate={{ transform: starfieldParallaxTransform }}
+        transition={{ type: "spring", stiffness: 26, damping: 24 }}
+        style={{
+          backgroundImage: "url('/images/bubbles/starfield-4k.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          mixBlendMode: "screen",
+        }}
+      />
+
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(1700px 960px at 18% 8%, rgba(144,180,245,0.20), transparent 63%), radial-gradient(1320px 860px at 85% 14%, rgba(182,168,231,0.15), transparent 64%), radial-gradient(1120px 760px at 56% 86%, rgba(147,214,218,0.11), transparent 68%), linear-gradient(180deg, rgba(4,8,20,0.62) 0%, rgba(3,7,16,0.76) 62%, rgba(2,4,10,0.88) 100%)",
+        }}
+      />
+
+      <motion.div
+        className="absolute inset-0 opacity-70"
+        animate={{ transform: stardustParallaxTransform }}
         transition={{ type: "spring", stiffness: 30, damping: 22 }}
         style={{
           backgroundImage:
-            "radial-gradient(1px 1px at 10% 16%, rgba(255,255,255,0.40), transparent), radial-gradient(1.2px 1.2px at 27% 70%, rgba(255,255,255,0.42), transparent), radial-gradient(1.4px 1.4px at 84% 26%, rgba(255,255,255,0.38), transparent), radial-gradient(1.1px 1.1px at 72% 80%, rgba(255,255,255,0.35), transparent), radial-gradient(1.2px 1.2px at 58% 14%, rgba(255,255,255,0.33), transparent), radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.32), transparent)",
+            "radial-gradient(1px 1px at 10% 16%, rgba(255,255,255,0.35), transparent), radial-gradient(1.2px 1.2px at 27% 70%, rgba(255,255,255,0.34), transparent), radial-gradient(1.4px 1.4px at 84% 26%, rgba(255,255,255,0.31), transparent), radial-gradient(1.1px 1.1px at 72% 80%, rgba(255,255,255,0.28), transparent), radial-gradient(1.2px 1.2px at 58% 14%, rgba(255,255,255,0.27), transparent), radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.24), transparent)",
         }}
       />
 
@@ -241,15 +294,20 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         {fireflies.map((firefly) => (
           <motion.span
             key={firefly.id}
-            className="absolute rounded-full bg-[#F6E7AE]"
+            className="absolute block rounded-full"
             style={{
               left: `${firefly.x}%`,
               top: `${firefly.y}%`,
-              width: firefly.size,
-              height: firefly.size,
+              width: firefly.size * 5.2,
+              height: firefly.size * 5.2,
+              backgroundColor: "rgba(246,231,174,0.72)",
+              backgroundImage: "url('/images/bubbles/luciole.png')",
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
               filter: `blur(${firefly.blur}px)`,
-              opacity: firefly.opacity,
-              boxShadow: "0 0 18px rgba(246,231,174,0.58)",
+              opacity: firefly.opacity * 0.95,
+              boxShadow: "0 0 22px rgba(242,225,152,0.45)",
             }}
             animate={{
               x: [0, firefly.dx, -firefly.dx * 0.4, 0],
@@ -318,28 +376,28 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         </AnimatePresence>
       </div>
 
-      <div ref={stageRef} className="relative h-screen w-full" style={{ perspective: "1200px" }}>
+      <div ref={stageRef} className="relative h-screen w-full" style={{ perspective: "1000px" }}>
         <motion.div
           className="absolute inset-0"
           animate={{
-            transform: `translate3d(${camera.x}px, ${camera.y}px, 0) scale(${effectiveZoom})`,
+            transform: stageTransform,
           }}
-          transition={{ type: "spring", stiffness: 118, damping: 20 }}
+          transition={{ type: "spring", stiffness: 106, damping: 22 }}
         >
           <div className="absolute inset-0">
             {centerBubble
-              ? bubbles
+              ? spacedBubbles
                   .filter((bubble) => bubble.id !== centerBubble.id)
                   .map((bubble) => (
                     <div
                       key={`link-${bubble.id}`}
-                      className="absolute h-px bg-gradient-to-r from-[#74A0FF]/35 via-[#7FD4E7]/28 to-transparent"
+                      className="absolute h-px bg-gradient-to-r from-[#BDD5FF]/15 via-[#C9E4FF]/15 to-transparent"
                       style={getLineStyle(centerBubble, bubble)}
                     />
                   ))
               : null}
 
-            {bubbles.map((bubble, index) => (
+            {spacedBubbles.map((bubble, index) => (
               <Bubble
                 key={bubble.id}
                 bubble={bubble}
