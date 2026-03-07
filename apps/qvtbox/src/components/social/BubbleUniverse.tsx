@@ -77,6 +77,12 @@ const bubbleMetaByIdFr: Record<string, BubbleMeta> = {
     actionLabel: "Personnaliser mes box",
     path: "/boutique",
   },
+  logo: {
+    title: "Bulle Logo QVT Box",
+    description: "Acces direct a l'accueil QVT Box.",
+    actionLabel: "Aller a l'accueil",
+    path: "/home",
+  },
 };
 
 const bubbleMetaByIdEn: Record<string, BubbleMeta> = {
@@ -103,6 +109,12 @@ const bubbleMetaByIdEn: Record<string, BubbleMeta> = {
     description: "Customize your boxes and explore wellness offers.",
     actionLabel: "Customize my boxes",
     path: "/boutique",
+  },
+  logo: {
+    title: "QVT Box Logo Bubble",
+    description: "Direct access to the QVT Box home page.",
+    actionLabel: "Go to home",
+    path: "/home",
   },
 };
 
@@ -330,7 +342,6 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
   };
 
   const handleWheelZoom = (event: WheelEvent<HTMLDivElement>) => {
-    event.preventDefault();
     const delta = -event.deltaY;
     setWheelZoom((currentZoom) => clamp(currentZoom * (1 + delta * 0.001), 0.6, 2.8));
 
@@ -347,16 +358,24 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
     }));
   };
 
-  const starfieldParallaxTransform = `translate3d(${camera.x * 0.06}px, ${camera.y * 0.06}px, 0) scale(${1 +
-    (effectiveZoom - 1) * 0.08})`;
-  const stardustParallaxTransform = `translate3d(${camera.x * 0.12}px, ${camera.y * 0.12}px, 0) scale(${1 +
-    (effectiveZoom - 1) * 0.11})`;
-  const ambientParallaxTransform = `translate3d(${camera.x * -0.05}px, ${camera.y * -0.05}px, 0) scale(${1 +
-    (effectiveZoom - 1) * 0.03})`;
-  const fireflyParallaxTransform = `translate3d(${camera.x * -0.12}px, ${camera.y * -0.12}px, 0) scale(${1 +
-    (effectiveZoom - 1) * 0.04})`;
-  const stageTransform = `translate3d(${camera.x}px, ${camera.y}px, 0) scale(${effectiveZoom}) rotateX(${camera.y *
-    -0.008}deg) rotateY(${camera.x * 0.008}deg)`;
+  const starfieldParallaxX = camera.x * 0.06;
+  const starfieldParallaxY = camera.y * 0.06;
+  const starfieldParallaxScale = 1 + (effectiveZoom - 1) * 0.08;
+
+  const stardustParallaxX = camera.x * 0.12;
+  const stardustParallaxY = camera.y * 0.12;
+  const stardustParallaxScale = 1 + (effectiveZoom - 1) * 0.11;
+
+  const ambientParallaxX = camera.x * -0.05;
+  const ambientParallaxY = camera.y * -0.05;
+  const ambientParallaxScale = 1 + (effectiveZoom - 1) * 0.03;
+
+  const fireflyParallaxX = camera.x * -0.12;
+  const fireflyParallaxY = camera.y * -0.12;
+  const fireflyParallaxScale = 1 + (effectiveZoom - 1) * 0.04;
+
+  const stageRotateX = camera.y * -0.008;
+  const stageRotateY = camera.x * 0.008;
 
   return (
     <section
@@ -375,7 +394,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
 
       <motion.div
         className="absolute inset-0 opacity-80"
-        animate={{ transform: starfieldParallaxTransform }}
+        animate={{ x: starfieldParallaxX, y: starfieldParallaxY, scale: starfieldParallaxScale }}
         transition={{ type: "spring", stiffness: 26, damping: 24 }}
         style={{
           backgroundImage: "url('/engagements-dark-halo.jpg')",
@@ -395,7 +414,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
 
       <motion.div
         className="absolute inset-0 opacity-70"
-        animate={{ transform: stardustParallaxTransform }}
+        animate={{ x: stardustParallaxX, y: stardustParallaxY, scale: stardustParallaxScale }}
         transition={{ type: "spring", stiffness: 30, damping: 22 }}
         style={{
           backgroundImage:
@@ -405,7 +424,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
 
       <motion.div
         className="pointer-events-none absolute inset-0"
-        animate={{ transform: ambientParallaxTransform }}
+        animate={{ x: ambientParallaxX, y: ambientParallaxY, scale: ambientParallaxScale }}
         transition={{ type: "spring", stiffness: 24, damping: 24 }}
         aria-hidden="true"
       >
@@ -468,7 +487,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
 
       <motion.div
         className="absolute inset-0"
-        animate={{ transform: fireflyParallaxTransform }}
+        animate={{ x: fireflyParallaxX, y: fireflyParallaxY, scale: fireflyParallaxScale }}
         transition={{ type: "spring", stiffness: 24, damping: 20 }}
       >
         {fireflies.map((firefly) => (
@@ -571,7 +590,11 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         <motion.div
           className="absolute inset-0"
           animate={{
-            transform: stageTransform,
+            x: camera.x,
+            y: camera.y,
+            scale: effectiveZoom,
+            rotateX: stageRotateX,
+            rotateY: stageRotateY,
           }}
           transition={{ type: "spring", stiffness: 106, damping: 22 }}
         >

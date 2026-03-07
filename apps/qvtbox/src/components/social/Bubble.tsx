@@ -15,6 +15,7 @@ const imageByBubbleId: Record<string, string> = {
   zena: "/images/zena-portrait.jpg",
   "mon-univers": "/engagements-data-bubble.jpg",
   boutique: "/hero-cicatrices-lumiere.jpg",
+  logo: "/logo-qvt.jpeg",
 };
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
@@ -189,7 +190,7 @@ const Bubble = ({ bubble, onClick, index, isCenter, zoomFactor = 1 }: BubbleProp
             <span className="rounded-full bg-black/24 px-2.5 py-1 text-[10px] font-semibold leading-tight text-white/95 backdrop-blur-sm md:text-xs">
               {bubble.name}
             </span>
-            {!isCenter ? (
+            {!isCenter && bubble.members > 0 ? (
               <span className="text-[9px] text-white/80 drop-shadow-sm">{bubble.members} membres</span>
             ) : null}
           </div>

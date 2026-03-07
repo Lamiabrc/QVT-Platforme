@@ -55,4 +55,15 @@ export const bubbles: BubbleData[] = [
     glowColor: "rgba(157, 236, 226, 0.55)",
     color: "from-teal-200/45 to-cyan-100/35",
   },
+  {
+    id: "logo",
+    name: "QVT Box",
+    emoji: "",
+    members: 0,
+    x: 13,
+    y: 77,
+    size: 250,
+    glowColor: "rgba(235, 214, 163, 0.62)",
+    color: "from-amber-200/45 to-yellow-100/35",
+  },
 ];
