@@ -4,9 +4,15 @@ import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  OAUTH_PROVIDERS,
+  type SupabaseOAuthProvider,
+  type SupportedOAuthProvider,
+  getOAuthErrorMessage,
+  isProviderNotEnabledError,
+  parseEnabledOAuthProviders,
+} from "@/lib/authProviders";
 import { cn } from "@/lib/utils";
-
-type OAuthProvider = Parameters<typeof supabase.auth.signInWithOAuth>[0]["provider"];
 
 interface SocialLoginButtonsProps {
   redirectTo: string;
@@ -14,89 +20,99 @@ interface SocialLoginButtonsProps {
 }
 
 type ProviderButton = {
-  provider: OAuthProvider;
+  provider: SupportedOAuthProvider;
   label: string;
   icon: LucideIcon;
 };
 
-const ALL_PROVIDERS: ProviderButton[] = [
-  { provider: "google", label: "Google", icon: Chrome },
-  { provider: "facebook", label: "Facebook", icon: Facebook },
-  { provider: "linkedin", label: "LinkedIn", icon: Linkedin },
-];
-
-const parseEnabledProviders = (): OAuthProvider[] | null => {
-  // Exemple: VITE_OAUTH_PROVIDERS=google,facebook
-  const raw = (import.meta as any)?.env?.VITE_OAUTH_PROVIDERS as string | undefined;
-  if (!raw) return null;
-
-  const cleaned = raw
-    .split(",")
-    .map((v) => v.trim().toLowerCase())
-    .filter(Boolean);
-
-  // On filtre uniquement les providers connus
-  const allowed = new Set<OAuthProvider>(["google", "facebook", "linkedin"]);
-  const result = cleaned.filter((p) => allowed.has(p as OAuthProvider)) as OAuthProvider[];
-
-  return result.length ? result : [];
+const PROVIDER_ICONS: Record<SupportedOAuthProvider, LucideIcon> = {
+  google: Chrome,
+  facebook: Facebook,
+  linkedin_oidc: Linkedin,
 };
 
-const getErrorMessage = (error: unknown) => {
-  if (error instanceof Error && error.message) return error.message;
-  return "Le provider n'est pas disponible pour le moment.";
-};
+const ALL_PROVIDERS: ProviderButton[] = OAUTH_PROVIDERS.map((provider) => ({
+  provider: provider.provider,
+  label: provider.label,
+  icon: PROVIDER_ICONS[provider.provider],
+}));
 
 const SocialLoginButtons = ({ redirectTo, className }: SocialLoginButtonsProps) => {
-  const [loadingProvider, setLoadingProvider] = useState<OAuthProvider | null>(null);
+  const [loadingProvider, setLoadingProvider] = useState<SupportedOAuthProvider | null>(null);
+  const [runtimeDisabledProviders, setRuntimeDisabledProviders] = useState<Set<SupportedOAuthProvider>>(
+    () => new Set(),
+  );
   const { toast } = useToast();
 
-  const enabledProviders = useMemo(() => parseEnabledProviders(), []);
+  const enabledProviders = useMemo(() => {
+    const raw = (import.meta as any)?.env?.VITE_OAUTH_PROVIDERS as string | undefined;
+    return parseEnabledOAuthProviders(raw);
+  }, []);
 
   const providersToRender = useMemo(() => {
-    // Si pas d'env -> on affiche tout (comportement backward compatible)
-    if (enabledProviders === null) return ALL_PROVIDERS;
-    // Si env présente mais vide -> on n'affiche rien
-    if (enabledProviders.length === 0) return [];
-    // Sinon on filtre selon env
-    return ALL_PROVIDERS.filter((p) => enabledProviders.includes(p.provider));
-  }, [enabledProviders]);
+    const configured =
+      enabledProviders === null
+        ? ALL_PROVIDERS
+        : ALL_PROVIDERS.filter((provider) => enabledProviders.includes(provider.provider));
 
-  const handleProviderLogin = async (provider: OAuthProvider) => {
+    return configured.filter((provider) => !runtimeDisabledProviders.has(provider.provider));
+  }, [enabledProviders, runtimeDisabledProviders]);
+
+  const handleProviderLogin = async (provider: SupportedOAuthProvider, label: string) => {
     if (loadingProvider) return;
 
     setLoadingProvider(provider);
 
     try {
       const { error } = await supabase.auth.signInWithOAuth({
-        provider,
+        provider: provider as SupabaseOAuthProvider,
         options: { redirectTo },
       });
 
       if (error) throw error;
 
-      // En cas de succès, Supabase redirige normalement le navigateur.
-      // Si pour une raison quelconque la redirection ne se fait pas, on laisse l'état tel quel.
+      // Supabase should redirect. If it does not, unlock button state after a short timeout.
+      window.setTimeout(() => {
+        setLoadingProvider((current) => (current === provider ? null : current));
+      }, 7000);
     } catch (error: unknown) {
-      toast({
-        title: "Connexion indisponible",
-        description: getErrorMessage(error),
-        variant: "destructive",
-      });
+      const message = getOAuthErrorMessage(error);
+
+      if (isProviderNotEnabledError(error)) {
+        console.warn("[auth] OAuth provider disabled", { provider, error });
+        setRuntimeDisabledProviders((current) => {
+          const next = new Set(current);
+          next.add(provider);
+          return next;
+        });
+
+        toast({
+          title: "Connexion sociale non activee",
+          description: `${label} n'est pas active dans Supabase pour le moment.`,
+          variant: "destructive",
+        });
+      } else {
+        console.error("[auth] OAuth login failed", { provider, error });
+        toast({
+          title: "Connexion indisponible",
+          description: message,
+          variant: "destructive",
+        });
+      }
+
       setLoadingProvider(null);
     }
   };
 
-  // Si l'env est définie mais ne contient aucun provider valide
-  if (enabledProviders !== null && providersToRender.length === 0) {
+  if (providersToRender.length === 0) {
     return (
       <div
         className={cn(
           "rounded-2xl border border-[#E8DCC8] bg-white px-4 py-3 text-sm text-[#6F6454]",
-          className
+          className,
         )}
       >
-        Les connexions sociales ne sont pas activées pour le moment.
+        Les connexions sociales ne sont pas activees pour le moment.
       </div>
     );
   }
@@ -112,15 +128,11 @@ const SocialLoginButtons = ({ redirectTo, className }: SocialLoginButtonsProps) 
             type="button"
             variant="outline"
             disabled={Boolean(loadingProvider)}
-            onClick={() => handleProviderLogin(provider)}
+            onClick={() => handleProviderLogin(provider, label)}
             className="h-11 rounded-2xl border-[#E8DCC8] bg-white text-[#2B2926] hover:bg-[#F8F2E8]"
             aria-label={`Se connecter avec ${label}`}
           >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Icon className="h-4 w-4" />
-            )}
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Icon className="h-4 w-4" />}
             <span>{label}</span>
           </Button>
         );
@@ -130,3 +142,4 @@ const SocialLoginButtons = ({ redirectTo, className }: SocialLoginButtonsProps) 
 };
 
 export default SocialLoginButtons;
+

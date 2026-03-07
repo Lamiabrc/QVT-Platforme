@@ -21,7 +21,7 @@ interface UseZenaChatProps {
   model?: AIModel;
 }
 
-export function useZenaChat({ memberRole = 'ado', mode = 'ai', model = 'google/gemini-2.5-flash' }: UseZenaChatProps = {}) {
+export function useZenaChat({ memberRole = 'ado', mode = 'ai', model = 'openai/gpt-5-mini' }: UseZenaChatProps = {}) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -104,6 +104,11 @@ export function useZenaChat({ memberRole = 'ado', mode = 'ai', model = 'google/g
           });
           setSending(false);
           return;
+        }
+
+        const errorText = `${errorData?.error ?? ''} ${errorData?.msg ?? ''}`.toLowerCase();
+        if (errorText.includes('unsupported provider') || errorText.includes('provider is not enabled')) {
+          throw new Error("Ce modele n'est pas active. Selectionne un modele OpenAI.");
         }
 
         throw new Error(errorData.error || 'Erreur de connexion à ZÉNA');

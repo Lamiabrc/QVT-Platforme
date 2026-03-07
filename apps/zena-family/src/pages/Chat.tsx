@@ -22,7 +22,7 @@ export default function Chat() {
   const { user, currentMember, loading } = useAuth();
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<'ai' | 'demo'>('ai');
-  const [model, setModel] = useState<AIModel>('google/gemini-2.5-flash');
+  const [model, setModel] = useState<AIModel>('openai/gpt-5-mini');
   const [showSettings, setShowSettings] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
