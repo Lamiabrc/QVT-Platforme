@@ -11,10 +11,10 @@ interface BubbleProps {
 }
 
 const imageByBubbleId: Record<string, string> = {
-  accueil: "/images/hero-boxes.jpg",
-  zena: "/images/zena-portrait.jpg",
-  "mon-univers": "/engagements-social-thread.jpg",
-  boutique: "/images/boutique/repose-pieds.jpg",
+  accueil: "/engagements-hero.jpg",
+  zena: "/zena-still.jpg",
+  "mon-univers": "/engagements-data-bubble.jpg",
+  boutique: "/hero-cicatrices-lumiere.jpg",
 };
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));

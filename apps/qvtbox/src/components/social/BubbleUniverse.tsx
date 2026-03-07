@@ -128,15 +128,15 @@ const fireflies: Firefly[] = Array.from({ length: 24 }, (_, index) => {
 });
 
 const ambientBubbleImages = [
-  "/images/box-salarie.jpg",
-  "/images/box-parent.jpg",
-  "/images/box-ado.jpg",
-  "/images/box-senior.jpg",
-  "/images/boutique/huile-lavande.jpg",
-  "/images/boutique/tisane-energisante.jpg",
-  "/images/boutique/coussin-lombaire.jpg",
-  "/images/hero-boxes.jpg",
+  "/zena-still.jpg",
+  "/images/zena-portrait.jpg",
+  "/engagements-dark-halo.jpg",
+  "/engagements-hero.jpg",
+  "/engagements-data-bubble.jpg",
   "/engagements-social-thread.jpg",
+  "/hero-cicatrices-lumiere.jpg",
+  "/saas-dashboard.jpg",
+  "/famille-still.jpg",
 ];
 
 const ambientBubbles: AmbientBubble[] = Array.from({ length: 18 }, (_, index) => {
