@@ -12,7 +12,7 @@ interface BubbleProps {
 
 const imageByBubbleId: Record<string, string> = {
   accueil: "/engagements-hero.jpg",
-  zena: "/zena-still.jpg",
+  zena: "/images/zena-portrait.jpg",
   "mon-univers": "/engagements-data-bubble.jpg",
   boutique: "/hero-cicatrices-lumiere.jpg",
 };
@@ -185,8 +185,7 @@ const Bubble = ({ bubble, onClick, index, isCenter, zoomFactor = 1 }: BubbleProp
             }}
           />
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-center">
-            <span className="text-2xl md:text-3xl drop-shadow-sm">{bubble.emoji}</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-center">
             <span className="rounded-full bg-black/24 px-2.5 py-1 text-[10px] font-semibold leading-tight text-white/95 backdrop-blur-sm md:text-xs">
               {bubble.name}
             </span>

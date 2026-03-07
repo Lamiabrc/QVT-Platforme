@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, WheelEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import { useLanguage } from "@/hooks/useLanguage";
 import Bubble from "@/components/social/Bubble";
 import type { BubbleData } from "@/data/bubbles";
 import { bubbles as defaultBubbles } from "@/data/bubbles";
@@ -51,7 +52,7 @@ type AmbientBubble = {
 
 const ZOOM_TO_ENTER_BUBBLE = 2.05;
 
-const bubbleMetaById: Record<string, BubbleMeta> = {
+const bubbleMetaByIdFr: Record<string, BubbleMeta> = {
   accueil: {
     title: "Bulle Accueil",
     description: "Retour vers la porte d'entree de QVT Box.",
@@ -78,12 +79,39 @@ const bubbleMetaById: Record<string, BubbleMeta> = {
   },
 };
 
-const quickLinks = [
-  { id: "accueil", label: "Accueil", path: "/home", color: "from-sky-200/70 to-indigo-200/70" },
-  { id: "zena", label: "ZENA", path: "/zena", color: "from-fuchsia-200/70 to-violet-200/70" },
-  { id: "mon-univers", label: "Mon univers", path: "/dashboard", color: "from-cyan-200/70 to-blue-200/70" },
-  { id: "boutique", label: "Boutique", path: "/boutique", color: "from-teal-200/70 to-cyan-200/70" },
-];
+const bubbleMetaByIdEn: Record<string, BubbleMeta> = {
+  accueil: {
+    title: "Home Bubble",
+    description: "Go back to the QVT Box home gateway.",
+    actionLabel: "Go to home",
+    path: "/home",
+  },
+  zena: {
+    title: "ZENA Bubble",
+    description: "Access the ZENA universe and mentoring pathways.",
+    actionLabel: "Open ZENA",
+    path: "/zena",
+  },
+  "mon-univers": {
+    title: "My Universe Bubble",
+    description: "Your main space with your activity and trusted circles.",
+    actionLabel: "Enter my universe",
+    path: "/dashboard",
+  },
+  boutique: {
+    title: "Shop Bubble",
+    description: "Customize your boxes and explore wellness offers.",
+    actionLabel: "Customize my boxes",
+    path: "/boutique",
+  },
+};
+
+const quickLinkDefs = [
+  { id: "accueil", path: "/home", color: "from-sky-200/70 to-indigo-200/70" },
+  { id: "zena", path: "/zena", color: "from-fuchsia-200/70 to-violet-200/70" },
+  { id: "mon-univers", path: "/dashboard", color: "from-cyan-200/70 to-blue-200/70" },
+  { id: "boutique", path: "/boutique", color: "from-teal-200/70 to-cyan-200/70" },
+] as const;
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
@@ -128,8 +156,11 @@ const fireflies: Firefly[] = Array.from({ length: 24 }, (_, index) => {
 });
 
 const ambientBubbleImages = [
-  "/zena-still.jpg",
   "/images/zena-portrait.jpg",
+  "/images/box-salarie.jpg",
+  "/images/box-ado.jpg",
+  "/images/box-senior.jpg",
+  "/images/box-parent.jpg",
   "/engagements-dark-halo.jpg",
   "/engagements-hero.jpg",
   "/engagements-data-bubble.jpg",
@@ -165,6 +196,8 @@ const ambientBubbles: AmbientBubble[] = Array.from({ length: 18 }, (_, index) =>
 });
 
 export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
+  const { language } = useLanguage();
+  const isEnglish = language === "en";
   const navigate = useNavigate();
   const stageRef = useRef<HTMLDivElement | null>(null);
   const navigationTimerRef = useRef<number | null>(null);
@@ -175,6 +208,28 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
   const [wheelZoom, setWheelZoom] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
   const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
+  const bubbleMetaById = isEnglish ? bubbleMetaByIdEn : bubbleMetaByIdFr;
+  const quickLinks = useMemo(
+    () =>
+      quickLinkDefs.map((item) => ({
+        ...item,
+        label:
+          item.id === "accueil"
+            ? isEnglish
+              ? "Home"
+              : "Accueil"
+            : item.id === "mon-univers"
+              ? isEnglish
+                ? "My Universe"
+                : "Mon univers"
+              : item.id === "boutique"
+                ? isEnglish
+                  ? "Shop"
+                  : "Boutique"
+                : "ZENA",
+      })),
+    [isEnglish],
+  );
 
   const spacedBubbles = useMemo(() => {
     const anchorX = 50;
@@ -200,7 +255,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
 
   const selectedMeta = useMemo(
     () => (selected ? bubbleMetaById[selected.id] : null),
-    [selected],
+    [selected, bubbleMetaById],
   );
 
   const effectiveZoom = clamp(camera.zoom * wheelZoom, 0.6, 2.8);
@@ -451,7 +506,18 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
       </motion.div>
 
       <div className="pointer-events-none absolute left-4 top-4 z-20 rounded-full border border-[#3C5D97]/65 bg-[#061533]/55 px-4 py-2 text-xs text-[#C9D8F6] backdrop-blur-md md:left-8 md:top-8">
-        Scroll: agrandir les bulles et zoom camera
+        {isEnglish ? "Scroll: grow bubbles and zoom camera" : "Scroll: agrandir les bulles et zoom camera"}
+      </div>
+
+      <div className="pointer-events-none absolute left-1/2 top-6 z-20 w-[min(92vw,640px)] -translate-x-1/2 rounded-2xl border border-[#6585BE]/55 bg-[#081B3B]/62 px-4 py-3 text-center text-[#E8F1FF] backdrop-blur-xl md:top-8 md:px-6">
+        <p className="text-sm font-semibold md:text-base">
+          {isEnglish ? "Welcome to your Bubble Universe" : "Bienvenue dans votre Univers de Bulles"}
+        </p>
+        <p className="mt-1 text-[11px] text-[#C5D8FA] md:text-xs">
+          {isEnglish
+            ? "Solo, teen, senior and family spaces are all around you."
+            : "Les espaces solo, ado, senior et famille gravitent autour de vous."}
+        </p>
       </div>
 
       {canZoomOut ? (
@@ -460,7 +526,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
           onClick={resetCamera}
           className="absolute left-4 top-16 z-30 rounded-full border border-[#6D89C4] bg-[#0C1C3D]/80 px-4 py-2 text-xs font-semibold text-[#EAF2FF] backdrop-blur-md transition hover:bg-[#122B5D] md:left-8 md:top-20"
         >
-          Retour / zoom out
+          {isEnglish ? "Back / zoom out" : "Retour / zoom out"}
         </button>
       ) : null}
 
@@ -544,15 +610,23 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
               exit={{ y: 20, opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
-              <p className="text-xs uppercase tracking-[0.24em] text-[#98B5EB]/90">entree dans la bulle</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-[#98B5EB]/90">
+                {isEnglish ? "entering bubble" : "entree dans la bulle"}
+              </p>
               <h3 className="mt-1 text-xl font-semibold text-[#EAF2FF]">{selectedMeta.title}</h3>
               <p className="mt-2 text-sm text-[#C6D7F5]">{selectedMeta.description}</p>
               <p className="mt-3 text-xs text-[#C6D7F5]">
                 {isEntering
-                  ? "Ouverture automatique..."
-                  : `Continue a zoomer (${effectiveZoom.toFixed(2)} / ${ZOOM_TO_ENTER_BUBBLE.toFixed(
-                      2,
-                    )}) pour ouvrir la page`}
+                  ? isEnglish
+                    ? "Opening automatically..."
+                    : "Ouverture automatique..."
+                  : isEnglish
+                    ? `Keep zooming (${effectiveZoom.toFixed(2)} / ${ZOOM_TO_ENTER_BUBBLE.toFixed(
+                        2,
+                      )}) to open the page`
+                    : `Continue a zoomer (${effectiveZoom.toFixed(2)} / ${ZOOM_TO_ENTER_BUBBLE.toFixed(
+                        2,
+                      )}) pour ouvrir la page`}
               </p>
 
               <div className="mt-4 flex flex-wrap gap-2">
@@ -564,7 +638,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
                   }}
                   className="rounded-full border border-[#6D89C4] px-4 py-2 text-xs font-semibold text-[#EAF2FF] transition hover:bg-[#112753]"
                 >
-                  Annuler l'ouverture
+                  {isEnglish ? "Cancel opening" : "Annuler l'ouverture"}
                 </button>
                 <button
                   type="button"
