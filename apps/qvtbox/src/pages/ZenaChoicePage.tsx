@@ -62,7 +62,7 @@ export default function ZenaChoicePage() {
       <Navigation />
 
       <main>
-        <section className="relative overflow-hidden px-6 pb-16 pt-32 md:pt-40">
+        <section className="relative overflow-hidden px-4 pb-16 pt-28 sm:px-6 md:pt-40">
           <div className="absolute inset-0 bg-gradient-to-b from-white via-[#FAF6EE] to-[#F4ECE0]" />
           <div className="absolute -left-12 top-20 h-64 w-64 rounded-full bg-[#CFECE8]/45 blur-3xl" />
           <div className="absolute -right-8 top-24 h-72 w-72 rounded-full bg-[#F3E0B9]/45 blur-3xl" />
@@ -80,7 +80,7 @@ export default function ZenaChoicePage() {
                 <button
                   type="button"
                   onClick={() => setSphere("family")}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  className={`w-full rounded-full px-4 py-2 text-sm font-semibold transition sm:w-auto ${
                     sphere === "family"
                       ? "bg-[#1B1A18] text-[#FAF6EE]"
                       : "border border-[#1B1A18]/20 bg-white text-[#1B1A18]"
@@ -91,7 +91,7 @@ export default function ZenaChoicePage() {
                 <button
                   type="button"
                   onClick={() => setSphere("company")}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                  className={`w-full rounded-full px-4 py-2 text-sm font-semibold transition sm:w-auto ${
                     sphere === "company"
                       ? "bg-[#1B1A18] text-[#FAF6EE]"
                       : "border border-[#1B1A18]/20 bg-white text-[#1B1A18]"
@@ -155,14 +155,14 @@ export default function ZenaChoicePage() {
                 <img
                   src="/zena-still.jpg"
                   alt="ZÉNA sur QVT Box"
-                  className="h-[250px] w-full object-cover"
+                  className="h-[220px] w-full object-cover sm:h-[250px]"
                 />
               </div>
 
               <div className="relative overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-[0_20px_46px_rgba(27,26,24,0.14)]">
                 <video
                   src="/images/zena-intro.mp4"
-                  className="h-[250px] w-full object-cover"
+                  className="h-[220px] w-full object-cover sm:h-[250px]"
                   autoPlay
                   muted
                   loop
@@ -177,7 +177,7 @@ export default function ZenaChoicePage() {
           </div>
         </section>
 
-        <section className="px-6 pb-24">
+        <section className="px-4 pb-24 sm:px-6">
           <div className="mx-auto max-w-6xl">
             <ZenaChatPanel
               sphere={sphere}

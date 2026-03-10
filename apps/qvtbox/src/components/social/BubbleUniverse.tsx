@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties, WheelEvent } from "react";
+import type { CSSProperties, PointerEvent, WheelEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -213,6 +213,13 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
   const navigate = useNavigate();
   const stageRef = useRef<HTMLDivElement | null>(null);
   const navigationTimerRef = useRef<number | null>(null);
+  const dragStateRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    cameraX: number;
+    cameraY: number;
+  } | null>(null);
 
   const [selected, setSelected] = useState<BubbleData | null>(null);
   const [isEntering, setIsEntering] = useState(false);
@@ -242,6 +249,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
       })),
     [isEnglish],
   );
+  const isMobile = stageSize.width > 0 ? stageSize.width < 768 : false;
 
   const spacedBubbles = useMemo(() => {
     const anchorX = 50;
@@ -341,6 +349,11 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
     setWheelZoom((currentZoom) => clamp(currentZoom, 1, 2.8));
   };
 
+  const nudgeZoom = (direction: "in" | "out") => {
+    const nextZoom = direction === "in" ? 1.16 : 0.86;
+    setWheelZoom((currentZoom) => clamp(currentZoom * nextZoom, 0.6, 2.8));
+  };
+
   const handleWheelZoom = (event: WheelEvent<HTMLDivElement>) => {
     const delta = -event.deltaY;
     setWheelZoom((currentZoom) => clamp(currentZoom * (1 + delta * 0.001), 0.6, 2.8));
@@ -356,6 +369,37 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
       x: clamp(current.x + xOffset, -220, 220),
       y: clamp(current.y + yOffset, -220, 220),
     }));
+  };
+
+  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.closest("button, a")) return;
+
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      cameraX: camera.x,
+      cameraY: camera.y,
+    };
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const dragState = dragStateRef.current;
+    if (!dragState || dragState.pointerId !== event.pointerId) return;
+
+    const deltaX = event.clientX - dragState.startX;
+    const deltaY = event.clientY - dragState.startY;
+    setCamera((current) => ({
+      ...current,
+      x: clamp(dragState.cameraX + deltaX, -260, 260),
+      y: clamp(dragState.cameraY + deltaY, -260, 260),
+    }));
+  };
+
+  const handlePointerEnd = (event: PointerEvent<HTMLDivElement>) => {
+    if (dragStateRef.current?.pointerId !== event.pointerId) return;
+    dragStateRef.current = null;
   };
 
   const starfieldParallaxX = camera.x * 0.06;
@@ -525,7 +569,13 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
       </motion.div>
 
       <div className="pointer-events-none absolute left-4 top-4 z-20 rounded-full border border-[#3C5D97]/65 bg-[#061533]/55 px-4 py-2 text-xs text-[#C9D8F6] backdrop-blur-md md:left-8 md:top-8">
-        {isEnglish ? "Scroll: grow bubbles and zoom camera" : "Scroll: agrandir les bulles et zoom camera"}
+        {isEnglish
+          ? isMobile
+            ? "Tap, drag and use +/- to explore"
+            : "Scroll: grow bubbles and zoom camera"
+          : isMobile
+            ? "Touchez, glissez et utilisez +/-"
+            : "Scroll: agrandir les bulles et zoom camera"}
       </div>
 
       <div className="pointer-events-none absolute left-1/2 top-6 z-20 w-[min(92vw,640px)] -translate-x-1/2 rounded-2xl border border-[#6585BE]/55 bg-[#081B3B]/62 px-4 py-3 text-center text-[#E8F1FF] backdrop-blur-xl md:top-8 md:px-6">
@@ -586,7 +636,33 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
         </AnimatePresence>
       </div>
 
-      <div ref={stageRef} className="relative h-screen w-full" style={{ perspective: "1000px" }}>
+      <div className="absolute right-4 top-24 z-30 flex flex-col gap-2 md:hidden">
+        <button
+          type="button"
+          onClick={() => nudgeZoom("in")}
+          className="rounded-full border border-[#6D89C4] bg-[#0C1C3D]/80 px-3 py-2 text-xs font-semibold text-[#EAF2FF] backdrop-blur-md"
+        >
+          Zoom +
+        </button>
+        <button
+          type="button"
+          onClick={() => nudgeZoom("out")}
+          className="rounded-full border border-[#6D89C4] bg-[#0C1C3D]/80 px-3 py-2 text-xs font-semibold text-[#EAF2FF] backdrop-blur-md"
+        >
+          Zoom -
+        </button>
+      </div>
+
+      <div
+        ref={stageRef}
+        className="relative h-[100svh] w-full touch-none"
+        style={{ perspective: "1000px" }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+        onPointerLeave={handlePointerEnd}
+      >
         <motion.div
           className="absolute inset-0"
           animate={{
@@ -617,6 +693,7 @@ export default function BubbleUniverse({ bubbles = defaultBubbles }: Props) {
                 bubble={bubble}
                 index={index}
                 zoomFactor={effectiveZoom}
+                compactMode={isMobile}
                 isCenter={selected ? selected.id === bubble.id : centerBubble?.id === bubble.id}
                 onClick={enterBubble}
               />

@@ -8,6 +8,7 @@ interface BubbleProps {
   index: number;
   isCenter?: boolean;
   zoomFactor?: number;
+  compactMode?: boolean;
 }
 
 const imageByBubbleId: Record<string, string> = {
@@ -20,12 +21,18 @@ const imageByBubbleId: Record<string, string> = {
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
-const Bubble = ({ bubble, onClick, index, isCenter, zoomFactor = 1 }: BubbleProps) => {
+const Bubble = ({ bubble, onClick, index, isCenter, zoomFactor = 1, compactMode = false }: BubbleProps) => {
   const delay = index * 0.08;
   const floatDuration = 6 + (index % 4) * 1.25;
-  const baseSize = clamp(bubble.size, 220, 300);
-  const baseRenderedSize = isCenter ? Math.max(360, baseSize + 96) : baseSize;
-  const scrollGrowth = clamp(1 + (zoomFactor - 1) * 0.18, 1, 1.26);
+  const baseSize = clamp(bubble.size, compactMode ? 180 : 220, compactMode ? 240 : 300);
+  const baseRenderedSize = isCenter
+    ? Math.max(compactMode ? 300 : 360, baseSize + (compactMode ? 72 : 96))
+    : baseSize;
+  const scrollGrowth = clamp(
+    1 + (zoomFactor - 1) * (compactMode ? 0.14 : 0.18),
+    1,
+    compactMode ? 1.18 : 1.26,
+  );
   const size = baseRenderedSize * scrollGrowth;
   const glowSize = isCenter ? size * 1.38 : size * 1.28;
   const bubbleImage = imageByBubbleId[bubble.id];
@@ -187,11 +194,11 @@ const Bubble = ({ bubble, onClick, index, isCenter, zoomFactor = 1 }: BubbleProp
           />
 
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-center">
-            <span className="rounded-full bg-black/24 px-2.5 py-1 text-[10px] font-semibold leading-tight text-white/95 backdrop-blur-sm md:text-xs">
+            <span className="rounded-full bg-black/24 px-2.5 py-1 text-[9px] font-semibold leading-tight text-white/95 backdrop-blur-sm md:text-xs">
               {bubble.name}
             </span>
             {!isCenter && bubble.members > 0 ? (
-              <span className="text-[9px] text-white/80 drop-shadow-sm">{bubble.members} membres</span>
+              <span className="text-[8px] text-white/80 drop-shadow-sm md:text-[9px]">{bubble.members} membres</span>
             ) : null}
           </div>
         </motion.div>

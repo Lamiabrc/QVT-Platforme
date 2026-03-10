@@ -95,7 +95,7 @@ const LoginPage = () => {
     <div className="min-h-screen bg-[#FAF6EE] text-[#1B1A18]">
       <Navigation />
 
-      <main className="relative overflow-hidden px-6 pb-20 pt-32 md:pt-36">
+      <main className="relative overflow-hidden px-4 pb-20 pt-28 sm:px-6 md:pt-36">
         <div className="absolute inset-0 bg-gradient-to-b from-white via-[#FAF6EE] to-[#F7F1E4]" />
         <div className="absolute left-10 top-24 h-64 w-64 rounded-full bg-[#CFECE8]/45 blur-3xl" />
         <div className="absolute -right-8 top-20 h-72 w-72 rounded-full bg-[#F3E0B9]/40 blur-3xl" />
@@ -118,11 +118,11 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <div className="mx-auto max-w-2xl rounded-3xl border border-[#E8DCC8] bg-white/90 p-5 md:p-7 shadow-sm">
+          <div className="mx-auto max-w-2xl rounded-3xl border border-[#E8DCC8] bg-white/90 p-4 shadow-sm sm:p-5 md:p-7">
             {/* ✅ Je viens pour... */}
             <div className="mb-5">
               <p className="text-xs uppercase tracking-[0.22em] text-[#9C8D77]">Je viens pour</p>
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 {DESTINATIONS.map((d) => {
                   const active = returnUrl.startsWith(d.path);
                   return (
@@ -131,7 +131,7 @@ const LoginPage = () => {
                       type="button"
                       onClick={() => setReturnUrl(d.path)}
                       className={[
-                        "rounded-full px-4 py-2 text-sm font-semibold transition",
+                        "w-full rounded-full px-4 py-2 text-sm font-semibold transition sm:w-auto",
                         active
                           ? "bg-[#1B1A18] text-[#FAF6EE]"
                           : "border border-[#E8DCC8] bg-white text-[#6F6454] hover:text-[#1B1A18]",
@@ -143,7 +143,7 @@ const LoginPage = () => {
                 })}
                 <Link
                   to="/bulles"
-                  className="rounded-full border border-[#E8DCC8] bg-white px-4 py-2 text-sm font-semibold text-[#6F6454] hover:text-[#1B1A18]"
+                  className="rounded-full border border-[#E8DCC8] bg-white px-4 py-2 text-center text-sm font-semibold text-[#6F6454] hover:text-[#1B1A18]"
                 >
                   Créer ma première bulle
                 </Link>
@@ -159,23 +159,23 @@ const LoginPage = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={handleTabChange}>
-              <TabsList className="grid h-11 w-full grid-cols-3 rounded-2xl bg-[#F8F2E8]">
-                <TabsTrigger value="login" className="rounded-xl data-[state=active]:bg-white">
+              <TabsList className="grid h-auto min-h-11 w-full grid-cols-3 rounded-2xl bg-[#F8F2E8]">
+                <TabsTrigger value="login" className="rounded-xl px-2 text-xs data-[state=active]:bg-white sm:text-sm">
                   Connexion
                 </TabsTrigger>
-                <TabsTrigger value="signup" className="rounded-xl data-[state=active]:bg-white">
+                <TabsTrigger value="signup" className="rounded-xl px-2 text-xs data-[state=active]:bg-white sm:text-sm">
                   Inscription
                 </TabsTrigger>
-                <TabsTrigger value="magic" className="rounded-xl data-[state=active]:bg-white">
+                <TabsTrigger value="magic" className="rounded-xl px-2 text-xs data-[state=active]:bg-white sm:text-sm">
                   Lien magique
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="login" className="mt-4 rounded-2xl border border-[#E8DCC8] bg-white p-5">
+              <TabsContent value="login" className="mt-4 rounded-2xl border border-[#E8DCC8] bg-white p-4 sm:p-5">
                 <PasswordLoginForm onSuccess={() => navigate(returnUrl)} />
               </TabsContent>
 
-              <TabsContent value="signup" className="mt-4 rounded-2xl border border-[#E8DCC8] bg-white p-5">
+              <TabsContent value="signup" className="mt-4 rounded-2xl border border-[#E8DCC8] bg-white p-4 sm:p-5">
                 <PasswordSignUpForm redirectTo={callbackUrl} onSuccess={() => navigate(returnUrl)} />
               </TabsContent>
 

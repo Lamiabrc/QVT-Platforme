@@ -121,7 +121,7 @@ const CheckoutPage = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
         <Navigation />
-        <div className="py-20 px-4">
+        <div className="px-4 py-24">
           <div className="max-w-2xl mx-auto text-center">
             <ShoppingBag className="mx-auto mb-6 text-6xl text-muted-foreground" />
             <h1 className="text-3xl font-bold mb-4">Votre panier est vide</h1>
@@ -142,10 +142,10 @@ const CheckoutPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5">
       <Navigation />
       
-      <div className="py-20 px-4">
+      <div className="px-4 py-24">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Finaliser votre commande</h1>
+            <h1 className="mb-4 text-3xl font-bold sm:text-4xl">Finaliser votre commande</h1>
             <p className="text-muted-foreground">
               Quelques informations pour livrer vos produits artisanaux
             </p>

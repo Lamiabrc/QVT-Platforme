@@ -200,7 +200,7 @@ const AdminPage = () => {
           </div>
 
           <Tabs defaultValue="products" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-2xl bg-muted p-2 sm:grid-cols-3 lg:grid-cols-5">
               <TabsTrigger value="products" className="flex items-center gap-2">
                 <ShoppingBag className="h-4 w-4" />
                 Produits

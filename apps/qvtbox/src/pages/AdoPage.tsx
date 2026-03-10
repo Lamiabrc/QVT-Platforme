@@ -218,7 +218,7 @@ export default function AdoPage() {
     <div className="min-h-screen bg-[#FAF6EE] text-[#1B1A18]">
       <Navigation />
 
-      <main className="px-6 pb-20 pt-32 md:pt-36">
+      <main className="px-4 pb-20 pt-28 sm:px-6 md:pt-36">
         <div className="mx-auto max-w-6xl">
           <div className="mb-8">
             <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">Univers ado</p>

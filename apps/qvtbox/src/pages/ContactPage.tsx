@@ -136,7 +136,7 @@ const ContactPage = () => {
       <Navigation />
 
       {/* HERO premium */}
-      <section className="relative h-[46vh] w-full overflow-hidden">
+      <section className="relative h-[38vh] min-h-[300px] w-full overflow-hidden sm:h-[46vh]">
         <img
           src="/images/contact-hero.jpg"
           alt="Contact QVT Box"
@@ -144,19 +144,19 @@ const ContactPage = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/10" />
 
-        <div className="absolute bottom-12 left-8 md:left-16 text-white max-w-xl">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+        <div className="absolute bottom-8 left-4 right-4 max-w-xl text-white sm:bottom-12 sm:left-8 md:left-16">
+          <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl">
             Prenez soin de votre bulle.
           </h1>
-          <p className="text-white/90 mt-3 text-lg md:text-xl leading-relaxed">
+          <p className="mt-3 text-base leading-relaxed text-white/90 md:text-xl">
             Entreprises, parents, ados ou seniors — nous sommes là pour vous.
           </p>
         </div>
       </section>
 
       {/* CONTENT */}
-      <main className="py-20 px-6">
-        <div className="container mx-auto grid lg:grid-cols-2 gap-14">
+      <main className="px-4 py-16 sm:px-6 sm:py-20">
+        <div className="container mx-auto grid gap-10 lg:grid-cols-2 lg:gap-14">
 
           {/* LEFT COLUMN */}
           <div className="space-y-10">

@@ -34,7 +34,7 @@ export default function FamillePage() {
           <div className="absolute -top-20 right-0 h-64 w-64 rounded-full bg-[#F3E0B9]/30 blur-3xl" />
           <div className="absolute bottom-8 left-1/4 h-40 w-40 rounded-full bg-[#CFECE8]/35 blur-3xl" />
 
-          <div className="relative z-10 mx-auto max-w-6xl px-6 pb-16 pt-32 md:pt-40">
+          <div className="relative z-10 mx-auto max-w-6xl px-4 pb-14 pt-28 sm:px-6 md:pb-16 md:pt-40">
             <div className="grid items-center gap-10 lg:grid-cols-[1.05fr,0.95fr]">
               <div>
                 <p className={`text-xs uppercase tracking-[0.28em] ${mutedText}`}>Vie perso</p>
@@ -51,13 +51,13 @@ export default function FamillePage() {
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
                     to="/famille/creer"
-                    className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90"
+                    className="inline-flex w-full items-center justify-center rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90 sm:w-auto"
                   >
                     Créer ma bulle
                   </Link>
                   <Link
                     to="/zena"
-                    className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40"
+                    className="inline-flex w-full items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40 sm:w-auto"
                   >
                     Découvrir ZÉNA
                   </Link>
@@ -88,7 +88,7 @@ export default function FamillePage() {
                   <img
                     src="/famille-still.jpg"
                     alt="Bulles famille et proches"
-                    className="h-[360px] w-full object-cover md:h-[420px]"
+                    className="h-[260px] w-full object-cover sm:h-[360px] md:h-[420px]"
                   />
                 </div>
               </div>
@@ -97,11 +97,11 @@ export default function FamillePage() {
         </section>
 
         <section className="border-y border-[#E8DCC8] bg-[#FDF9F0] py-16 md:py-20">
-          <div className="mx-auto grid max-w-6xl gap-8 px-6 lg:grid-cols-[0.95fr,1.05fr]">
+          <div className="mx-auto grid max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.95fr,1.05fr]">
             <div className="relative overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white shadow-[0_20px_48px_rgba(27,26,24,0.12)]">
               <video
                 src="/zena-avatar.mp4"
-                className="h-full min-h-[320px] w-full object-cover"
+                className="h-full min-h-[240px] w-full object-cover sm:min-h-[320px]"
                 autoPlay
                 muted
                 loop

@@ -11,7 +11,7 @@ export default function Index() {
       <Navigation />
 
       <main>
-        <section className="relative min-h-[88vh] overflow-hidden">
+        <section className="relative min-h-[76vh] overflow-hidden sm:min-h-[88vh]">
           <img
             src="/hero-cicatrices-lumiere.jpg"
             alt="Bulle de confiance QVT Box"
@@ -23,18 +23,18 @@ export default function Index() {
           <div className="absolute -left-12 top-24 h-72 w-72 rounded-full bg-[#CFECE8]/30 blur-3xl" />
           <div className="absolute -right-16 top-28 h-80 w-80 rounded-full bg-[#F3E0B9]/30 blur-3xl" />
 
-          <div className="relative z-10 mx-auto flex min-h-[88vh] max-w-6xl items-end px-6 pb-20 pt-36">
+          <div className="relative z-10 mx-auto flex min-h-[76vh] max-w-6xl items-center px-4 pb-12 pt-28 sm:min-h-[88vh] sm:items-end sm:px-6 sm:pb-20 sm:pt-36">
             <div className="max-w-3xl">
               <p className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1 text-xs uppercase tracking-[0.2em] text-[#F3E0B9] backdrop-blur-sm">
                 <Sparkles className="h-3.5 w-3.5" />
                 QVT Box
               </p>
 
-              <h1 className="mt-5 text-4xl font-semibold leading-tight text-white md:text-6xl">
+              <h1 className="mt-5 text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-6xl">
                 Le réseau social responsable.
               </h1>
 
-              <p className="mt-5 max-w-2xl whitespace-pre-line text-base leading-relaxed text-[#F3EBDD] md:text-lg">
+              <p className="mt-5 max-w-2xl whitespace-pre-line text-sm leading-relaxed text-[#F3EBDD] sm:text-base md:text-lg">
                 QVT Box réinvente le réseau social avec des bulles de confiance : tu choisis qui
                 entre (proches, Luciole, ami·e, manager…).
                 {"\n"}
@@ -46,14 +46,14 @@ export default function Index() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   to="/entreprise"
-                  className="inline-flex min-w-[250px] items-center justify-center gap-2 rounded-full bg-[#F3E0B9] px-7 py-3 text-sm font-semibold text-[#151515] transition hover:bg-[#F7E7C5]"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#F3E0B9] px-7 py-3 text-sm font-semibold text-[#151515] transition hover:bg-[#F7E7C5] sm:min-w-[250px] sm:w-auto"
                 >
                   Découvrir pour mon entreprise
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   to="/famille"
-                  className="inline-flex min-w-[250px] items-center justify-center gap-2 rounded-full border border-white/35 bg-white/10 px-7 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/35 bg-white/10 px-7 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20 sm:min-w-[250px] sm:w-auto"
                 >
                   Découvrir pour ma vie perso
                   <ArrowRight className="h-4 w-4" />
@@ -67,7 +67,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="bg-[#FAF6EE] px-6 py-20">
+        <section className="bg-[#FAF6EE] px-4 py-16 sm:px-6 sm:py-20">
           <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.05fr,0.95fr]">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-[#8B7D67]">ZÉNA intégrée</p>
@@ -119,7 +119,7 @@ export default function Index() {
           </div>
         </section>
 
-        <section className="border-t border-[#E8DCC8] bg-[#FDF9F0] px-6 py-20">
+        <section className="border-t border-[#E8DCC8] bg-[#FDF9F0] px-4 py-16 sm:px-6 sm:py-20">
           <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[0.95fr,1.05fr]">
             <div className="relative overflow-hidden rounded-[28px] border border-[#E8DCC8] bg-white shadow-[0_24px_60px_rgba(27,26,24,0.12)]">
               <img

@@ -168,7 +168,7 @@ const BoutiquePage = () => {
 
       {/* HERO */}
       <section
-        className="pt-24 pb-16 px-6 bg-[#151515] text-[#FDF9F0]"
+        className="bg-[#151515] px-4 pb-16 pt-24 text-[#FDF9F0] sm:px-6"
         ref={heroRef}
       >
         <div
@@ -216,7 +216,7 @@ const BoutiquePage = () => {
               <img
                 src={localProductsHero}
                 alt="Produits locaux français pour QVT Box"
-                className="w-full h-[280px] md:h-[340px] object-cover"
+                className="h-[240px] w-full object-cover sm:h-[280px] md:h-[340px]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
             </div>
@@ -228,7 +228,7 @@ const BoutiquePage = () => {
       </section>
 
       {/* STATISTIQUES */}
-      <section className="py-14 px-6 bg-background">
+      <section className="bg-background px-4 py-14 sm:px-6">
         <div className="container mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
             <Card key={index} className="card-professional text-center p-6">
@@ -247,7 +247,7 @@ const BoutiquePage = () => {
       </section>
 
       {/* RECHERCHE + CATEGORIES */}
-      <section className="py-8 px-6 bg-background-soft">
+      <section className="bg-background-soft px-4 py-8 sm:px-6">
         <div className="container mx-auto space-y-6">
           <div className="grid lg:grid-cols-[minmax(0,1.5fr)_minmax(0,2fr)] gap-6 items-center">
             {/* Barre de recherche */}
@@ -301,7 +301,7 @@ const BoutiquePage = () => {
       </section>
 
       {/* PRODUITS */}
-      <section className="py-12 px-6 bg-background" ref={productsRef}>
+      <section className="bg-background px-4 py-12 sm:px-6" ref={productsRef}>
         <div className="container mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProducts.map((product, index) => (
@@ -376,7 +376,7 @@ const BoutiquePage = () => {
       </section>
 
       {/* ENGAGEMENTS */}
-      <section className="py-20 px-6 bg-background-soft">
+      <section className="bg-background-soft px-4 py-20 sm:px-6">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -433,7 +433,7 @@ const BoutiquePage = () => {
       </section>
 
       {/* LIVRAISON */}
-      <section className="py-16 px-6 bg-background">
+      <section className="bg-background px-4 py-16 sm:px-6">
         <div className="container mx-auto">
           <Card className="card-professional p-8">
             <div className="grid lg:grid-cols-2 gap-8 items-center">
@@ -478,7 +478,7 @@ const BoutiquePage = () => {
 
       {/* CTA FINAL */}
       <section
-        className="py-20 px-6 bg-secondary text-white"
+        className="bg-secondary px-4 py-20 text-white sm:px-6"
         ref={ctaRef}
       >
         <div

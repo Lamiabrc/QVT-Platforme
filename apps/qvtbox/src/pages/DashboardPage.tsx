@@ -30,7 +30,7 @@ const DashboardPage = () => {
     <AuthGuard>
       <Navigation />
 
-      <main className="min-h-[70vh] bg-[#FAF6EE] px-6 pb-20 pt-28 md:pt-32 text-[#1B1A18]">
+      <main className="min-h-[70vh] bg-[#FAF6EE] px-4 pb-20 pt-24 text-[#1B1A18] sm:px-6 md:pt-32">
         <div className="mx-auto max-w-6xl">
           {/* Header */}
           <div className="mb-8">

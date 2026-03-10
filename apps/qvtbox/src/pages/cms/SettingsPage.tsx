@@ -166,7 +166,7 @@ const SettingsPage = () => {
 
       {/* Settings Tabs */}
       <Tabs defaultValue="general" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-2 rounded-2xl bg-muted p-2 md:grid-cols-4">
           <TabsTrigger value="general">Général</TabsTrigger>
           <TabsTrigger value="seo">SEO</TabsTrigger>
           <TabsTrigger value="commerce">Commerce</TabsTrigger>

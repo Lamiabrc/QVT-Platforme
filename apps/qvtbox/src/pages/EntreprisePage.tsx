@@ -10,7 +10,7 @@ export default function EntreprisePage() {
       <Navigation />
 
       <main>
-        <section className="relative overflow-hidden px-6 pb-16 pt-32 md:pt-40">
+        <section className="relative overflow-hidden px-4 pb-14 pt-28 sm:px-6 md:pb-16 md:pt-40">
           <div className="absolute inset-0 bg-gradient-to-b from-white via-[#FAF6EE] to-[#F7F1E4]" />
           <div className="absolute -top-20 left-0 h-64 w-64 rounded-full bg-[#CFECE8]/35 blur-3xl" />
           <div className="absolute right-0 top-10 h-80 w-80 rounded-full bg-[#F3E0B9]/35 blur-3xl" />
@@ -29,13 +29,13 @@ export default function EntreprisePage() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
                   href="#demo"
-                  className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90"
+                  className="inline-flex w-full items-center justify-center rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90 sm:w-auto"
                 >
                   Demander une démo
                 </a>
                 <a
                   href="#comment-ca-marche"
-                  className="inline-flex items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40"
+                  className="inline-flex w-full items-center justify-center rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40 sm:w-auto"
                 >
                   Voir comment ça marche
                 </a>
@@ -48,7 +48,7 @@ export default function EntreprisePage() {
                 <img
                   src="/equipe.png"
                   alt="Équipe entreprise QVT Box"
-                  className="h-[360px] w-full object-cover md:h-[440px]"
+                  className="h-[280px] w-full object-cover sm:h-[360px] md:h-[440px]"
                 />
               </div>
             </div>
@@ -56,7 +56,7 @@ export default function EntreprisePage() {
         </section>
 
         <section id="comment-ca-marche" className="border-y border-[#E8DCC8] bg-[#FDF9F0] py-16 md:py-20">
-          <div className="mx-auto grid max-w-6xl gap-6 px-6 md:grid-cols-3">
+          <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 md:grid-cols-3">
             {[
               {
                 title: "Check-in ‘ça va ?’ en 30 secondes",
@@ -89,7 +89,7 @@ export default function EntreprisePage() {
         </section>
 
         <section id="demo" className="bg-[#FAF6EE] py-16 md:py-20">
-          <div className="mx-auto grid max-w-6xl items-start gap-8 px-6 lg:grid-cols-[1fr,0.95fr]">
+          <div className="mx-auto grid max-w-6xl items-start gap-8 px-4 sm:px-6 lg:grid-cols-[1fr,0.95fr]">
             <div className="rounded-3xl border border-[#E8DCC8] bg-white p-6 shadow-sm">
               <h2 className="text-2xl font-semibold md:text-3xl">Demander une démo</h2>
               <p className="mt-3 text-sm text-[#6F6454]">
@@ -136,7 +136,7 @@ export default function EntreprisePage() {
               <img
                 src="/saas-dashboard.jpg"
                 alt="Dashboard RH QVT Box"
-                className="h-full min-h-[380px] w-full object-cover"
+                className="h-full min-h-[260px] w-full object-cover sm:min-h-[380px]"
               />
             </div>
           </div>

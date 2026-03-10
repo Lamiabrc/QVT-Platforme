@@ -587,7 +587,7 @@ export default function BubbleDetailPage() {
     return (
       <div className="min-h-screen bg-[#FAF6EE] text-[#1B1A18]">
         <Navigation />
-        <main className="px-6 pb-20 pt-32">
+        <main className="px-4 pb-20 pt-24 sm:px-6 sm:pt-32">
           <div className="mx-auto max-w-6xl rounded-3xl border border-[#E8DCC8] bg-white p-6 text-sm text-[#6F6454]">
             Chargement de la bulle...
           </div>
@@ -600,7 +600,7 @@ export default function BubbleDetailPage() {
     return (
       <div className="min-h-screen bg-[#FAF6EE] text-[#1B1A18]">
         <Navigation />
-        <main className="px-6 pb-20 pt-32">
+        <main className="px-4 pb-20 pt-24 sm:px-6 sm:pt-32">
           <div className="mx-auto max-w-6xl rounded-3xl border border-[#E8DCC8] bg-white p-6">
             <h1 className="text-xl font-semibold">Bulle introuvable</h1>
             <Link
@@ -621,7 +621,7 @@ export default function BubbleDetailPage() {
     <div className="min-h-screen bg-[#FAF6EE] text-[#1B1A18]">
       <Navigation />
 
-      <main className="px-6 pb-20 pt-32 md:pt-36">
+      <main className="px-4 pb-20 pt-24 sm:px-6 md:pt-36">
         <div className="mx-auto max-w-6xl">
           <BubbleCover title={bubble.name} src={bubble.cover_path || "/covers/cover-1.svg"} />
 
@@ -643,7 +643,7 @@ export default function BubbleDetailPage() {
           </div>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[240px,1fr]">
-            <aside className="space-y-2">
+            <aside className="flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-2 lg:overflow-visible">
             {[
               { key: "feed", label: "Fil d'actualite" },
               { key: "discussions", label: "Discussions" },
@@ -657,7 +657,7 @@ export default function BubbleDetailPage() {
                 type="button"
                 onClick={() => setTab(item.key as TabKey)}
                 className={[
-                  "rounded-full px-4 py-2 text-sm font-semibold transition",
+                  "shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition",
                   tab === item.key
                     ? "bg-[#1B1A18] text-[#FAF6EE]"
                     : "border border-[#E8DCC8] bg-white text-[#6F6454]",

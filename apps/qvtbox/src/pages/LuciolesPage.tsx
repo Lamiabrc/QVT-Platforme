@@ -38,7 +38,7 @@ export default function LuciolesPage() {
       <Navigation />
 
       <main>
-        <section className="relative overflow-hidden px-6 pb-16 pt-32 md:pt-40">
+        <section className="relative overflow-hidden px-4 pb-16 pt-28 sm:px-6 md:pt-40">
           <div className="absolute inset-0 bg-gradient-to-b from-white via-[#FAF6EE] to-[#F7F1E4]" />
           <div className="absolute -right-8 top-20 h-72 w-72 rounded-full bg-[#F3E0B9]/40 blur-3xl" />
           <div className="absolute left-10 top-24 h-64 w-64 rounded-full bg-[#CFECE8]/40 blur-3xl" />
@@ -60,7 +60,7 @@ export default function LuciolesPage() {
             <div className="mt-8">
               <Link
                 to="/devenir-luciole"
-                className="inline-flex items-center justify-center rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90"
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90 sm:w-auto"
               >
                 Devenir Luciole
               </Link>
@@ -78,7 +78,7 @@ export default function LuciolesPage() {
           </div>
         </section>
 
-        <section className="px-6 pb-8">
+        <section className="px-4 pb-8 sm:px-6">
           <div className="mx-auto max-w-6xl">
             <div className="relative overflow-hidden rounded-3xl border border-[#E8DCC8] bg-white">
               <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-[#F3E0B9]/35 blur-2xl" />
@@ -123,7 +123,7 @@ export default function LuciolesPage() {
         </section>
 
         <section className="border-t border-[#E8DCC8] bg-[#FDF9F0] py-16">
-          <div className="mx-auto max-w-6xl px-6">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {loading ? (
                 <article className="rounded-3xl border border-[#E8DCC8] bg-white p-6 text-sm text-[#6F6454]">

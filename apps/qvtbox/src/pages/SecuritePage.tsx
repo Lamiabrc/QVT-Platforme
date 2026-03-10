@@ -15,7 +15,7 @@ export default function SecuritePage() {
       <Navigation />
 
       <main>
-        <section className="relative overflow-hidden px-6 pb-20 pt-32 md:pt-40">
+        <section className="relative overflow-hidden px-4 pb-20 pt-28 sm:px-6 md:pt-40">
           <div className="absolute inset-0 bg-gradient-to-b from-white via-[#FAF6EE] to-[#F7F1E4]" />
           <div className="absolute -top-20 left-0 h-64 w-64 rounded-full bg-[#CFECE8]/35 blur-3xl" />
           <div className="relative z-10 mx-auto max-w-4xl">

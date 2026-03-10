@@ -81,17 +81,17 @@ const MobilePage = () => {
         
         <main className="pt-24 relative z-10">
           {/* Hero Section Mobile */}
-          <section className="container mx-auto px-6 py-16 text-center">
+          <section className="container mx-auto px-4 py-16 text-center sm:px-6">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
                 <Badge className="mb-6 bg-primary/10 text-primary border-primary/20">
                   Application Mobile
                 </Badge>
-                <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 font-kalam text-left">
+                <h1 className="mb-6 text-left font-kalam text-3xl font-bold text-foreground md:text-6xl">
                   QVT Box 
                   <span className="text-gradient"> sur Mobile</span>
                 </h1>
-                <p className="text-xl text-foreground/80 mb-8 leading-relaxed text-left">
+                <p className="mb-8 text-left text-base leading-relaxed text-foreground/80 sm:text-xl">
                   Emportez votre bien-être partout avec vous. Application native pour iPhone et Android 
                   avec notifications intelligentes, simulateur avancé et suivi personnalisé.
                 </p>
@@ -127,9 +127,9 @@ const MobilePage = () => {
           </section>
 
           {/* Tabs principales */}
-          <section className="container mx-auto px-6 py-16">
+          <section className="container mx-auto px-4 py-16 sm:px-6">
             <Tabs defaultValue="simulator" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid h-auto w-full grid-cols-3 gap-2 rounded-2xl bg-muted p-2">
                 <TabsTrigger value="simulator" className="flex items-center gap-2">
                   <Play className="w-4 h-4" />
                   <span className="hidden sm:inline">Simulateur</span>

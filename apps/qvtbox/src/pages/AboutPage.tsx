@@ -82,7 +82,7 @@ const AboutPage: React.FC = () => {
       <Navigation />
 
       {/* HERO */}
-      <section className="relative pt-28 pb-20 overflow-hidden">
+      <section className="relative overflow-hidden pb-20 pt-24 sm:pt-28">
         <img
           src={heroTeam}
           alt={t("about.hero.imageAlt")}
@@ -92,7 +92,7 @@ const AboutPage: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,91,95,0.85)] via-[rgba(0,91,95,0.55)] to-transparent" />
         <div className="absolute -top-10 right-10 w-48 h-48 bg-white/15 rounded-full blur-3xl animate-pulse" />
 
-        <div className="relative container mx-auto px-6">
+        <div className="relative container mx-auto px-4 sm:px-6">
           <div className="max-w-5xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5 shadow bg-white/90 text-[color:#005B5F]">
               <Sparkles className="h-4 w-4" />
@@ -126,7 +126,7 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* ÉCOUTER, PRÉVENIR, AGIR */}
-      <section className="relative py-20 px-6 bg-gradient-to-b from-[#F2F7F6] via-white to-[#E9FAF8] overflow-hidden">
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F2F7F6] via-white to-[#E9FAF8] px-4 py-20 sm:px-6">
         <div className="absolute inset-0">
           <div className="absolute w-64 h-64 bg-[#8B5CF6]/10 rounded-full blur-3xl top-20 left-10" />
           <div className="absolute w-80 h-80 bg-[#00B0B9]/10 rounded-full blur-3xl bottom-10 right-10" />
@@ -187,7 +187,7 @@ const AboutPage: React.FC = () => {
           </div>
 
           {/* Vidéos / visuels des trois piliers */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {[
               "/images/about-listen-daily.mp4",
               "/images/about-prevention-ai.jpg",
@@ -202,14 +202,14 @@ const AboutPage: React.FC = () => {
                   muted
                   loop
                   playsInline
-                  className="rounded-2xl shadow-lg ring-1 ring-black/5 object-cover h-48 md:h-56 w-full"
+                  className="h-48 w-full rounded-2xl object-cover shadow-lg ring-1 ring-black/5 md:h-56"
                 />
               ) : (
                 <img
                   key={i}
                   src={src}
                   alt="QVT Box visuel"
-                  className="rounded-2xl shadow-lg ring-1 ring-black/5 object-cover h-48 md:h-56 w-full"
+                  className="h-48 w-full rounded-2xl object-cover shadow-lg ring-1 ring-black/5 md:h-56"
                   loading="lazy"
                 />
               )
@@ -219,7 +219,7 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* FONDATRICE */}
-      <section className="py-20 px-6 bg-muted/40 relative overflow-hidden">
+      <section className="relative overflow-hidden bg-muted/40 px-4 py-20 sm:px-6">
         <div className="absolute inset-0">
           <div className="absolute w-64 h-64 bg-[#8B5CF6]/10 rounded-full blur-3xl top-10 left-10" />
           <div className="absolute w-80 h-80 bg-[#00B0B9]/10 rounded-full blur-3xl bottom-10 right-10" />
@@ -230,7 +230,7 @@ const AboutPage: React.FC = () => {
             <img
               src={lamiaPortrait}
               alt="Portrait de Lamia Bréchet"
-              className="w-full h-[420px] object-cover"
+              className="h-[280px] w-full object-cover sm:h-[360px] md:h-[420px]"
               loading="lazy"
             />
           </div>
@@ -291,7 +291,7 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* ZÉNA */}
-      <section className="relative py-20 px-6 bg-gradient-to-r from-[#8B5CF6]/10 via-[#00B0B9]/10 to-[#8B5CF6]/10 backdrop-blur-lg overflow-hidden">
+      <section className="relative overflow-hidden bg-gradient-to-r from-[#8B5CF6]/10 via-[#00B0B9]/10 to-[#8B5CF6]/10 px-4 py-20 backdrop-blur-lg sm:px-6">
         <div className="absolute inset-0 -z-10">
           <div className="absolute w-96 h-96 bg-white/20 rounded-full blur-3xl top-20 left-1/3 animate-pulse" />
         </div>
@@ -304,7 +304,7 @@ const AboutPage: React.FC = () => {
               loop
               playsInline
               poster="/images/zena-avatar.mp4"
-              className="w-full h-[420px] object-cover"
+              className="h-[280px] w-full object-cover sm:h-[360px] md:h-[420px]"
             >
               <source src="/images/zena-intro.mp4" type="video/mp4" />
               Votre navigateur ne prend pas en charge la lecture vidéo.
@@ -367,7 +367,7 @@ const AboutPage: React.FC = () => {
       </section>
 
       {/* PARTENAIRES */}
-      <section className="py-10 px-6">
+      <section className="px-4 py-10 sm:px-6">
         <div className="container mx-auto">
           <div className="text-center mb-6">
             <HeadingFR>Nos partenaires</HeadingFR>

@@ -9,8 +9,8 @@ export default function ChoisirSpherePage() {
     <div className="bg-[#FAF6EE] text-[#1B1A18]">
       <Navigation />
 
-      <main className="py-24 md:py-32">
-        <div className="mx-auto max-w-5xl px-6">
+      <main className="py-20 md:py-32">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <p className="text-xs uppercase tracking-[0.28em] text-[#9C8D77]">
             Choisir ma sphere
           </p>

@@ -11,7 +11,7 @@ export default function EngagementsPage() {
 
       <main>
         {/* HERO VISUEL AVEC IMAGE */}
-        <section className="pt-32 pb-20 px-8 md:px-16 bg-[#FAF6EE]">
+        <section className="bg-[#FAF6EE] px-4 pb-20 pt-28 sm:px-8 md:px-16 md:pt-32">
           <div className="max-w-6xl mx-auto">
             
             {/* IMAGE HERO CORRECTEMENT LIÉE */}
@@ -19,7 +19,7 @@ export default function EngagementsPage() {
               <img
                 src="/engagements-hero.jpg"
                 alt="Technologie bienveillante"
-                className="w-full h-[420px] md:h-[500px] object-cover object-center"
+                className="h-[260px] w-full object-cover object-center sm:h-[420px] md:h-[500px]"
               />
             </div>
 
@@ -42,7 +42,7 @@ export default function EngagementsPage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3">
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#1B1A18] text-[#FAF6EE] text-sm font-medium hover:bg-[#2A2722] transition"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-medium text-[#FAF6EE] transition hover:bg-[#2A2722] sm:w-auto"
               >
                 Parler de vos enjeux QVT
                 <ArrowRight className="w-4 h-4" />
@@ -50,7 +50,7 @@ export default function EngagementsPage() {
 
               <Link
                 to="/simulateur"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#D4C7B3] text-sm text-[#4A4134] hover:bg-white/40 transition"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#D4C7B3] px-6 py-3 text-sm text-[#4A4134] transition hover:bg-white/40 sm:w-auto"
               >
                 Tester « Ma bulle attentionnée »
               </Link>
@@ -59,7 +59,7 @@ export default function EngagementsPage() {
         </section>
 
         {/* SECTION TEXTE STYLE SANDBAR */}
-        <section className="py-28 bg-[#FDF9F0] border-y border-[#E8DCC8]">
+        <section className="border-y border-[#E8DCC8] bg-[#FDF9F0] py-20 sm:py-28">
           <p className="max-w-3xl mx-auto px-8 md:px-16 text-center text-lg md:text-xl text-[#4A4134] leading-relaxed">
             La technologie peut fatiguer.
             <br />
@@ -70,7 +70,7 @@ export default function EngagementsPage() {
         </section>
 
         {/* BLOC ENGAGEMENTS AVEC IMAGES */}
-        <section className="py-24 px-8 md:px-16 bg-[#FAF6EE]">
+        <section className="bg-[#FAF6EE] px-4 py-20 sm:px-8 md:px-16 md:py-24">
           <div className="max-w-5xl mx-auto mb-14">
             <p className="uppercase tracking-[0.18em] text-xs text-[#9C8D77] mb-3">
               Une boussole éthique
@@ -166,7 +166,7 @@ export default function EngagementsPage() {
         </section>
 
         {/* CTA FINAL AVEC IMAGE SOMBRE */}
-        <section className="py-32 bg-[#151515] text-[#FDF9F0] text-center relative">
+        <section className="relative bg-[#151515] py-24 text-center text-[#FDF9F0] sm:py-32">
           <img
             src="/engagements-dark-halo.jpg"
             alt="Halo espoir"

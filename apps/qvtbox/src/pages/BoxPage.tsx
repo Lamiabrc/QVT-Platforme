@@ -72,7 +72,7 @@ export default function BoxPage() {
       <Navigation />
 
       <main>
-        <section className="relative min-h-[64vh] overflow-hidden">
+        <section className="relative min-h-[56vh] overflow-hidden sm:min-h-[64vh]">
           <img
             src="/images/hero-boxes.jpg"
             alt="Visuels des box QVT Box"
@@ -80,10 +80,10 @@ export default function BoxPage() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#151515]/75 via-[#151515]/40 to-[#151515]/25" />
 
-          <div className="relative z-10 mx-auto flex min-h-[64vh] max-w-5xl items-end px-6 pb-16 pt-32">
+          <div className="relative z-10 mx-auto flex min-h-[56vh] max-w-5xl items-end px-4 pb-12 pt-28 sm:min-h-[64vh] sm:px-6 sm:pb-16 sm:pt-32">
             <div className="max-w-3xl">
               <p className="text-xs uppercase tracking-[0.28em] text-[#E7D9C2]">Box</p>
-              <h1 className="mt-4 text-4xl font-semibold leading-tight text-white md:text-6xl">
+              <h1 className="mt-4 text-3xl font-semibold leading-tight text-white sm:text-4xl md:text-6xl">
                 Une box quand ça compte.
               </h1>
               <p className="mt-4 max-w-2xl text-base text-[#F3EBDD] md:text-lg">
@@ -94,7 +94,7 @@ export default function BoxPage() {
           </div>
         </section>
 
-        <section className="bg-[#FAF6EE] px-6 py-16 md:py-20">
+        <section className="bg-[#FAF6EE] px-4 py-16 sm:px-6 md:py-20">
           <div className="mx-auto max-w-6xl">
             {loading ? (
               <div className="rounded-3xl border border-[#E8DCC8] bg-white p-5 text-sm text-[#6F6454]">
@@ -127,14 +127,14 @@ export default function BoxPage() {
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
                 to="/bulles"
-                className="inline-flex items-center gap-2 rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#1B1A18] px-6 py-3 text-sm font-semibold text-[#FAF6EE] transition hover:opacity-90 sm:w-auto"
               >
                 Voir mes recommandations
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 to="/simulateur"
-                className="inline-flex items-center gap-2 rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#1B1A18]/20 bg-white px-6 py-3 text-sm font-semibold text-[#1B1A18] transition hover:border-[#1B1A18]/40 sm:w-auto"
               >
                 Estimer le bon moment
               </Link>
